@@ -3,7 +3,7 @@ import { useSearchParams } from 'react-router-dom'
 import { Button } from '@/components/Button'
 import { Input } from '@/components/Input'
 import { sendMagicLink } from '@/data/supabase'
-import { Images, MapPin, ReceiptText, UsersRound } from 'lucide-react'
+import { Images, MapPin, ReceiptText } from 'lucide-react'
 import { isKakaoInAppBrowser, openInExternalBrowser } from './inAppBrowser'
 import { sanitizeNextPath } from './nextPath'
 
@@ -55,12 +55,14 @@ export function LoginPage() {
   return (
     <div className="flex min-h-dvh flex-col justify-between px-5 pt-24 pb-[calc(env(safe-area-inset-bottom)+24px)]">
       <div>
-        <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-primary">
-          <UsersRound size={30} className="text-white" />
+        <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-primary text-[26px] font-bold text-white">
+          식
         </div>
-        <h1 className="mt-5 text-[28px] leading-[1.35] font-bold">
-          모임의 기록과 정산,
-          <br />한 곳에서
+        <p className="mt-3 text-sm font-bold tracking-[0.25em] text-primary">SIKU</p>
+        <h1 className="mt-1.5 text-[28px] leading-[1.35] font-bold">
+          밥 같이 먹는 사이,
+          <br />
+          식구
         </h1>
         <ul className="mt-5 space-y-3">
           <li className="flex items-start gap-2.5 text-base leading-[1.5] text-ink-soft">

@@ -18,9 +18,9 @@ export default defineConfig({
     VitePWA({
       registerType: 'autoUpdate',
       manifest: {
-        name: '모임',
-        short_name: '모임',
-        description: '소규모 모임 기록·사진·정산',
+        name: '식구 (SIKU)',
+        short_name: '식구',
+        description: '밥 같이 먹는 사이의 기록·사진·정산',
         lang: 'ko',
         display: 'standalone',
         theme_color: '#ffffff',
