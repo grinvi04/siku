@@ -15,6 +15,7 @@ import {
   markTransfer,
   reopenSettlement,
   type TransferRow,
+  type TransferStatus,
 } from '@/data/settlements'
 import { formatKrw } from '@/lib/format'
 import { useSession } from '@/features/auth/useSession'
@@ -99,11 +100,17 @@ export function SettleTab({ event }: { event: EventDetail }) {
     onError: () => toast('정산을 취소하지 못했어요. 다시 시도해 주세요'),
   })
   const mark = useMutation({
-    mutationFn: ({ id, status }: { id: string; status: 'sent' | 'confirmed' }) =>
+    mutationFn: ({ id, status }: { id: string; status: TransferStatus }) =>
       markTransfer(id, status),
     onSuccess: (_, { status }) => {
       invalidate()
-      toast(status === 'sent' ? '보냈다고 표시했어요' : '받았다고 확인했어요')
+      toast(
+        status === 'sent'
+          ? '보냈다고 표시했어요'
+          : status === 'confirmed'
+            ? '받았다고 확인했어요'
+            : '되돌렸어요',
+      )
     },
     onError: () => toast('처리하지 못했어요. 다시 시도해 주세요'),
   })
@@ -300,7 +307,7 @@ function TransferItem({
   nameOf: (id: string) => string
   holder: string | null
   onCopy: () => void
-  onMark: (status: 'sent' | 'confirmed') => void
+  onMark: (status: TransferStatus) => void
 }) {
   const isSender = me === transfer.from_user
   const isReceiver = me === transfer.to_user
@@ -339,13 +346,21 @@ function TransferItem({
             >
               계좌 복사
             </button>
-            {transfer.status === 'pending' && (
+            {transfer.status === 'pending' ? (
               <button
                 type="button"
                 className="h-11 rounded-xl bg-primary-container px-3 text-base font-semibold text-primary"
                 onClick={() => onMark('sent')}
               >
                 보냈어요
+              </button>
+            ) : (
+              <button
+                type="button"
+                className="h-11 px-2 text-sm text-ink-soft"
+                onClick={() => onMark('pending')}
+              >
+                잘못 눌렀어요 (되돌리기)
               </button>
             )}
           </>
@@ -357,6 +372,15 @@ function TransferItem({
             onClick={() => onMark('confirmed')}
           >
             받았어요
+          </button>
+        )}
+        {done && isReceiver && (
+          <button
+            type="button"
+            className="h-11 px-2 text-sm text-ink-soft"
+            onClick={() => onMark(transfer.sent_at ? 'sent' : 'pending')}
+          >
+            잘못 눌렀어요 (되돌리기)
           </button>
         )}
       </div>

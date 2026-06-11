@@ -9,6 +9,7 @@ export interface TransferRow {
   to_user: string
   amount: number
   status: TransferStatus
+  sent_at: string | null
 }
 
 export interface ClosedSettlement {
@@ -21,7 +22,7 @@ export interface ClosedSettlement {
 export async function getClosedSettlement(eventId: string): Promise<ClosedSettlement | null> {
   const { data, error } = await supabase
     .from('settlements')
-    .select('id, created_at, settlement_transfers(id, from_user, to_user, amount, status)')
+    .select('id, created_at, settlement_transfers(id, from_user, to_user, amount, status, sent_at)')
     .eq('event_id', eventId)
     .eq('status', 'closed')
     .maybeSingle()
@@ -68,7 +69,7 @@ export async function reopenSettlement(eventId: string): Promise<void> {
   if (error) throw error
 }
 
-export async function markTransfer(transferId: string, status: 'sent' | 'confirmed'): Promise<void> {
+export async function markTransfer(transferId: string, status: TransferStatus): Promise<void> {
   const { error } = await supabase
     .from('settlement_transfers')
     .update({ status })
