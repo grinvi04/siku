@@ -87,13 +87,13 @@ export function ExpenseFormPage() {
       isEdit ? updateExpense(expenseId!, input) : createExpense(input),
     onSuccess: () => {
       invalidate()
-      toast(isEdit ? '지출을 고쳤어요' : '지출을 추가했어요')
+      toast(isEdit ? '지출을 수정했어요' : '지출을 추가했어요')
       goBack()
     },
     onError: (e) => {
       if (e instanceof Error && e.message.includes('정산이 확정된')) {
         void queryClient.invalidateQueries({ queryKey: ['settlement', eventId] })
-        toast('그 사이 정산이 확정되어 잠겼어요. 정산을 취소하면 고칠 수 있어요')
+        toast('그 사이 정산이 확정되어 잠겼어요. 정산을 취소하면 수정할 수 있어요')
         goBack()
       } else {
         toast('저장하지 못했어요. 다시 시도해 주세요')
@@ -145,7 +145,7 @@ export function ExpenseFormPage() {
       <button type="button" className="h-11 text-base text-ink-soft" onClick={goBack}>
         ‹ 뒤로
       </button>
-      <h1 className="mt-2 text-[22px] font-bold">{isEdit ? '지출 고치기' : '지출 추가'}</h1>
+      <h1 className="mt-2 text-[22px] font-bold">{isEdit ? '지출 수정' : '지출 추가'}</h1>
 
       <div className="mt-6 space-y-5">
         <div>
@@ -246,7 +246,7 @@ export function ExpenseFormPage() {
 
       <div className="mt-8 space-y-3">
         <Button type="submit" disabled={save.isPending}>
-          {save.isPending ? '저장하고 있어요…' : isEdit ? '고치기' : '추가'}
+          {save.isPending ? '저장하고 있어요…' : isEdit ? '저장' : '추가'}
         </Button>
         {/* 삭제는 작성자·결제자만 (RLS와 동일) — 권한 없는 사람에겐 버튼을 보이지 않음 */}
         {isEdit &&

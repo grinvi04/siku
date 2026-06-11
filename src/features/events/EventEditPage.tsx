@@ -31,7 +31,7 @@ export function EventEditPage() {
     onSuccess: () => {
       void queryClient.invalidateQueries({ queryKey: ['event', eventId] })
       void queryClient.invalidateQueries({ queryKey: ['events', event?.group_id] })
-      toast('기록을 고쳤어요')
+      toast('기록을 수정했어요')
       navigate(`/events/${eventId}`, { replace: true })
     },
     onError: () => toast('저장하지 못했어요. 다시 시도해 주세요'),
@@ -68,7 +68,7 @@ export function EventEditPage() {
       >
         ‹ 뒤로
       </button>
-      <h1 className="mt-2 text-[22px] font-bold">기록 고치기</h1>
+      <h1 className="mt-2 text-[22px] font-bold">기록 수정</h1>
 
       <div className="mt-6 space-y-5">
         <div>
