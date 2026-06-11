@@ -51,6 +51,14 @@ describe('parseReceiptText', () => {
     expect(parseReceiptText(text).amount).toBe(45000)
   })
 
+  it('실제 OCR 결과: 키워드 다음 줄이 날짜여도 금액으로 오인하지 않는다', () => {
+    // 회전·흔들린 사진의 실제 Vision OCR 출력 — 날짜를 '20026-06-08'로 오독한 케이스
+    const text = `coupang eats\n[매장용]\n메뉴\nJE\nICE\n26P56K\n[수저포크]\n수량 금액\n햄치즈 샌드위치+커피세 1 10,500\n주문금액\n거래일시: 20026-06-08 20:06:08\n0\n10,500`
+    const result = parseReceiptText(text)
+    expect(result.amount).toBe(10500)
+    expect(result.title).toBe('coupang eats')
+  })
+
   it('배달앱 영수증: 주문금액 키워드 + 상호 첫 줄', () => {
     const text = `coupang eats\n26P56K\n[수저포크O]\n메뉴 수량 금액\n더블 햄치즈 샌드위치+커피세트 1 10,500\n* ICE 1 0\n주문금액 10,500\n거래일시: 2026-06-08 20:05:09`
     const result = parseReceiptText(text)

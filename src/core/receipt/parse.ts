@@ -27,8 +27,15 @@ const AMOUNT_KEYWORDS = [
 
 const TITLE_SKIP = /영수증|매출|신용|카드|승인|사업자|대표자?|전화|주소|TEL|POS|NO[.:]|일시|발행/i
 
+/** 날짜·시각은 금액 후보가 아니다 (OCR이 '20026-06-08'처럼 읽어도 금액으로 오인 방지) */
+function stripDatesAndTimes(line: string): string {
+  return line
+    .replace(/\d{4,6}\s*[-./년]\s*\d{1,2}\s*[-./월]\s*\d{1,2}일?/g, ' ')
+    .replace(/\d{1,2}:\d{2}(?::\d{2})?/g, ' ')
+}
+
 function extractNumbers(line: string): number[] {
-  const matches = line.match(/\d{1,3}(?:,\d{3})+|\d+/g) ?? []
+  const matches = stripDatesAndTimes(line).match(/\d{1,3}(?:,\d{3})+|\d+/g) ?? []
   return matches.map((m) => parseInt(m.replaceAll(',', ''), 10))
 }
 
@@ -45,7 +52,7 @@ function findAmount(lines: string[]): number | null {
   }
   // 폴백: 콤마 포맷된 숫자 중 최댓값 (사업자번호·카드번호·전화번호는 콤마가 없다)
   const commaNumbers = lines
-    .flatMap((line) => line.match(/\d{1,3}(?:,\d{3})+/g) ?? [])
+    .flatMap((line) => stripDatesAndTimes(line).match(/\d{1,3}(?:,\d{3})+/g) ?? [])
     .map((m) => parseInt(m.replaceAll(',', ''), 10))
     .filter((n) => n >= 100 && n < 100_000_000)
   return commaNumbers.length > 0 ? Math.max(...commaNumbers) : null
