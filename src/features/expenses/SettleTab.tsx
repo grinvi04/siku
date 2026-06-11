@@ -72,13 +72,10 @@ export function SettleTab({ event }: { event: EventDetail }) {
     enabled: partyIds.length > 0,
   })
 
-  const nameOf = (id: string) => {
-    const name =
-      accounts?.get(id)?.display_name ??
-      event.participants.find((p) => p.user_id === id)?.display_name ??
-      '멤버'
-    return id === me ? `${name} (나)` : name
-  }
+  const nameOf = (id: string) =>
+    accounts?.get(id)?.display_name ??
+    event.participants.find((p) => p.user_id === id)?.display_name ??
+    '멤버'
 
   const invalidate = () => {
     void queryClient.invalidateQueries({ queryKey: ['expenses', event.id] })
@@ -356,8 +353,13 @@ function TransferItem({
     <li className="border-b border-line py-3">
       <div className="flex items-center justify-between">
         <span className="text-base">
-          <span className="font-semibold">{nameOf(transfer.from_user)}</span> →{' '}
-          <span className="font-semibold">{nameOf(transfer.to_user)}</span>
+          <span className={`font-semibold ${me === transfer.from_user ? 'text-primary' : ''}`}>
+            {nameOf(transfer.from_user)}
+          </span>{' '}
+          →{' '}
+          <span className={`font-semibold ${me === transfer.to_user ? 'text-primary' : ''}`}>
+            {nameOf(transfer.to_user)}
+          </span>
           {holder && <span className="ml-1 text-sm text-ink-soft">(예금주 {holder})</span>}
         </span>
         <span className={`amount text-base ${done ? 'text-success' : ''}`}>

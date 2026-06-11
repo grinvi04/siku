@@ -7,7 +7,6 @@ import { Input } from '@/components/Input'
 import { useToast } from '@/components/Toast'
 import { getGroup } from '@/data/groups'
 import { createEvent, EVENT_TYPE_LABEL, type EventType } from '@/data/events'
-import { useSession } from '@/features/auth/useSession'
 
 const TYPES = (Object.keys(EVENT_TYPE_LABEL) as EventType[]).map((value) => ({
   value,
@@ -19,7 +18,6 @@ export function EventNewPage() {
   const navigate = useNavigate()
   const queryClient = useQueryClient()
   const toast = useToast()
-  const { session } = useSession()
 
   const { data: group } = useQuery({
     queryKey: ['group', groupId],
@@ -110,7 +108,6 @@ export function EventNewPage() {
                 onClick={() => toggleParticipant(m.user_id)}
               >
                 {m.profile.display_name}
-                {m.user_id === session?.user.id && ' (나)'}
               </Chip>
             ))}
           </div>

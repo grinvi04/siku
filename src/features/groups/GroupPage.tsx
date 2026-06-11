@@ -66,14 +66,13 @@ export function GroupPage() {
               }`}
             >
               {m.profile.display_name}
-              {m.user_id === me && ' (나)'}
             </span>
           ))}
-          {/* 정보 칩(나)과 구분되는 행동 버튼 — 점선 테두리 */}
+          {/* 행동은 면 채움(파랑+흰 글씨) — 연한 파랑 정보 칩(나)과 층위 구분 */}
           <button
             type="button"
             onClick={() => void shareInvite()}
-            className="rounded-full border border-dashed border-primary bg-white px-3 py-1.5 text-sm font-semibold text-primary"
+            className="rounded-full bg-primary px-3 py-1.5 text-sm font-semibold text-white active:bg-primary-pressed"
           >
             + 멤버 초대
           </button>

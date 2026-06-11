@@ -70,7 +70,6 @@ export function EventPage() {
                 className={p.user_id === session?.user.id ? 'font-semibold text-primary' : ''}
               >
                 {p.display_name}
-                {p.user_id === session?.user.id && ' (나)'}
               </span>
             </span>
           ))}
