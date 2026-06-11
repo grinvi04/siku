@@ -75,6 +75,22 @@ export async function getEvent(eventId: string): Promise<EventDetail> {
   }
 }
 
+export async function updateEvent(
+  eventId: string,
+  patch: { title: string; type: EventType; startsAt: string; endsAt: string | null },
+): Promise<void> {
+  const { error } = await supabase
+    .from('events')
+    .update({
+      title: patch.title,
+      type: patch.type,
+      starts_at: patch.startsAt,
+      ends_at: patch.endsAt,
+    })
+    .eq('id', eventId)
+  if (error) throw error
+}
+
 /**
  * 기록 삭제 — DB row는 cascade로 정리되지만 storage 사진 파일은 직접 지워야 한다.
  * 권한(작성자·모임장)은 RLS가 강제. 확정된 정산이 있으면 잠금 트리거가 막는다.

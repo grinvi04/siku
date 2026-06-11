@@ -4,11 +4,13 @@ import { LoginPage } from '@/features/auth/LoginPage'
 import { ProfilePage } from '@/features/auth/ProfilePage'
 import { WelcomePage } from '@/features/auth/WelcomePage'
 import { useSession } from '@/features/auth/useSession'
+import { EventEditPage } from '@/features/events/EventEditPage'
 import { EventNewPage } from '@/features/events/EventNewPage'
 import { EventPage } from '@/features/events/EventPage'
 import { ExpenseFormPage } from '@/features/expenses/ExpenseFormPage'
 import { GroupNewPage } from '@/features/groups/GroupNewPage'
 import { GroupPage } from '@/features/groups/GroupPage'
+import { StatsPage } from '@/features/groups/StatsPage'
 import { HomePage } from '@/features/groups/HomePage'
 import { InvitePage } from '@/features/groups/InvitePage'
 
@@ -36,7 +38,9 @@ function App() {
           <Route path="/groups/new" element={<GroupNewPage />} />
           <Route path="/groups/:groupId" element={<GroupPage />} />
           <Route path="/groups/:groupId/events/new" element={<EventNewPage />} />
+          <Route path="/groups/:groupId/stats" element={<StatsPage />} />
           <Route path="/events/:eventId" element={<EventPage />} />
+          <Route path="/events/:eventId/edit" element={<EventEditPage />} />
           <Route path="/events/:eventId/expenses/new" element={<ExpenseFormPage />} />
           <Route path="/events/:eventId/expenses/:expenseId/edit" element={<ExpenseFormPage />} />
         </Route>

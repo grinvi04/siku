@@ -7,7 +7,7 @@ import { EVENT_TYPE_LABEL, listEvents } from '@/data/events'
 import { formatDateRange } from '@/lib/format'
 import { useSession } from '@/features/auth/useSession'
 import { EVENT_TYPE_ICON } from '@/components/eventTypeIcon'
-import { CalendarPlus, ChevronRight } from 'lucide-react'
+import { BarChart3, CalendarPlus, ChevronRight } from 'lucide-react'
 import { Avatar } from '@/components/Avatar'
 import { CardListSkeleton } from '@/components/Skeleton'
 
@@ -85,7 +85,15 @@ export function GroupPage() {
       </header>
 
       <section className="mt-8">
-        <h2 className="text-[19px] font-semibold">지난 기록</h2>
+        <div className="flex items-center justify-between">
+          <h2 className="text-[19px] font-semibold">지난 기록</h2>
+          <Link
+            to={`/groups/${group.id}/stats`}
+            className="flex h-11 items-center gap-1 px-2 text-sm font-semibold text-primary"
+          >
+            <BarChart3 size={16} /> 통계
+          </Link>
+        </div>
         {isLoading ? (
           <CardListSkeleton />
         ) : events && events.length > 0 ? (

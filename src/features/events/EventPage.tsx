@@ -9,7 +9,7 @@ import { SettleTab } from '@/features/expenses/SettleTab'
 import { PhotosTab } from '@/features/photos/PhotosTab'
 import { VisitsTab } from '@/features/places/VisitsTab'
 import { useSession } from '@/features/auth/useSession'
-import { Images, MapPin, ReceiptText } from 'lucide-react'
+import { Images, MapPin, Pencil, ReceiptText } from 'lucide-react'
 import { Skeleton } from '@/components/Skeleton'
 
 const TABS = [
@@ -72,7 +72,16 @@ export function EventPage() {
         ‹ 모임으로
       </button>
       <header className="mt-2">
-        <h1 className="text-[22px] font-bold">{event.title}</h1>
+        <div className="flex items-start justify-between gap-2">
+          <h1 className="text-[22px] font-bold">{event.title}</h1>
+          <button
+            type="button"
+            className="flex h-11 shrink-0 items-center gap-1 px-2 text-sm font-semibold text-ink-soft"
+            onClick={() => navigate(`/events/${event.id}/edit`)}
+          >
+            <Pencil size={15} /> 수정
+          </button>
+        </div>
         <p className="mt-1 text-sm text-ink-soft">
           {formatDateRange(event.starts_at, event.ends_at)} · {EVENT_TYPE_LABEL[event.type]} ·{' '}
           {event.participants.map((p, i) => (
