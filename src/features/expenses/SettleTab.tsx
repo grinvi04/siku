@@ -92,7 +92,15 @@ export function SettleTab({ event }: { event: EventDetail }) {
       invalidate()
       toast('정산을 확정했어요. 이제 송금만 하면 돼요')
     },
-    onError: () => toast('정산을 확정하지 못했어요. 다시 시도해 주세요'),
+    onError: (e) => {
+      // 다른 멤버가 먼저 확정한 경우 — 오류가 아니라 상태가 바뀐 것
+      if (e instanceof Error && e.message.includes('이미 확정된')) {
+        invalidate()
+        toast('다른 멤버가 이미 정산을 확정했어요. 최신 내용을 불러왔어요')
+      } else {
+        toast('정산을 확정하지 못했어요. 다시 시도해 주세요')
+      }
+    },
   })
   const reopen = useMutation({
     mutationFn: () => reopenSettlement(event.id),
@@ -100,7 +108,15 @@ export function SettleTab({ event }: { event: EventDetail }) {
       invalidate()
       toast('정산을 취소했어요. 이미 받은 송금은 다음 확정에서 빼고 계산해요')
     },
-    onError: () => toast('정산을 취소하지 못했어요. 다시 시도해 주세요'),
+    onError: (e) => {
+      // 다른 멤버가 먼저 취소한 경우
+      if (e instanceof Error && e.message.includes('확정된 정산이 없')) {
+        invalidate()
+        toast('이미 정산이 취소된 상태예요. 최신 내용을 불러왔어요')
+      } else {
+        toast('정산을 취소하지 못했어요. 다시 시도해 주세요')
+      }
+    },
   })
   const mark = useMutation({
     mutationFn: ({ id, status }: { id: string; status: TransferStatus }) =>

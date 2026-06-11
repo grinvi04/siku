@@ -74,7 +74,7 @@ export function VisitsTab({ event }: { event: EventDetail }) {
       } else if (gpsPhotos.length < 2) {
         toast('위치 정보가 있는 사진이 2장 이상 있어야 찾을 수 있어요')
       } else {
-        toast('같은 곳에서 10분 이상 머문 사진 묶음이 없어요. 시간차가 있는 사진을 더 올려 보세요')
+        toast('같은 곳에서 찍힌 사진이 2장 이상인 곳이 없어요. 사진을 더 올려 보세요')
       }
     },
     onError: () => toast('장소를 찾지 못했어요. 다시 시도해 주세요'),

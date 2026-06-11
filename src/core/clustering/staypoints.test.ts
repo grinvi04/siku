@@ -29,7 +29,7 @@ describe('detectStayPoints', () => {
     expect(result[0].endedAt - result[0].startedAt).toBe(40 * MIN)
   })
 
-  it('체류 30분 미만인 클러스터는 버린다 (이동 중 사진)', () => {
+  it('이동 중 사진은 각자 다른 위치라 묶이지 않는다', () => {
     // 자전거로 이동하며 10분 간격, 각각 다른 위치(>150m)
     const result = detectStayPoints([
       photo('p1', 0),
@@ -83,16 +83,8 @@ describe('detectStayPoints — 경계·옵션', () => {
     expect(detectStayPoints([])).toEqual([])
   })
 
-  it('정확히 10분 체류는 포함 (경계 이상)', () => {
-    expect(detectStayPoints([photo('p1', 0), photo('p2', 10)])).toHaveLength(1)
-  })
-
-  it('10분에서 1초 모자라면 제외', () => {
-    const almost = [
-      { ...photo('p1', 0) },
-      { ...photo('p2', 10), takenAt: 10 * MIN - 1000 },
-    ]
-    expect(detectStayPoints(almost)).toHaveLength(0)
+  it('같은 자리에서 연달아 찍힌 2장(1분 간격)도 방문 후보다', () => {
+    expect(detectStayPoints([photo('p1', 0), photo('p2', 1)])).toHaveLength(1)
   })
 
   it('반경 안(~149m)은 같은 클러스터, 밖(~155m)은 분리', () => {
@@ -103,14 +95,14 @@ describe('detectStayPoints — 경계·옵션', () => {
     expect(outside.map((s) => s.photoIds)).toEqual([['p2', 'p3']])
   })
 
-  it('옵션으로 반경·최소 체류시간을 조정할 수 있다', () => {
+  it('minStayMs 옵션으로 시간 기준을 강화할 수 있다 (네이티브 자동 스캔 대비)', () => {
     const photos = [photo('p1', 0), photo('p2', 15)]
-    expect(detectStayPoints(photos)).toHaveLength(1) // 기본 10분
+    expect(detectStayPoints(photos)).toHaveLength(1) // 기본: 2장이면 후보
     expect(detectStayPoints(photos, { minStayMs: 20 * MIN })).toHaveLength(0)
   })
 
-  it('같은 시각 사진 여러 장은 체류시간 0 → 방문 아님', () => {
-    expect(detectStayPoints([photo('p1', 5), photo('p2', 5), photo('p3', 5)])).toHaveLength(0)
+  it('같은 시각 연사 여러 장도 방문 후보다 (그 자리에 있었다는 증거)', () => {
+    expect(detectStayPoints([photo('p1', 5), photo('p2', 5), photo('p3', 5)])).toHaveLength(1)
   })
 
   it('점진 이동(드리프트)은 앵커 기준으로 분리 — 동네 전체가 한 방문이 되지 않는다', () => {
