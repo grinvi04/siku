@@ -15,7 +15,9 @@ const DEFAULT_RADIUS_M = 150
 // 이동 중 오인은 반경 조건이 걸러준다 (10분이면 도보로도 150m를 벗어남).
 // 추후 네이티브 자동 스캔에서는 옵션으로 더 엄격하게 줄 것.
 const DEFAULT_MIN_STAY_MS = 10 * 60 * 1000
-const DEFAULT_MAX_GAP_MS = 2 * 60 * 60 * 1000
+// 모임은 4~5시간 이어지며 사진은 시작·끝에만 찍히는 경우가 많아 넉넉하게 6시간.
+// (다른 날짜의 같은 장소 사진은 여전히 분리됨)
+const DEFAULT_MAX_GAP_MS = 6 * 60 * 60 * 1000
 
 /**
  * 사진의 GPS·촬영시각으로 "방문 장소"를 사후 재구성한다 (stay-point detection).

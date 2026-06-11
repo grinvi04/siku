@@ -121,12 +121,12 @@ describe('detectStayPoints — 경계·옵션', () => {
     expect(result[0].photoIds).toEqual(['p0', 'p1', 'p2'])
   })
 
-  it('같은 자리여도 시간 간격이 크면 별도 방문 (아침의 집 ≠ 저녁의 집)', () => {
+  it('같은 자리여도 시간 간격이 크면(6시간 초과) 별도 방문', () => {
     const result = detectStayPoints([
       photo('m1', 0),
       photo('m2', 40),
-      photo('e1', 340), // 5시간 뒤 같은 자리
-      photo('e2', 380),
+      photo('e1', 460), // 7시간 뒤 같은 자리
+      photo('e2', 500),
     ])
     expect(result).toHaveLength(2)
     expect(result[0].photoIds).toEqual(['m1', 'm2'])
