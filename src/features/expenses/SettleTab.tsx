@@ -72,10 +72,13 @@ export function SettleTab({ event }: { event: EventDetail }) {
     enabled: partyIds.length > 0,
   })
 
-  const nameOf = (id: string) =>
-    accounts?.get(id)?.display_name ??
-    event.participants.find((p) => p.user_id === id)?.display_name ??
-    '멤버'
+  const nameOf = (id: string) => {
+    const name =
+      accounts?.get(id)?.display_name ??
+      event.participants.find((p) => p.user_id === id)?.display_name ??
+      '멤버'
+    return id === me ? `${name} (나)` : name
+  }
 
   const invalidate = () => {
     void queryClient.invalidateQueries({ queryKey: ['expenses', event.id] })
@@ -246,7 +249,11 @@ export function SettleTab({ event }: { event: EventDetail }) {
                     key={userId}
                     className="flex min-h-12 items-center justify-between border-b border-line py-2"
                   >
-                    <span className="text-base">{nameOf(userId)}</span>
+                    <span
+                      className={`text-base ${userId === me ? 'font-semibold text-primary' : ''}`}
+                    >
+                      {nameOf(userId)}
+                    </span>
                     <span className={`amount text-base ${balance > 0 ? 'text-receive' : 'text-pay'}`}>
                       {balance > 0 ? `+${formatKrw(balance)} 받아요` : `${formatKrw(balance)} 보내요`}
                     </span>

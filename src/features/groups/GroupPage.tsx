@@ -5,13 +5,14 @@ import { useToast } from '@/components/Toast'
 import { getGroup } from '@/data/groups'
 import { EVENT_TYPE_LABEL, listEvents } from '@/data/events'
 import { formatDateRange } from '@/lib/format'
-
-
+import { useSession } from '@/features/auth/useSession'
 
 export function GroupPage() {
   const { groupId } = useParams<{ groupId: string }>()
   const navigate = useNavigate()
   const toast = useToast()
+  const { session } = useSession()
+  const me = session?.user.id
 
   const { data: group } = useQuery({
     queryKey: ['group', groupId],
@@ -57,9 +58,14 @@ export function GroupPage() {
           {group.members.map((m) => (
             <span
               key={m.user_id}
-              className="shrink-0 rounded-full bg-surface px-3 py-1.5 text-sm text-ink-soft"
+              className={`shrink-0 rounded-full px-3 py-1.5 text-sm ${
+                m.user_id === me
+                  ? 'bg-primary-container font-semibold text-primary'
+                  : 'bg-surface text-ink-soft'
+              }`}
             >
               {m.profile.display_name}
+              {m.user_id === me && ' (나)'}
             </span>
           ))}
           <button

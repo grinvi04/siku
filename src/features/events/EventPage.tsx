@@ -63,7 +63,17 @@ export function EventPage() {
         <h1 className="text-[22px] font-bold">{event.title}</h1>
         <p className="mt-1 text-sm text-ink-soft">
           {formatDateRange(event.starts_at, event.ends_at)} · {EVENT_TYPE_LABEL[event.type]} ·{' '}
-          {event.participants.map((p) => p.display_name).join(', ')}
+          {event.participants.map((p, i) => (
+            <span key={p.user_id}>
+              {i > 0 && ', '}
+              <span
+                className={p.user_id === session?.user.id ? 'font-semibold text-primary' : ''}
+              >
+                {p.display_name}
+                {p.user_id === session?.user.id && ' (나)'}
+              </span>
+            </span>
+          ))}
         </p>
       </header>
 

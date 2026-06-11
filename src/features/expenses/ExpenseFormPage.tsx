@@ -209,6 +209,7 @@ export function ExpenseFormPage() {
                 onClick={() => setPayerId(p.user_id)}
               >
                 {p.display_name}
+                {p.user_id === session?.user.id && ' (나)'}
               </Chip>
             ))}
           </div>
@@ -226,6 +227,7 @@ export function ExpenseFormPage() {
                 onClick={() => toggleParticipant(p.user_id)}
               >
                 {p.display_name}
+                {p.user_id === session?.user.id && ' (나)'}
               </Chip>
             ))}
           </div>
