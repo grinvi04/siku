@@ -29,7 +29,7 @@ export function LoginPage() {
         {isKakaoInAppBrowser() && (
           <button
             onClick={openInExternalBrowser}
-            className="w-full rounded-xl bg-surface px-4 py-3 text-left text-[13px] leading-[1.5] text-ink-soft"
+            className="w-full rounded-xl bg-surface px-4 py-3 text-left text-sm leading-[1.5] text-ink-soft"
           >
             카카오톡 안에서는 앱 설치가 안 돼요.
             <span className="font-semibold text-primary"> 외부 브라우저로 열기 →</span>
@@ -41,7 +41,7 @@ export function LoginPage() {
         >
           카카오로 시작하기
         </button>
-        {error && <p className="text-center text-[13px] text-error">{error}</p>}
+        {error && <p className="text-center text-sm text-error">{error}</p>}
       </div>
     </div>
   )
