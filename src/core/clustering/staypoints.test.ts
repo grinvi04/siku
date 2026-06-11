@@ -83,14 +83,14 @@ describe('detectStayPoints — 경계·옵션', () => {
     expect(detectStayPoints([])).toEqual([])
   })
 
-  it('정확히 30분 체류는 포함 (경계 이상)', () => {
-    expect(detectStayPoints([photo('p1', 0), photo('p2', 30)])).toHaveLength(1)
+  it('정확히 10분 체류는 포함 (경계 이상)', () => {
+    expect(detectStayPoints([photo('p1', 0), photo('p2', 10)])).toHaveLength(1)
   })
 
-  it('30분에서 1초 모자라면 제외', () => {
+  it('10분에서 1초 모자라면 제외', () => {
     const almost = [
       { ...photo('p1', 0) },
-      { ...photo('p2', 30), takenAt: 30 * MIN - 1000 },
+      { ...photo('p2', 10), takenAt: 10 * MIN - 1000 },
     ]
     expect(detectStayPoints(almost)).toHaveLength(0)
   })
@@ -105,8 +105,8 @@ describe('detectStayPoints — 경계·옵션', () => {
 
   it('옵션으로 반경·최소 체류시간을 조정할 수 있다', () => {
     const photos = [photo('p1', 0), photo('p2', 15)]
-    expect(detectStayPoints(photos)).toHaveLength(0) // 기본 30분
-    expect(detectStayPoints(photos, { minStayMs: 10 * MIN })).toHaveLength(1)
+    expect(detectStayPoints(photos)).toHaveLength(1) // 기본 10분
+    expect(detectStayPoints(photos, { minStayMs: 20 * MIN })).toHaveLength(0)
   })
 
   it('같은 시각 사진 여러 장은 체류시간 0 → 방문 아님', () => {
@@ -116,7 +116,9 @@ describe('detectStayPoints — 경계·옵션', () => {
   it('점진 이동(드리프트)은 앵커 기준으로 분리 — 동네 전체가 한 방문이 되지 않는다', () => {
     // 10분마다 ~55m씩 이동: 앵커에서 165m 벗어나는 4번째 사진에서 분리
     const drift = [0, 1, 2, 3].map((i) => photo(`p${i}`, i * 10, i * 0.0005))
-    expect(detectStayPoints(drift)).toHaveLength(0) // 분리된 조각들은 모두 30분 미만
+    const result = detectStayPoints(drift)
+    expect(result).toHaveLength(1) // 앵커 반경 안의 앞 3장만 한 방문 (20분 체류)
+    expect(result[0].photoIds).toEqual(['p0', 'p1', 'p2'])
   })
 
   it('같은 자리여도 시간 간격이 크면 별도 방문 (아침의 집 ≠ 저녁의 집)', () => {

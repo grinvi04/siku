@@ -11,7 +11,10 @@ export interface StayPointOptions {
 }
 
 const DEFAULT_RADIUS_M = 150
-const DEFAULT_MIN_STAY_MS = 30 * 60 * 1000
+// 직접 고른 사진은 한 장소에서 긴 간격으로 찍는 일이 드물어 10분이 현실적.
+// 이동 중 오인은 반경 조건이 걸러준다 (10분이면 도보로도 150m를 벗어남).
+// 추후 네이티브 자동 스캔에서는 옵션으로 더 엄격하게 줄 것.
+const DEFAULT_MIN_STAY_MS = 10 * 60 * 1000
 const DEFAULT_MAX_GAP_MS = 2 * 60 * 60 * 1000
 
 /**
