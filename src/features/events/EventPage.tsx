@@ -10,6 +10,7 @@ import { PhotosTab } from '@/features/photos/PhotosTab'
 import { VisitsTab } from '@/features/places/VisitsTab'
 import { useSession } from '@/features/auth/useSession'
 import { Images, MapPin, ReceiptText } from 'lucide-react'
+import { Skeleton } from '@/components/Skeleton'
 
 const TABS = [
   { key: 'settle', label: '정산', icon: ReceiptText },
@@ -47,7 +48,17 @@ export function EventPage() {
     },
   })
 
-  if (!event) return <p className="px-5 pt-24 text-center text-ink-soft">불러오는 중…</p>
+  if (!event) {
+    return (
+      <div className="px-5 pt-6">
+        <Skeleton className="h-6 w-24" />
+        <Skeleton className="mt-5 h-7 w-44" />
+        <Skeleton className="mt-2 h-4 w-60" />
+        <Skeleton className="mt-5 h-12 rounded-xl" />
+        <Skeleton className="mt-6 h-36 rounded-2xl" />
+      </div>
+    )
+  }
 
   const isCreator = session?.user.id === event.created_by
 

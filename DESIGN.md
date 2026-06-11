@@ -77,6 +77,11 @@ Fallback: `Pretendard Variable, Pretendard, -apple-system, "Apple SD Gothic Neo"
 - **Photo Grid**: 3열, 2px 간격, radius 없음(그리드) / 단독 사진은 radius 12px
 - **Toast**: 하단에서 16px 위, bg #1A202C 90%, 흰 텍스트 15px, radius 12px, **3초** 자동 소멸
   (40대 읽기 속도 고려). 화면당 1개, 새 토스트가 이전 토스트를 교체
+- **Icon**: lucide 라인 아이콘. 목록 아이콘은 Accent Container 원각 배지(44px) 안에 22px,
+  탭·불릿은 18~20px. 텍스트 라벨 항상 동반 (아이콘 단독 금지 원칙)
+- **Avatar**: 이니셜 원형, 사용자 id 기반 고정 팔레트 7색(흰 글자 대비 확보). 칩 24px, 프로필 52px
+- **Progress Bar**: 높이 8px 알약형, 트랙 Surface · 채움 Success — 정산 송금 완료율
+- **Skeleton**: 로딩 텍스트 대신 콘텐츠 형태의 Surface 펄스 블록
 
 ## Elevation
 

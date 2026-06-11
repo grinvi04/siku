@@ -4,6 +4,7 @@ import { Button } from '@/components/Button'
 import { getMyProfile } from '@/data/profiles'
 import { listMyGroups } from '@/data/groups'
 import { ChevronRight, UsersRound } from 'lucide-react'
+import { CardListSkeleton } from '@/components/Skeleton'
 
 export function HomePage() {
   const navigate = useNavigate()
@@ -23,7 +24,7 @@ export function HomePage() {
       </header>
 
       {isLoading ? (
-        <p className="mt-24 text-center text-ink-soft">불러오는 중…</p>
+        <CardListSkeleton />
       ) : groups && groups.length > 0 ? (
         <ul className="mt-5 space-y-2.5">
           {groups.map((group) => (

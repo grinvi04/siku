@@ -156,7 +156,7 @@ export function SettleTab({ event }: { event: EventDetail }) {
         <div className="flex items-center justify-between">
           <h2 className="text-[19px] font-semibold">쓴 돈</h2>
           {expenses && expenses.length > 0 && (
-            <span className="amount text-base">{formatKrw(total)}</span>
+            <span className="amount text-[19px]">{formatKrw(total)}</span>
           )}
         </div>
         {isLocked && (
@@ -236,6 +236,14 @@ export function SettleTab({ event }: { event: EventDetail }) {
                   {closed.transfers.some((t) => t.status === 'sent') &&
                     ` · ${closed.transfers.filter((t) => t.status === 'sent').length}건 확인 대기`}
                 </p>
+                <div className="mt-2 h-2 overflow-hidden rounded-full bg-surface">
+                  <div
+                    className="h-full rounded-full bg-success transition-all"
+                    style={{
+                      width: `${Math.round((closed.transfers.filter((t) => t.status === 'confirmed').length / closed.transfers.length) * 100)}%`,
+                    }}
+                  />
+                </div>
                 <ul className="mt-1">
                 {closed.transfers.map((t) => (
                   <TransferItem

@@ -16,7 +16,7 @@ export function Button({
 }: ButtonHTMLAttributes<HTMLButtonElement> & { variant?: Variant }) {
   return (
     <button
-      className={`h-13 w-full rounded-xl text-base font-semibold transition-colors ${styles[variant]} ${className}`}
+      className={`h-13 w-full rounded-xl text-base font-semibold transition-[background-color,transform] duration-100 active:scale-[0.98] ${styles[variant]} ${className}`}
       {...props}
     />
   )

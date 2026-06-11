@@ -8,6 +8,8 @@ import { formatDateRange } from '@/lib/format'
 import { useSession } from '@/features/auth/useSession'
 import { EVENT_TYPE_ICON } from '@/components/eventTypeIcon'
 import { CalendarPlus, ChevronRight } from 'lucide-react'
+import { Avatar } from '@/components/Avatar'
+import { CardListSkeleton } from '@/components/Skeleton'
 
 export function GroupPage() {
   const { groupId } = useParams<{ groupId: string }>()
@@ -61,12 +63,13 @@ export function GroupPage() {
           {group.members.map((m) => (
             <span
               key={m.user_id}
-              className={`rounded-full px-3 py-1.5 text-sm ${
+              className={`flex items-center gap-1.5 rounded-full py-1 pr-3 pl-1 text-sm ${
                 m.user_id === me
                   ? 'bg-primary-container font-semibold text-primary'
                   : 'bg-surface text-ink-soft'
               }`}
             >
+              <Avatar name={m.profile.display_name} id={m.user_id} size={24} />
               {m.profile.display_name}
             </span>
           ))}
@@ -84,7 +87,7 @@ export function GroupPage() {
       <section className="mt-8">
         <h2 className="text-[19px] font-semibold">지난 기록</h2>
         {isLoading ? (
-          <p className="mt-8 text-center text-ink-soft">불러오는 중…</p>
+          <CardListSkeleton />
         ) : events && events.length > 0 ? (
           // 월별 섹션으로 묶어 표시 — 기록이 쌓여도 훑기 쉽게
           events
