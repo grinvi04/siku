@@ -1,12 +1,12 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
-import { Button } from '../../components/Button'
-import { Chip } from '../../components/Chip'
-import { Input } from '../../components/Input'
-import { useToast } from '../../components/Toast'
-import { getGroup } from '../../data/groups'
-import { createEvent, type EventType } from '../../data/events'
+import { Button } from '@/components/Button'
+import { Chip } from '@/components/Chip'
+import { Input } from '@/components/Input'
+import { useToast } from '@/components/Toast'
+import { getGroup } from '@/data/groups'
+import { createEvent, type EventType } from '@/data/events'
 
 const TYPES: { value: EventType; label: string }[] = [
   { value: 'dinner', label: '저녁모임' },

@@ -1,8 +1,8 @@
 import { useQuery } from '@tanstack/react-query'
 import { Link, useNavigate } from 'react-router-dom'
-import { Button } from '../../components/Button'
-import { getMyProfile } from '../../data/profiles'
-import { listMyGroups } from '../../data/groups'
+import { Button } from '@/components/Button'
+import { getMyProfile } from '@/data/profiles'
+import { listMyGroups } from '@/data/groups'
 
 export function HomePage() {
   const navigate = useNavigate()

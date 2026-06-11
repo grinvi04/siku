@@ -1,4 +1,4 @@
-import type { Transfer } from '../core/types'
+import type { Transfer } from '@/core/types'
 import { supabase } from './supabase'
 
 export type TransferStatus = 'pending' | 'sent' | 'confirmed'

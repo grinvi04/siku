@@ -1,9 +1,9 @@
 import { useQuery } from '@tanstack/react-query'
 import { useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
-import { getEvent, type EventType } from '../../data/events'
-import { formatDateRange } from '../../lib/format'
-import { SettleTab } from '../expenses/SettleTab'
+import { getEvent, type EventType } from '@/data/events'
+import { formatDateRange } from '@/lib/format'
+import { SettleTab } from '@/features/expenses/SettleTab'
 
 const TYPE_LABEL: Record<EventType, string> = { dinner: '저녁모임', ride: '라이딩', trip: '여행' }
 

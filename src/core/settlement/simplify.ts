@@ -1,4 +1,4 @@
-import type { Balances, Transfer } from '../types'
+import type { Balances, Transfer } from '@/core/types'
 
 /**
  * 잔액을 최소 이체 목록으로 정리 (greedy: 최대 채무자 ↔ 최대 채권자 반복 매칭, 최대 n−1회).

@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
-import { ensureProfile } from '../../data/profiles'
-import { supabase } from '../../data/supabase'
+import { ensureProfile } from '@/data/profiles'
+import { supabase } from '@/data/supabase'
 
 /** 매직링크 리다이렉트 처리 — supabase-js의 토큰→세션 교환이 끝날 때까지 기다린다 */
 export function AuthCallbackPage() {

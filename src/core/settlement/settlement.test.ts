@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import type { Expense } from '../types'
+import type { Expense } from '@/core/types'
 import { computeBalances } from './balance'
 import { roundTransfers, simplifyBalances, settle } from './simplify'
 import { splitExpense } from './split'

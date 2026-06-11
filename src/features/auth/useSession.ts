@@ -1,6 +1,6 @@
 import type { Session } from '@supabase/supabase-js'
 import { useEffect, useState } from 'react'
-import { supabase } from '../../data/supabase'
+import { supabase } from '@/data/supabase'
 
 interface SessionState {
   session: Session | null

@@ -1,9 +1,9 @@
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { Navigate, useLocation, useNavigate, useParams } from 'react-router-dom'
-import { Button } from '../../components/Button'
-import { useToast } from '../../components/Toast'
-import { getInvitePreview, joinGroup } from '../../data/groups'
-import { useSession } from '../auth/useSession'
+import { Button } from '@/components/Button'
+import { useToast } from '@/components/Toast'
+import { getInvitePreview, joinGroup } from '@/data/groups'
+import { useSession } from '@/features/auth/useSession'
 
 export function InvitePage() {
   const { code } = useParams<{ code: string }>()

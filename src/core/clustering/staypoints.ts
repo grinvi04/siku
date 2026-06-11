@@ -1,4 +1,4 @@
-import type { PhotoPoint, StayPoint } from '../types'
+import type { PhotoPoint, StayPoint } from '@/core/types'
 import { distanceM } from './geo'
 
 export interface StayPointOptions {

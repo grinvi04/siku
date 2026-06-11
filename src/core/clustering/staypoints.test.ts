@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import type { PhotoPoint } from '../types'
+import type { PhotoPoint } from '@/core/types'
 import { distanceM } from './geo'
 import { assignPhotoToStayPoint, detectStayPoints } from './staypoints'
 

@@ -1,9 +1,9 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useNavigate } from 'react-router-dom'
-import { Button } from '../../components/Button'
-import { Input } from '../../components/Input'
-import { useToast } from '../../components/Toast'
-import { createGroup } from '../../data/groups'
+import { Button } from '@/components/Button'
+import { Input } from '@/components/Input'
+import { useToast } from '@/components/Toast'
+import { createGroup } from '@/data/groups'
 
 export function GroupNewPage() {
   const navigate = useNavigate()

@@ -1,9 +1,9 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useNavigate } from 'react-router-dom'
-import { Button } from '../../components/Button'
-import { Input } from '../../components/Input'
-import { useToast } from '../../components/Toast'
-import { updateMyProfile } from '../../data/profiles'
+import { Button } from '@/components/Button'
+import { Input } from '@/components/Input'
+import { useToast } from '@/components/Toast'
+import { updateMyProfile } from '@/data/profiles'
 
 /** 첫 로그인 온보딩 — 이메일 아이디 대신 부를 이름(닉네임)을 정한다 */
 export function WelcomePage() {

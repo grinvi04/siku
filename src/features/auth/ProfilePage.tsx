@@ -1,9 +1,9 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { Button } from '../../components/Button'
-import { Input } from '../../components/Input'
-import { useToast } from '../../components/Toast'
-import { getMyProfile, updateMyProfile } from '../../data/profiles'
-import { supabase } from '../../data/supabase'
+import { Button } from '@/components/Button'
+import { Input } from '@/components/Input'
+import { useToast } from '@/components/Toast'
+import { getMyProfile, updateMyProfile } from '@/data/profiles'
+import { supabase } from '@/data/supabase'
 
 /** 프로필 + 정산 계좌 입력 — 계좌는 정산 송금 안내에 그대로 노출된다 */
 export function ProfilePage() {

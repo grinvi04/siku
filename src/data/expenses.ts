@@ -1,4 +1,4 @@
-import type { Expense } from '../core/types'
+import type { Expense } from '@/core/types'
 import { supabase } from './supabase'
 
 export interface ExpenseRow {

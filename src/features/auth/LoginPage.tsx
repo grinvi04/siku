@@ -1,8 +1,8 @@
 import { useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
-import { Button } from '../../components/Button'
-import { Input } from '../../components/Input'
-import { sendMagicLink } from '../../data/supabase'
+import { Button } from '@/components/Button'
+import { Input } from '@/components/Input'
+import { sendMagicLink } from '@/data/supabase'
 import { isKakaoInAppBrowser, openInExternalBrowser } from './inAppBrowser'
 
 export function LoginPage() {

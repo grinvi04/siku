@@ -1,4 +1,4 @@
-import type { Expense } from '../types'
+import type { Expense } from '@/core/types'
 
 /**
  * 지출 1건을 참여자별 부담액으로 분할한다.

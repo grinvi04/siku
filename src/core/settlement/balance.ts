@@ -1,4 +1,4 @@
-import type { Balances, Expense, Transfer } from '../types'
+import type { Balances, Expense, Transfer } from '@/core/types'
 import { splitExpense } from './split'
 
 /**

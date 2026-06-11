@@ -1,12 +1,12 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useMemo, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { Button } from '../../components/Button'
-import { ConfirmDialog } from '../../components/ConfirmDialog'
-import { useToast } from '../../components/Toast'
-import { computeBalances, settle } from '../../core/settlement'
-import type { EventDetail } from '../../data/events'
-import { listExpenses, toCoreExpense } from '../../data/expenses'
+import { Button } from '@/components/Button'
+import { ConfirmDialog } from '@/components/ConfirmDialog'
+import { useToast } from '@/components/Toast'
+import { computeBalances, settle } from '@/core/settlement'
+import type { EventDetail } from '@/data/events'
+import { listExpenses, toCoreExpense } from '@/data/expenses'
 import {
   closeSettlement,
   getAccounts,
@@ -15,9 +15,9 @@ import {
   markTransfer,
   reopenSettlement,
   type TransferRow,
-} from '../../data/settlements'
-import { formatKrw } from '../../lib/format'
-import { useSession } from '../auth/useSession'
+} from '@/data/settlements'
+import { formatKrw } from '@/lib/format'
+import { useSession } from '@/features/auth/useSession'
 
 export function SettleTab({ event }: { event: EventDetail }) {
   const { session } = useSession()

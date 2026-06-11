@@ -1,14 +1,14 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
-import { Button } from '../../components/Button'
-import { Chip } from '../../components/Chip'
-import { ConfirmDialog } from '../../components/ConfirmDialog'
-import { Input } from '../../components/Input'
-import { useToast } from '../../components/Toast'
-import { getEvent } from '../../data/events'
-import { createExpense, deleteExpense, getExpense, updateExpense } from '../../data/expenses'
-import { useSession } from '../auth/useSession'
+import { Button } from '@/components/Button'
+import { Chip } from '@/components/Chip'
+import { ConfirmDialog } from '@/components/ConfirmDialog'
+import { Input } from '@/components/Input'
+import { useToast } from '@/components/Toast'
+import { getEvent } from '@/data/events'
+import { createExpense, deleteExpense, getExpense, updateExpense } from '@/data/expenses'
+import { useSession } from '@/features/auth/useSession'
 
 /** 지출 추가(/expenses/new)와 수정(/expenses/:expenseId/edit)을 한 폼으로 */
 export function ExpenseFormPage() {
