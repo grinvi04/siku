@@ -18,6 +18,8 @@ export function AuthCallbackPage() {
       if (done) return
       done = true
       try {
+        const { data: u } = await supabase.auth.getUser()
+        if (u.user?.email) localStorage.setItem('moim:lastEmail', u.user.email)
         const { created } = await ensureProfile()
         // 초대 등 딥링크가 있으면 그쪽 우선, 첫 로그인이면 닉네임 정하기로
         navigate(next ?? (created ? '/welcome' : '/'), { replace: true })

@@ -26,7 +26,11 @@ export function GroupNewPage() {
       onSubmit={(e) => {
         e.preventDefault()
         const name = String(new FormData(e.currentTarget).get('name') ?? '').trim()
-        if (name) create.mutate(name)
+        if (!name) {
+          toast('식구 이름을 입력해 주세요')
+          return
+        }
+        create.mutate(name)
       }}
     >
       <button type="button" className="h-11 text-base text-ink-soft" onClick={() => navigate(-1)}>
@@ -38,7 +42,7 @@ export function GroupNewPage() {
       </p>
 
       <div className="mt-6">
-        <Input id="name" name="name" label="식구 이름" placeholder="예: 목요 식구, 회사 동기들" required />
+        <Input id="name" name="name" label="식구 이름" placeholder="예: 목요 식구, 회사 동기들" maxLength={30} required />
       </div>
 
       <div className="mt-8">

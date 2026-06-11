@@ -262,7 +262,12 @@ export function VisitsTab({ event }: { event: EventDetail }) {
         className="mt-6 flex gap-2"
         onSubmit={(e) => {
           e.preventDefault()
-          if (manualName.trim()) addManual.mutate(manualName.trim())
+          const name = manualName.trim()
+            if (!name) {
+              toast('장소 이름을 입력해 주세요')
+              return
+            }
+            addManual.mutate(name)
         }}
       >
         <div className="flex-1">

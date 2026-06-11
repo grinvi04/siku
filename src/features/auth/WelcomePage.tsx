@@ -27,7 +27,11 @@ export function WelcomePage() {
       onSubmit={(e) => {
         e.preventDefault()
         const name = String(new FormData(e.currentTarget).get('display_name') ?? '').trim()
-        if (name) save.mutate(name)
+        if (!name) {
+          toast('닉네임을 입력해 주세요')
+          return
+        }
+        save.mutate(name)
       }}
     >
       <h1 className="text-[28px] leading-[1.35] font-bold">

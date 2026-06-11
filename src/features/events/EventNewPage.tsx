@@ -53,7 +53,18 @@ export function EventNewPage() {
     const title = String(form.get('title') ?? '').trim()
     const startDate = String(form.get('start_date') ?? '')
     const endDate = String(form.get('end_date') ?? '')
-    if (!title || !startDate) return
+    if (!title) {
+      toast('기록 이름을 입력해 주세요')
+      return
+    }
+    if (!startDate) {
+      toast('시작일을 선택해 주세요')
+      return
+    }
+    if (endDate && endDate < startDate) {
+      toast('종료일이 시작일보다 빨라요. 날짜를 확인해 주세요')
+      return
+    }
     if (participantIds.size === 0) {
       toast('함께한 사람을 한 명 이상 선택해 주세요')
       return
@@ -89,7 +100,7 @@ export function EventNewPage() {
           </div>
         </div>
 
-        <Input id="title" name="title" label="이름" placeholder="예: 6월 정기모임, 제주 라이딩" required />
+        <Input id="title" name="title" label="이름" placeholder="예: 6월 정기모임, 제주 라이딩" maxLength={40} required />
 
         <div className="grid grid-cols-2 gap-3">
           <Input id="start_date" name="start_date" type="date" label="시작일" defaultValue={today} required />

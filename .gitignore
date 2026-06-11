@@ -35,3 +35,7 @@ dist-ssr
 *.sw?
 *.HEIC
 .vercel
+
+# Playwright
+test-results/
+playwright-report/

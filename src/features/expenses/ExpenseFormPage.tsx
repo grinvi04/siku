@@ -119,9 +119,20 @@ export function ExpenseFormPage() {
     const form = new FormData(e.currentTarget)
     const title = String(form.get('title') ?? '').trim()
     const raw = Number(String(form.get('amount') ?? '').replaceAll(',', ''))
-    if (!title || !payer) return
+    if (!title) {
+      toast('내용을 입력해 주세요')
+      return
+    }
+    if (!payer) {
+      toast(refund ? '누가 돌려받았는지 선택해 주세요' : '누가 결제했는지 선택해 주세요')
+      return
+    }
     if (!Number.isInteger(raw) || raw <= 0) {
       toast('금액은 1원 이상 숫자로 입력해 주세요')
+      return
+    }
+    if (raw >= 100_000_000) {
+      toast('금액이 너무 커요. 1억 원 미만으로 입력해 주세요')
       return
     }
     if (participantIds.size === 0) {
@@ -190,6 +201,7 @@ export function ExpenseFormPage() {
           name="title"
           label="내용"
           placeholder={refund ? '예: 숙소 보증금 환급' : '예: 저녁 식사, 숙소'}
+          maxLength={40}
           value={title}
           onChange={(e) => setTitleValue(e.target.value)}
           required

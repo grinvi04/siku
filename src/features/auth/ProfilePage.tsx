@@ -14,18 +14,26 @@ export function ProfilePage() {
   const { data: profile, isLoading } = useQuery({ queryKey: ['myProfile'], queryFn: getMyProfile })
 
   const save = useMutation({
-    mutationFn: (form: FormData) =>
-      updateMyProfile({
-        display_name: String(form.get('display_name') ?? '').trim(),
+    mutationFn: (form: FormData) => {
+      const displayName = String(form.get('display_name') ?? '').trim()
+      if (!displayName) throw new Error('EMPTY_NAME')
+      return updateMyProfile({
+        display_name: displayName,
         bank_name: String(form.get('bank_name') ?? '').trim() || null,
         account_number: String(form.get('account_number') ?? '').trim() || null,
         account_holder: String(form.get('account_holder') ?? '').trim() || null,
-      }),
+      })
+    },
     onSuccess: () => {
       void queryClient.invalidateQueries({ queryKey: ['myProfile'] })
       toast('저장했어요')
     },
-    onError: () => toast('저장에 실패했어요. 다시 시도해 주세요'),
+    onError: (e) =>
+      toast(
+        e instanceof Error && e.message === 'EMPTY_NAME'
+          ? '닉네임을 입력해 주세요'
+          : '저장에 실패했어요. 다시 시도해 주세요',
+      ),
   })
 
   if (isLoading || !profile) {

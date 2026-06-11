@@ -47,7 +47,14 @@ export function EventEditPage() {
     const title = String(form.get('title') ?? '').trim()
     const startDate = String(form.get('start_date') ?? '')
     const endDate = String(form.get('end_date') ?? '')
-    if (!title || !startDate) return
+    if (!title) {
+      toast('기록 이름을 입력해 주세요')
+      return
+    }
+    if (endDate && endDate < startDate) {
+      toast('종료일이 시작일보다 빨라요. 날짜를 확인해 주세요')
+      return
+    }
     save.mutate({
       title,
       type,
@@ -82,7 +89,7 @@ export function EventEditPage() {
           </div>
         </div>
 
-        <Input id="title" name="title" label="이름" defaultValue={event.title} required />
+        <Input id="title" name="title" label="이름" defaultValue={event.title} maxLength={40} required />
 
         <div className="grid grid-cols-2 gap-3">
           <Input

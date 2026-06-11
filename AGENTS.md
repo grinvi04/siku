@@ -32,7 +32,7 @@
 ## 빌드·테스트 명령
 
 - 품질 검증: `npm run lint`
-- 테스트: `npm test` (vitest)
+- 테스트: `npm test` (vitest 단위) / `npm run test:e2e` (Playwright — dev 서버 자동 기동)
 - 빌드: `npm run build`
 - 개발 서버: `npm run dev`
 
