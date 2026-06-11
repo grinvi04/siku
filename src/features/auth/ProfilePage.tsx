@@ -82,6 +82,7 @@ export function ProfilePage() {
           로그아웃
         </Button>
       </div>
+      <p className="mt-10 text-center text-sm text-ink-soft">버전 {__BUILD_TIME__}</p>
     </form>
   )
 }
