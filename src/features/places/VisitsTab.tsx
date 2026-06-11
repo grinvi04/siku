@@ -17,7 +17,33 @@ import {
   replaceSuggestedVisits,
   type VisitRow,
 } from '@/data/visits'
+import { fetchNearbyPlaces } from '@/data/nearby'
 import { formatDate, formatTimeRange } from '@/lib/format'
+
+/** 자동 인식된 좌표 주변 장소 이름 후보 — 탭하면 이름이 채워진다 */
+function NearbyNameChips({ visit, onPick }: { visit: VisitRow; onPick: (name: string) => void }) {
+  const { data: places } = useQuery({
+    queryKey: ['nearby', visit.id],
+    queryFn: () => fetchNearbyPlaces(visit.lat!, visit.lng!),
+    enabled: visit.lat != null && visit.lng != null,
+    staleTime: Infinity,
+  })
+  if (!places || places.length === 0) return null
+  return (
+    <div className="mt-2 flex flex-wrap gap-1.5">
+      {places.map((p) => (
+        <button
+          key={p.name}
+          type="button"
+          className="rounded-full bg-white px-3 py-1.5 text-sm text-ink-soft"
+          onClick={() => onPick(p.name)}
+        >
+          {p.name} <span className="text-ink-faint">{p.distance}m</span>
+        </button>
+      ))}
+    </div>
+  )
+}
 
 const TOLERANCE_MS = 10 * 60 * 1000
 
@@ -166,6 +192,10 @@ export function VisitsTab({ event }: { event: EventDetail }) {
                   onChange={(e) =>
                     setNameDrafts((prev) => ({ ...prev, [visit.id]: e.target.value }))
                   }
+                />
+                <NearbyNameChips
+                  visit={visit}
+                  onPick={(name) => setNameDrafts((prev) => ({ ...prev, [visit.id]: name }))}
                 />
               </div>
               <div className="mt-3 grid grid-cols-2 gap-2">
