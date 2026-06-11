@@ -2,6 +2,7 @@ import { Navigate, Outlet, Route, Routes, useLocation } from 'react-router-dom'
 import { AuthCallbackPage } from './features/auth/AuthCallbackPage'
 import { LoginPage } from './features/auth/LoginPage'
 import { ProfilePage } from './features/auth/ProfilePage'
+import { WelcomePage } from './features/auth/WelcomePage'
 import { useSession } from './features/auth/useSession'
 import { EventNewPage } from './features/events/EventNewPage'
 import { EventPage } from './features/events/EventPage'
@@ -30,6 +31,7 @@ function App() {
         <Route path="/invite/:code" element={<InvitePage />} />
         <Route element={<RequireAuth />}>
           <Route path="/" element={<HomePage />} />
+          <Route path="/welcome" element={<WelcomePage />} />
           <Route path="/profile" element={<ProfilePage />} />
           <Route path="/groups/new" element={<GroupNewPage />} />
           <Route path="/groups/:groupId" element={<GroupPage />} />

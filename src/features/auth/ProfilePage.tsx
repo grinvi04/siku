@@ -45,7 +45,8 @@ export function ProfilePage() {
         <Input
           id="display_name"
           name="display_name"
-          label="이름"
+          label="닉네임"
+          maxLength={20}
           defaultValue={profile.display_name}
           required
         />

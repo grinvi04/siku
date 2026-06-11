@@ -18,8 +18,8 @@ export function AuthCallbackPage() {
       done = true
       try {
         const { created } = await ensureProfile()
-        // 초대 등 딥링크가 있으면 그쪽 우선, 첫 로그인이면 이름·계좌 설정으로
-        navigate(next ?? (created ? '/profile' : '/'), { replace: true })
+        // 초대 등 딥링크가 있으면 그쪽 우선, 첫 로그인이면 닉네임 정하기로
+        navigate(next ?? (created ? '/welcome' : '/'), { replace: true })
       } catch {
         setError('로그인 처리에 실패했어요. 다시 시도해 주세요')
       }
