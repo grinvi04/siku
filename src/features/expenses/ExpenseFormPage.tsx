@@ -237,7 +237,10 @@ export function ExpenseFormPage() {
               </Chip>
             ))}
           </div>
-          <p className="mt-1.5 text-sm text-ink-soft">선택한 사람들끼리 똑같이 나눠요.</p>
+          <p className="mt-1.5 text-sm leading-[1.5] text-ink-soft">
+            선택한 사람들끼리 똑같이 나눠요. 결제한 사람도 먹었다면 포함하세요 —
+            그 몫은 받을 금액에서 자동으로 빠져요.
+          </p>
         </div>
       </div>
 
