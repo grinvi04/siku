@@ -8,14 +8,16 @@ export interface StayPointOptions {
   minStayMs?: number
   /** 연속 사진 사이 최대 간격 (밀리초) — 초과하면 같은 자리여도 별도 방문 */
   maxGapMs?: number
+  /** 방문 후보가 되기 위한 최소 사진 수 */
+  minPhotos?: number
 }
 
 const DEFAULT_RADIUS_M = 150
-// 모임 사진은 한 장소에서 1~2분 사이에 연달아 찍히는 경우가 많다.
-// 체류 시간 대신 "같은 자리 사진 2장 이상"을 기본 기준으로 삼고(오탐은 사용자가 거절),
-// 시간 기준이 필요한 경우(네이티브 자동 스캔 등)는 minStayMs 옵션으로 강화한다.
+// 한 장소에서 사진을 1장만 찍는 경우도 흔하다 — 모든 GPS 사진을 방문 후보로 삼고
+// 오탐(이동 중 스냅)은 사용자가 '아니에요'로 거절한다. 제안-승인 구조라 비용이 낮다.
+// 네이티브 자동 스캔처럼 입력이 커지면 minStayMs·minPhotos 옵션으로 강화한다.
 const DEFAULT_MIN_STAY_MS = 0
-const MIN_PHOTOS = 2
+const DEFAULT_MIN_PHOTOS = 1
 // 모임은 4~5시간 이어지며 사진은 시작·끝에만 찍히는 경우가 많아 넉넉하게 6시간.
 // (다른 날짜의 같은 장소 사진은 여전히 분리됨)
 const DEFAULT_MAX_GAP_MS = 6 * 60 * 60 * 1000
@@ -35,6 +37,7 @@ export function detectStayPoints(photos: PhotoPoint[], options: StayPointOptions
   const radiusM = options.radiusM ?? DEFAULT_RADIUS_M
   const minStayMs = options.minStayMs ?? DEFAULT_MIN_STAY_MS
   const maxGapMs = options.maxGapMs ?? DEFAULT_MAX_GAP_MS
+  const minPhotos = options.minPhotos ?? DEFAULT_MIN_PHOTOS
   const sorted = [...photos].sort((a, b) => a.takenAt - b.takenAt || (a.id < b.id ? -1 : 1))
 
   const stayPoints: StayPoint[] = []
@@ -43,7 +46,7 @@ export function detectStayPoints(photos: PhotoPoint[], options: StayPointOptions
   const flush = () => {
     if (cluster.length === 0) return
     const duration = cluster[cluster.length - 1].takenAt - cluster[0].takenAt
-    if (cluster.length >= MIN_PHOTOS && duration >= minStayMs) {
+    if (cluster.length >= minPhotos && duration >= minStayMs) {
       stayPoints.push({
         lat: cluster.reduce((s, p) => s + p.lat, 0) / cluster.length,
         lng: cluster.reduce((s, p) => s + p.lng, 0) / cluster.length,

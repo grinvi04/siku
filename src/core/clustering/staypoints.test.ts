@@ -29,7 +29,7 @@ describe('detectStayPoints', () => {
     expect(result[0].endedAt - result[0].startedAt).toBe(40 * MIN)
   })
 
-  it('이동 중 사진은 각자 다른 위치라 묶이지 않는다', () => {
+  it('이동 중 사진은 각각 1장짜리 후보가 된다 (사용자가 거절로 정리)', () => {
     // 자전거로 이동하며 10분 간격, 각각 다른 위치(>150m)
     const result = detectStayPoints([
       photo('p1', 0),
@@ -37,20 +37,28 @@ describe('detectStayPoints', () => {
       photo('p3', 20, 0.01),
       photo('p4', 30, 0.015),
     ])
-    expect(result).toHaveLength(0)
+    expect(result).toHaveLength(4)
+    expect(result.every((s) => s.photoIds.length === 1)).toBe(true)
   })
 
-  it('식당(40분) → 이동 → 카페(50분) → 두 방문으로 분리', () => {
+  it('minPhotos 옵션으로 1장짜리 후보를 걸러낼 수 있다', () => {
+    const result = detectStayPoints(
+      [photo('p1', 0), photo('p2', 10, 0.005), photo('a1', 30, 0.01), photo('a2', 35, 0.01)],
+      { minPhotos: 2 },
+    )
+    expect(result).toHaveLength(1)
+    expect(result[0].photoIds).toEqual(['a1', 'a2'])
+  })
+
+  it('식당 → 이동(1장) → 카페 → 세 후보로 분리, 위치별 사진이 올바르게 묶인다', () => {
     const result = detectStayPoints([
       photo('r1', 0),
       photo('r2', 40),
-      photo('move', 50, 0.005), // 이동 중 1장
+      photo('move', 50, 0.005), // 이동 중 1장 — 1장짜리 후보
       photo('c1', 60, 0.01),
       photo('c2', 110, 0.01),
     ])
-    expect(result).toHaveLength(2)
-    expect(result[0].photoIds).toEqual(['r1', 'r2'])
-    expect(result[1].photoIds).toEqual(['c1', 'c2'])
+    expect(result.map((s) => s.photoIds)).toEqual([['r1', 'r2'], ['move'], ['c1', 'c2']])
   })
 
   it('같은 장소 재방문은 별도 방문으로 기록된다', () => {
@@ -73,8 +81,8 @@ describe('detectStayPoints', () => {
     )
   })
 
-  it('사진 1장뿐인 장소는 체류시간 0 → 방문으로 잡지 않는다 (알려진 한계)', () => {
-    expect(detectStayPoints([photo('p1', 0)])).toHaveLength(0)
+  it('사진 1장뿐인 장소도 방문 후보가 된다', () => {
+    expect(detectStayPoints([photo('p1', 0)])).toHaveLength(1)
   })
 })
 
@@ -92,7 +100,7 @@ describe('detectStayPoints — 경계·옵션', () => {
     const inside = detectStayPoints([photo('p1', 0), photo('p2', 35, 0.00134)])
     expect(inside).toHaveLength(1)
     const outside = detectStayPoints([photo('p1', 0), photo('p2', 35, 0.0014), photo('p3', 70, 0.0014)])
-    expect(outside.map((s) => s.photoIds)).toEqual([['p2', 'p3']])
+    expect(outside.map((s) => s.photoIds)).toEqual([['p1'], ['p2', 'p3']])
   })
 
   it('minStayMs 옵션으로 시간 기준을 강화할 수 있다 (네이티브 자동 스캔 대비)', () => {
@@ -109,8 +117,7 @@ describe('detectStayPoints — 경계·옵션', () => {
     // 10분마다 ~55m씩 이동: 앵커에서 165m 벗어나는 4번째 사진에서 분리
     const drift = [0, 1, 2, 3].map((i) => photo(`p${i}`, i * 10, i * 0.0005))
     const result = detectStayPoints(drift)
-    expect(result).toHaveLength(1) // 앵커 반경 안의 앞 3장만 한 방문 (20분 체류)
-    expect(result[0].photoIds).toEqual(['p0', 'p1', 'p2'])
+    expect(result.map((s) => s.photoIds)).toEqual([['p0', 'p1', 'p2'], ['p3']])
   })
 
   it('같은 자리여도 시간 간격이 크면(6시간 초과) 별도 방문', () => {
@@ -127,7 +134,7 @@ describe('detectStayPoints — 경계·옵션', () => {
 
   it('maxGapMs 옵션으로 간격 기준을 조정할 수 있다', () => {
     const photos = [photo('p1', 0), photo('p2', 40)]
-    expect(detectStayPoints(photos, { maxGapMs: 30 * MIN })).toHaveLength(0) // 40분 간격 → 분리 → 각각 0분
+    expect(detectStayPoints(photos, { maxGapMs: 30 * MIN })).toHaveLength(2) // 분리 → 1장짜리 둘
     expect(detectStayPoints(photos, { maxGapMs: 60 * MIN })).toHaveLength(1)
   })
 })

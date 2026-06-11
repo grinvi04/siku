@@ -92,11 +92,13 @@ export function SettleTab({ event }: { event: EventDetail }) {
       invalidate()
       toast('정산을 확정했어요. 이제 송금만 하면 돼요')
     },
-    onError: (e) => {
+    onError: async (e) => {
       // 다른 멤버가 먼저 확정한 경우 — 오류가 아니라 상태가 바뀐 것
       if (e instanceof Error && e.message.includes('이미 확정된')) {
+        const latest = await getClosedSettlement(event.id).catch(() => null)
         invalidate()
-        toast('다른 멤버가 이미 정산을 확정했어요. 최신 내용을 불러왔어요')
+        const who = latest?.closed_by ? `${nameOf(latest.closed_by)}님이` : '다른 멤버가'
+        toast(`${who} 이미 정산을 확정했어요. 최신 내용을 불러왔어요`)
       } else {
         toast('정산을 확정하지 못했어요. 다시 시도해 주세요')
       }
@@ -219,6 +221,10 @@ export function SettleTab({ event }: { event: EventDetail }) {
 
         {closedLoading ? null : closed ? (
           <>
+            <p className="mt-1 text-sm text-ink-soft">
+              {formatDateTime(closed.created_at)}
+              {closed.closed_by && ` · ${nameOf(closed.closed_by)}님이 확정했어요`}
+            </p>
             {closed.transfers.length === 0 ? (
               <p className="mt-2 text-base text-ink-soft">주고받을 돈 없이 정산이 끝났어요.</p>
             ) : (

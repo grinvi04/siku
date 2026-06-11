@@ -16,6 +16,7 @@ export interface TransferRow {
 export interface ClosedSettlement {
   id: string
   created_at: string
+  closed_by: string | null
   transfers: TransferRow[]
 }
 
@@ -23,7 +24,7 @@ export interface ClosedSettlement {
 export async function getClosedSettlement(eventId: string): Promise<ClosedSettlement | null> {
   const { data, error } = await supabase
     .from('settlements')
-    .select('id, created_at, settlement_transfers(id, from_user, to_user, amount, status, sent_at, confirmed_at)')
+    .select('id, created_at, closed_by, settlement_transfers(id, from_user, to_user, amount, status, sent_at, confirmed_at)')
     .eq('event_id', eventId)
     .eq('status', 'closed')
     .maybeSingle()
@@ -32,6 +33,7 @@ export async function getClosedSettlement(eventId: string): Promise<ClosedSettle
   return {
     id: data.id,
     created_at: data.created_at,
+    closed_by: data.closed_by,
     transfers: data.settlement_transfers as unknown as TransferRow[],
   }
 }
