@@ -1,28 +1,30 @@
 import { useEffect, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useSearchParams } from 'react-router-dom'
 import { ensureProfile } from '../../data/profiles'
 import { supabase } from '../../data/supabase'
 
-/** OAuth 리다이렉트 처리 — supabase-js의 URL 코드→세션 교환이 끝날 때까지 기다린다 */
+/** 매직링크 리다이렉트 처리 — supabase-js의 토큰→세션 교환이 끝날 때까지 기다린다 */
 export function AuthCallbackPage() {
   const navigate = useNavigate()
+  const [searchParams] = useSearchParams()
   const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
     let done = false
+    const next = searchParams.get('next')
 
     const complete = async () => {
       if (done) return
       done = true
       try {
-        await ensureProfile()
-        navigate('/', { replace: true })
+        const { created } = await ensureProfile()
+        // 초대 등 딥링크가 있으면 그쪽 우선, 첫 로그인이면 이름·계좌 설정으로
+        navigate(next ?? (created ? '/profile' : '/'), { replace: true })
       } catch {
-        setError('로그인 처리에 실패했어요. 다시 시도해 주세요.')
+        setError('로그인 처리에 실패했어요. 다시 시도해 주세요')
       }
     }
 
-    // 이미 세션이 있으면 바로, 없으면 교환 완료(SIGNED_IN) 이벤트를 기다림
     supabase.auth.getSession().then(({ data }) => {
       if (data.session) void complete()
     })
@@ -30,19 +32,27 @@ export function AuthCallbackPage() {
       if (event === 'SIGNED_IN') void complete()
     })
     const timeout = setTimeout(() => {
-      if (!done) setError('로그인 처리에 실패했어요. 다시 시도해 주세요.')
+      if (!done) setError('링크가 만료됐을 수 있어요. 로그인 링크를 다시 받아 주세요')
     }, 10_000)
 
     return () => {
       sub.subscription.unsubscribe()
       clearTimeout(timeout)
     }
-  }, [navigate])
+  }, [navigate, searchParams])
 
   return (
     <div className="flex min-h-dvh items-center justify-center px-5">
       {error ? (
-        <p className="text-center text-base text-ink-soft">{error}</p>
+        <div className="text-center">
+          <p className="text-base text-ink-soft">{error}</p>
+          <button
+            className="mt-4 text-base font-semibold text-primary"
+            onClick={() => navigate('/login', { replace: true })}
+          >
+            로그인으로 돌아가기
+          </button>
+        </div>
       ) : (
         <p className="text-base text-ink-soft">로그인하고 있어요…</p>
       )}

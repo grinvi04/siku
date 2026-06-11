@@ -9,13 +9,15 @@ if (!url || !anonKey) {
 
 export const supabase = createClient(url, anonKey)
 
-/** 카카오 로그인 — 비즈 앱 미전환 전제: 이메일 동의항목 없이 닉네임·프로필만 요청 */
-export function signInWithKakao() {
-  return supabase.auth.signInWithOAuth({
-    provider: 'kakao',
-    options: {
-      redirectTo: `${window.location.origin}/auth/callback`,
-      scopes: 'profile_nickname profile_image',
-    },
+/**
+ * 이메일 매직링크 로그인 — 1회용·만료 토큰, 비밀번호 없음.
+ * @param next 로그인 후 돌아갈 경로 (초대 링크 등 딥링크)
+ */
+export function sendMagicLink(email: string, next?: string) {
+  const redirect = new URL('/auth/callback', window.location.origin)
+  if (next) redirect.searchParams.set('next', next)
+  return supabase.auth.signInWithOtp({
+    email,
+    options: { emailRedirectTo: redirect.toString() },
   })
 }

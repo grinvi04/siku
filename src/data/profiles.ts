@@ -21,22 +21,21 @@ export async function getMyProfile(): Promise<Profile | null> {
   return data
 }
 
-/** 첫 로그인 시 카카오 메타데이터(닉네임·프로필 사진)로 프로필 생성 */
-export async function ensureProfile(): Promise<Profile> {
+/** 첫 로그인 시 프로필 생성 — 이름 기본값은 이메일 앞부분, 내 정보에서 수정 */
+export async function ensureProfile(): Promise<{ profile: Profile; created: boolean }> {
   const existing = await getMyProfile()
-  if (existing) return existing
+  if (existing) return { profile: existing, created: false }
 
   const { data: auth } = await supabase.auth.getUser()
   if (!auth.user) throw new Error('로그인이 필요합니다.')
-  const meta = auth.user.user_metadata
   const profile = {
     id: auth.user.id,
-    display_name: (meta.name ?? meta.preferred_username ?? '이름없음') as string,
-    avatar_url: (meta.avatar_url ?? meta.picture ?? null) as string | null,
+    display_name: auth.user.email?.split('@')[0] ?? '이름없음',
+    avatar_url: null,
   }
   const { data, error } = await supabase.from('profiles').insert(profile).select().single()
   if (error) throw error
-  return data
+  return { profile: data, created: true }
 }
 
 export async function updateMyProfile(

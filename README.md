@@ -26,19 +26,16 @@ npm run dev
 2. SQL Editor에서 `supabase/migrations/` 파일을 번호 순서대로 실행
    (또는 `npx supabase db push` — supabase CLI 링크 후)
 
-## 카카오 로그인 셋업 (1회)
+## 로그인 셋업 (이메일 매직링크, 1회)
 
-> ⚠️ 비즈 앱 미전환 전제 — 이메일 동의항목을 사용하지 않는다.
+비밀번호 없이 메일로 받은 1회용 링크(만료 있음)로 로그인한다. 외부 콘솔 의존 없음.
 
-1. [Kakao Developers](https://developers.kakao.com) → 애플리케이션 추가
-2. 앱 설정 → 플랫폼 → Web에 도메인 등록 (로컬: `http://localhost:5173`, 배포: Vercel 도메인)
-3. 제품 설정 → 카카오 로그인 활성화, Redirect URI에
-   `https://<프로젝트ref>.supabase.co/auth/v1/callback` 등록
-4. 동의항목: **닉네임, 프로필 사진만** 설정 (이메일 사용 안 함)
-5. Supabase 대시보드 → Authentication → Providers → Kakao 활성화,
-   카카오 REST API 키 + Client Secret 입력
-6. Supabase → Authentication → URL Configuration → Redirect URLs에
-   `http://localhost:5173/auth/callback`과 배포 도메인 추가
+1. Supabase → Authentication → Providers → **Email** 활성화 확인 (기본 활성),
+   "Confirm email" 설정은 매직링크 흐름 그대로 사용
+2. Authentication → URL Configuration:
+   - Site URL: 배포 도메인 (로컬 개발 시 `http://localhost:5173`)
+   - Redirect URLs에 `http://localhost:5173/auth/callback`과 `https://<배포도메인>/auth/callback` 추가
+3. (운영 시 권장) Supabase 기본 메일 발송은 시간당 횟수 제한이 있으므로
+   Authentication → SMTP Settings에 자체 SMTP(예: Resend 무료 티어) 연결
 
-**M1 검증 항목**: 이메일 없는 카카오 계정으로 가입이 되는지 첫 로그인에서 확인.
-막히면 폴백: ① 카카오 OIDC + `signInWithIdToken` ② 이메일 매직링크.
+> 소셜 로그인(카카오 등)은 필요해지면 Supabase Provider 추가로 확장 — 현 코드는 auth 레이어만 바꾸면 됨.
