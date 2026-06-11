@@ -37,6 +37,11 @@ describe('parseReceiptText', () => {
     expect(parseReceiptText(text).amount).toBe(35000)
   })
 
+  it('콤마 없이 원 접미사만 있는 금액도 폴백으로 잡는다', () => {
+    const text = `분식왕\n김밥 3500원\n라면 4500원\n8000원`
+    expect(parseReceiptText(text).amount).toBe(8000)
+  })
+
   it('한국어 날짜 표기(년월일)도 인식', () => {
     expect(parseReceiptText('2026년 6월 9일 결제').date).toBe('2026-06-09')
   })

@@ -50,12 +50,15 @@ function findAmount(lines: string[]): number | null {
       }
     }
   }
-  // 폴백: 콤마 포맷된 숫자 중 최댓값 (사업자번호·카드번호·전화번호는 콤마가 없다)
-  const commaNumbers = lines
-    .flatMap((line) => stripDatesAndTimes(line).match(/\d{1,3}(?:,\d{3})+/g) ?? [])
+  // 폴백: 콤마 포맷(1,000) 또는 '원' 접미 숫자 중 최댓값
+  // (사업자번호·카드번호·전화번호는 콤마도 '원'도 붙지 않는다)
+  const candidates = lines
+    .flatMap(
+      (line) => stripDatesAndTimes(line).match(/\d{1,3}(?:,\d{3})+|\d{3,8}(?=\s*원)/g) ?? [],
+    )
     .map((m) => parseInt(m.replaceAll(',', ''), 10))
     .filter((n) => n >= 100 && n < 100_000_000)
-  return commaNumbers.length > 0 ? Math.max(...commaNumbers) : null
+  return candidates.length > 0 ? Math.max(...candidates) : null
 }
 
 function findDate(text: string): string | null {
