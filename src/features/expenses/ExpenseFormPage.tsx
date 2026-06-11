@@ -248,7 +248,11 @@ export function ExpenseFormPage() {
         <Button type="submit" disabled={save.isPending}>
           {save.isPending ? '저장하고 있어요…' : isEdit ? '고치기' : '추가'}
         </Button>
-        {isEdit && (
+        {/* 삭제는 작성자·결제자만 (RLS와 동일) — 권한 없는 사람에겐 버튼을 보이지 않음 */}
+        {isEdit &&
+          existing &&
+          (existing.created_by === session?.user.id ||
+            existing.payer_id === session?.user.id) && (
           <button
             type="button"
             className="h-11 w-full text-base font-semibold text-pay"
