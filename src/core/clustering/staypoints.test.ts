@@ -113,10 +113,28 @@ describe('detectStayPoints — 경계·옵션', () => {
     expect(detectStayPoints([photo('p1', 5), photo('p2', 5), photo('p3', 5)])).toHaveLength(0)
   })
 
-  it('점진 이동(드리프트): 각 사진이 갱신된 중심 반경 안이면 한 클러스터로 유지', () => {
-    // 10분마다 ~55m씩 이동 — 누적 이동은 150m를 넘지만 중심이 따라가므로 단일 클러스터 (알고리즘 특성)
+  it('점진 이동(드리프트)은 앵커 기준으로 분리 — 동네 전체가 한 방문이 되지 않는다', () => {
+    // 10분마다 ~55m씩 이동: 앵커에서 165m 벗어나는 4번째 사진에서 분리
     const drift = [0, 1, 2, 3].map((i) => photo(`p${i}`, i * 10, i * 0.0005))
-    expect(detectStayPoints(drift)).toHaveLength(1)
+    expect(detectStayPoints(drift)).toHaveLength(0) // 분리된 조각들은 모두 30분 미만
+  })
+
+  it('같은 자리여도 시간 간격이 크면 별도 방문 (아침의 집 ≠ 저녁의 집)', () => {
+    const result = detectStayPoints([
+      photo('m1', 0),
+      photo('m2', 40),
+      photo('e1', 340), // 5시간 뒤 같은 자리
+      photo('e2', 380),
+    ])
+    expect(result).toHaveLength(2)
+    expect(result[0].photoIds).toEqual(['m1', 'm2'])
+    expect(result[1].photoIds).toEqual(['e1', 'e2'])
+  })
+
+  it('maxGapMs 옵션으로 간격 기준을 조정할 수 있다', () => {
+    const photos = [photo('p1', 0), photo('p2', 40)]
+    expect(detectStayPoints(photos, { maxGapMs: 30 * MIN })).toHaveLength(0) // 40분 간격 → 분리 → 각각 0분
+    expect(detectStayPoints(photos, { maxGapMs: 60 * MIN })).toHaveLength(1)
   })
 })
 

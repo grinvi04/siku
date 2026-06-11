@@ -48,6 +48,14 @@ export async function getPhotoUrl(storagePath: string): Promise<string> {
   return data.signedUrl
 }
 
+function friendlyUploadError(e: unknown): string {
+  const message = e instanceof Error ? e.message : String(e)
+  if (/maximum allowed size|exceeded/i.test(message)) return '용량 초과'
+  if (/mime|content.?type/i.test(message)) return '지원하지 않는 형식'
+  if (/decod|변환/i.test(message)) return '이미지를 읽지 못함'
+  return message.slice(0, 60)
+}
+
 /**
  * 사진들을 순차 업로드 (iOS 메모리 한계 — 동시 리사이즈 금지).
  * storage 업로드 성공 후 DB row를 만들고, row 생성이 실패하면 storage를 정리해 고아를 막는다.
@@ -57,27 +65,29 @@ export async function uploadPhotos(
   eventId: string,
   files: File[],
   onProgress?: (done: number, total: number) => void,
-): Promise<{ uploaded: number; failed: number }> {
+): Promise<{ uploaded: number; failed: number; reasons: string[] }> {
   const { data: auth } = await supabase.auth.getUser()
   if (!auth.user) throw new Error('로그인이 필요합니다.')
 
   let uploaded = 0
   let failed = 0
+  const reasons: string[] = []
   for (const file of files) {
     try {
       const processed = await processPhoto(file)
+      const ext = processed.main.blob.type === 'image/webp' ? 'webp' : 'jpg'
       const id = crypto.randomUUID()
       const basePath = `${groupId}/${eventId}/${id}`
-      const storagePath = `${basePath}.webp`
-      const thumbPath = `${basePath}_thumb.webp`
+      const storagePath = `${basePath}.${ext}`
+      const thumbPath = `${basePath}_thumb.${ext}`
 
       const { error: mainError } = await supabase.storage
         .from('photos')
-        .upload(storagePath, processed.main.blob, { contentType: 'image/webp' })
+        .upload(storagePath, processed.main.blob, { contentType: processed.main.blob.type })
       if (mainError) throw mainError
       const { error: thumbError } = await supabase.storage
         .from('photos')
-        .upload(thumbPath, processed.thumb.blob, { contentType: 'image/webp' })
+        .upload(thumbPath, processed.thumb.blob, { contentType: processed.thumb.blob.type })
       if (thumbError) {
         await supabase.storage.from('photos').remove([storagePath])
         throw thumbError
@@ -101,16 +111,27 @@ export async function uploadPhotos(
         throw rowError
       }
       uploaded++
-    } catch {
+    } catch (e) {
+      console.error('사진 업로드 실패:', file.name, e)
       failed++
+      reasons.push(friendlyUploadError(e))
     }
     onProgress?.(uploaded + failed, files.length)
   }
-  return { uploaded, failed }
+  return { uploaded, failed, reasons }
 }
 
-export async function deletePhoto(photo: PhotoRow): Promise<void> {
-  const { error } = await supabase.from('photos').delete().eq('id', photo.id)
+export async function deletePhotos(photos: PhotoRow[]): Promise<void> {
+  if (photos.length === 0) return
+  const { error } = await supabase
+    .from('photos')
+    .delete()
+    .in(
+      'id',
+      photos.map((p) => p.id),
+    )
   if (error) throw error
-  await supabase.storage.from('photos').remove([photo.storage_path, photo.thumb_path])
+  await supabase.storage
+    .from('photos')
+    .remove(photos.flatMap((p) => [p.storage_path, p.thumb_path]))
 }

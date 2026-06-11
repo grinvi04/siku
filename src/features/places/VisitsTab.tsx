@@ -21,11 +21,11 @@ import { formatDate, formatTimeRange } from '@/lib/format'
 
 const TOLERANCE_MS = 10 * 60 * 1000
 
-/** 좌표 있는 기존 방문(확정·거절)과 시간·거리가 겹치는 제안은 다시 만들지 않는다 */
+/** 좌표 있는 확정 방문과 시간·거리가 겹치는 제안은 다시 만들지 않는다 (거절 기록은 재스캔 시 리셋) */
 function overlapsExisting(sp: StayPoint, visits: VisitRow[]): boolean {
   return visits.some((v) => {
     if (v.lat == null || v.lng == null) return false
-    if (v.status === 'suggested') return false
+    if (v.status !== 'confirmed') return false
     const start = new Date(v.started_at).getTime()
     const end = new Date(v.ended_at).getTime()
     const timeOverlap = sp.startedAt <= end + TOLERANCE_MS && sp.endedAt >= start - TOLERANCE_MS

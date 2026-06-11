@@ -28,8 +28,8 @@ export async function listVisits(eventId: string): Promise<VisitRow[]> {
 }
 
 /**
- * 자동 인식 결과를 갱신한다 — 기존 suggested(auto)를 지우고 새 제안으로 교체.
- * confirmed·manual·rejected는 건드리지 않는다 (멱등 재실행).
+ * 자동 인식 결과를 갱신한다 — 기존 suggested·rejected(auto)를 지우고 새 제안으로 교체.
+ * "다시 찾기"는 새 스캔이므로 이전 거절 기록도 리셋한다. confirmed·manual은 유지.
  */
 export async function replaceSuggestedVisits(
   eventId: string,
@@ -39,7 +39,7 @@ export async function replaceSuggestedVisits(
     .from('visits')
     .delete()
     .eq('event_id', eventId)
-    .eq('status', 'suggested')
+    .in('status', ['suggested', 'rejected'])
     .eq('source', 'auto')
   if (deleteError) throw deleteError
   if (stayPoints.length === 0) return 0

@@ -35,14 +35,21 @@ export async function resizeImage(
   canvas.getContext('2d')!.drawImage(bitmap, 0, 0, width, height)
   bitmap.close()
 
-  return new Promise((resolve, reject) => {
-    canvas.toBlob(
-      (blob) =>
-        blob ? resolve({ blob, width, height }) : reject(new Error('이미지 변환에 실패했습니다.')),
-      mimeType,
-      quality,
-    )
-  })
+  const encode = (type: string) =>
+    new Promise<Blob>((resolve, reject) => {
+      canvas.toBlob(
+        (blob) => (blob ? resolve(blob) : reject(new Error('이미지 변환에 실패했습니다.'))),
+        type,
+        quality,
+      )
+    })
+
+  let blob = await encode(mimeType)
+  // Safari는 WebP 인코딩 미지원 → PNG로 폴백되어 용량이 커진다. JPEG로 재인코딩.
+  if (blob.type !== mimeType) {
+    blob = await encode('image/jpeg')
+  }
+  return { blob, width, height }
 }
 
 export function blobToBase64(blob: Blob): Promise<string> {
