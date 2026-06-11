@@ -18,7 +18,7 @@ import {
   type TransferStatus,
 } from '@/data/settlements'
 import { formatDateTime, formatKrw } from '@/lib/format'
-import { Check, ReceiptText, RotateCcw } from 'lucide-react'
+import { Check, Lock, ReceiptText, RotateCcw } from 'lucide-react'
 import { useSession } from '@/features/auth/useSession'
 
 export function SettleTab({ event }: { event: EventDetail }) {
@@ -160,8 +160,8 @@ export function SettleTab({ event }: { event: EventDetail }) {
           )}
         </div>
         {isLocked && (
-          <p className="mt-1 text-sm text-ink-soft">
-            정산이 확정되어 잠겼어요. 고치려면 아래에서 정산을 취소하세요.
+          <p className="mt-1 flex items-center gap-1 text-sm text-ink-soft">
+            <Lock size={14} className="shrink-0" /> 정산이 확정되어 잠겨 있어요
           </p>
         )}
         {expenses && expenses.length > 0 ? (
