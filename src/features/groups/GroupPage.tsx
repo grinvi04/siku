@@ -6,6 +6,8 @@ import { getGroup } from '@/data/groups'
 import { EVENT_TYPE_LABEL, listEvents } from '@/data/events'
 import { formatDateRange } from '@/lib/format'
 import { useSession } from '@/features/auth/useSession'
+import { EVENT_TYPE_ICON } from '@/components/eventTypeIcon'
+import { CalendarPlus, ChevronRight } from 'lucide-react'
 
 export function GroupPage() {
   const { groupId } = useParams<{ groupId: string }>()
@@ -97,30 +99,37 @@ export function GroupPage() {
             .map(({ month, items: monthEvents }) => (
             <div key={month}>
               <h3 className="mt-5 text-sm font-semibold text-ink-soft">{month}</h3>
-              <ul className="mt-1">
-                {monthEvents.map((event) => (
-                  <li key={event.id} className="border-b border-line">
-                    <Link
-                      to={`/events/${event.id}`}
-                      className="flex min-h-14 items-center justify-between py-4"
-                    >
-                      <div>
-                        <p className="text-base font-semibold">{event.title}</p>
-                        <p className="mt-0.5 text-sm text-ink-soft">
-                          {formatDateRange(event.starts_at, event.ends_at)} ·{' '}
-                          {EVENT_TYPE_LABEL[event.type]} · {event.participant_count}명
-                        </p>
-                      </div>
-                      <span className="text-ink-soft">›</span>
-                    </Link>
-                  </li>
-                ))}
+              <ul className="mt-2 space-y-2">
+                {monthEvents.map((event) => {
+                  const TypeIcon = EVENT_TYPE_ICON[event.type]
+                  return (
+                    <li key={event.id}>
+                      <Link
+                        to={`/events/${event.id}`}
+                        className="flex items-center gap-3 rounded-2xl border border-line bg-white p-4 transition-colors active:bg-surface"
+                      >
+                        <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-accent-container text-accent">
+                          <TypeIcon size={22} />
+                        </span>
+                        <div className="min-w-0 flex-1">
+                          <p className="truncate text-base font-semibold">{event.title}</p>
+                          <p className="mt-0.5 text-sm text-ink-soft">
+                            {formatDateRange(event.starts_at, event.ends_at)} ·{' '}
+                            {EVENT_TYPE_LABEL[event.type]} · {event.participant_count}명
+                          </p>
+                        </div>
+                        <ChevronRight size={20} className="shrink-0 text-ink-faint" />
+                      </Link>
+                    </li>
+                  )
+                })}
               </ul>
             </div>
           ))
         ) : (
           <div className="mt-12 text-center">
-            <p className="text-base text-ink-soft">아직 기록이 없어요.</p>
+            <CalendarPlus size={40} className="mx-auto text-ink-faint" />
+            <p className="mt-3 text-base text-ink-soft">아직 기록이 없어요.</p>
             <p className="mt-1 text-sm text-ink-soft">
               저녁모임이나 여행을 다녀왔다면 아래에서 기록해 보세요.
             </p>

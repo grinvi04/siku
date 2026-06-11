@@ -19,6 +19,7 @@ import {
 } from '@/data/visits'
 import { fetchNearbyPlaces } from '@/data/nearby'
 import { formatDate, formatTimeRange } from '@/lib/format'
+import { MapPin } from 'lucide-react'
 
 /** 자동 인식된 좌표 주변 장소 이름 후보 — 탭하면 이름이 채워진다 */
 function NearbyNameChips({ visit, onPick }: { visit: VisitRow; onPick: (name: string) => void }) {
@@ -38,7 +39,8 @@ function NearbyNameChips({ visit, onPick }: { visit: VisitRow; onPick: (name: st
           className="rounded-full bg-white px-3 py-1.5 text-sm text-ink-soft"
           onClick={() => onPick(p.name)}
         >
-          {p.name} <span className="text-ink-faint">{p.distance}m</span>
+          {p.name}
+          {p.distance > 0 && <span className="text-ink-faint"> {p.distance}m</span>}
         </button>
       ))}
     </div>
@@ -246,9 +248,12 @@ export function VisitsTab({ event }: { event: EventDetail }) {
             ))}
           </ul>
         ) : (
-          <p className="mt-2 text-base text-ink-soft">
-            아직 기록된 장소가 없어요. 위 버튼으로 찾거나 아래에서 직접 추가하세요.
-          </p>
+          <div className="mt-6 text-center">
+            <MapPin size={36} className="mx-auto text-ink-faint" />
+            <p className="mt-2 text-base text-ink-soft">
+              아직 기록된 장소가 없어요. 위 버튼으로 찾거나 아래에서 직접 추가하세요.
+            </p>
+          </div>
         )}
       </section>
 

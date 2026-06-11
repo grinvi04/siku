@@ -12,6 +12,7 @@ import {
   type PhotoWithUrl,
 } from '@/data/photos'
 import { formatDate } from '@/lib/format'
+import { Images } from 'lucide-react'
 import { useSession } from '@/features/auth/useSession'
 
 export function PhotosTab({ event }: { event: EventDetail }) {
@@ -159,9 +160,12 @@ export function PhotosTab({ event }: { event: EventDetail }) {
           })}
         </div>
       ) : (
-        <p className="mt-8 text-center text-base text-ink-soft">
-          아직 사진이 없어요. 모임에서 찍은 사진을 올려 보세요.
-        </p>
+        <div className="mt-10 text-center">
+          <Images size={40} className="mx-auto text-ink-faint" />
+          <p className="mt-3 text-base text-ink-soft">
+            아직 사진이 없어요. 모임에서 찍은 사진을 올려 보세요.
+          </p>
+        </div>
       )}
 
       {/* 선택 모드 하단 고정 삭제 버튼 */}

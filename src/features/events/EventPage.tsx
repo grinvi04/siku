@@ -9,11 +9,12 @@ import { SettleTab } from '@/features/expenses/SettleTab'
 import { PhotosTab } from '@/features/photos/PhotosTab'
 import { VisitsTab } from '@/features/places/VisitsTab'
 import { useSession } from '@/features/auth/useSession'
+import { Images, MapPin, ReceiptText } from 'lucide-react'
 
 const TABS = [
-  { key: 'settle', label: '정산' },
-  { key: 'photos', label: '사진' },
-  { key: 'places', label: '다녀온 곳' },
+  { key: 'settle', label: '정산', icon: ReceiptText },
+  { key: 'photos', label: '사진', icon: Images },
+  { key: 'places', label: '다녀온 곳', icon: MapPin },
 ] as const
 type TabKey = (typeof TABS)[number]['key']
 
@@ -83,11 +84,12 @@ export function EventPage() {
             key={t.key}
             type="button"
             aria-current={tab === t.key}
-            className={`h-11 rounded-lg text-base transition-colors ${
+            className={`flex h-11 items-center justify-center gap-1.5 rounded-lg text-base transition-colors ${
               tab === t.key ? 'bg-white font-semibold text-primary shadow-[0_2px_8px_rgba(26,32,44,0.08)]' : 'text-ink-soft'
             }`}
             onClick={() => setTab(t.key)}
           >
+            <t.icon size={18} />
             {t.label}
           </button>
         ))}

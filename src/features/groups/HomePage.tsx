@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import { Button } from '@/components/Button'
 import { getMyProfile } from '@/data/profiles'
 import { listMyGroups } from '@/data/groups'
+import { ChevronRight, UsersRound } from 'lucide-react'
 
 export function HomePage() {
   const navigate = useNavigate()
@@ -24,22 +25,29 @@ export function HomePage() {
       {isLoading ? (
         <p className="mt-24 text-center text-ink-soft">불러오는 중…</p>
       ) : groups && groups.length > 0 ? (
-        <ul className="mt-4">
+        <ul className="mt-5 space-y-2.5">
           {groups.map((group) => (
-            <li key={group.id} className="border-b border-line">
+            <li key={group.id}>
               <Link
                 to={`/groups/${group.id}`}
-                className="flex min-h-14 items-center justify-between py-4"
+                className="flex items-center gap-3 rounded-2xl border border-line bg-white p-4 transition-colors active:bg-surface"
               >
-                <span className="text-base font-semibold">{group.name}</span>
-                <span className="text-sm text-ink-soft">멤버 {group.member_count}명 ›</span>
+                <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-primary-container text-primary">
+                  <UsersRound size={22} />
+                </span>
+                <div className="min-w-0 flex-1">
+                  <p className="truncate text-base font-semibold">{group.name}</p>
+                  <p className="mt-0.5 text-sm text-ink-soft">멤버 {group.member_count}명</p>
+                </div>
+                <ChevronRight size={20} className="shrink-0 text-ink-faint" />
               </Link>
             </li>
           ))}
         </ul>
       ) : (
         <div className="mt-24 text-center">
-          <p className="text-base text-ink-soft">아직 모임이 없어요.</p>
+          <UsersRound size={40} className="mx-auto text-ink-faint" />
+          <p className="mt-3 text-base text-ink-soft">아직 모임이 없어요.</p>
           <p className="mt-1 text-sm text-ink-soft">아래 버튼으로 첫 모임을 만들어 보세요.</p>
         </div>
       )}

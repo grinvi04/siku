@@ -18,6 +18,7 @@ import {
   type TransferStatus,
 } from '@/data/settlements'
 import { formatDateTime, formatKrw } from '@/lib/format'
+import { ReceiptText } from 'lucide-react'
 import { useSession } from '@/features/auth/useSession'
 
 export function SettleTab({ event }: { event: EventDetail }) {
@@ -196,9 +197,10 @@ export function SettleTab({ event }: { event: EventDetail }) {
             })}
           </ul>
         ) : (
-          <p className="mt-6 text-center text-base text-ink-soft">
-            아직 등록한 지출이 없어요.
-          </p>
+          <div className="mt-8 text-center">
+            <ReceiptText size={36} className="mx-auto text-ink-faint" />
+            <p className="mt-2 text-base text-ink-soft">아직 등록한 지출이 없어요.</p>
+          </div>
         )}
         {!isLocked && (
           <div className="mt-4">

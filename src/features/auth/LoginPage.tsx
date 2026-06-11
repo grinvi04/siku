@@ -3,6 +3,7 @@ import { useSearchParams } from 'react-router-dom'
 import { Button } from '@/components/Button'
 import { Input } from '@/components/Input'
 import { sendMagicLink } from '@/data/supabase'
+import { Images, MapPin, ReceiptText, UsersRound } from 'lucide-react'
 import { isKakaoInAppBrowser, openInExternalBrowser } from './inAppBrowser'
 import { sanitizeNextPath } from './nextPath'
 
@@ -48,15 +49,27 @@ export function LoginPage() {
   return (
     <div className="flex min-h-dvh flex-col justify-between px-5 pt-24 pb-[calc(env(safe-area-inset-bottom)+24px)]">
       <div>
-        <h1 className="text-[28px] leading-[1.35] font-bold">
+        <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-primary">
+          <UsersRound size={30} className="text-white" />
+        </div>
+        <h1 className="mt-5 text-[28px] leading-[1.35] font-bold">
           모임의 기록과 정산,
           <br />한 곳에서
         </h1>
-        <p className="mt-3 text-base leading-[1.55] text-ink-soft">
-          다녀온 곳과 사진을 모으고,
-          <br />
-          경비는 계좌번호 복사 한 번으로 정산해요.
-        </p>
+        <ul className="mt-5 space-y-3">
+          <li className="flex items-start gap-2.5 text-base leading-[1.5] text-ink-soft">
+            <ReceiptText size={20} className="mt-0.5 shrink-0 text-primary" />
+            계좌번호 복사 한 번으로 끝나는 정산
+          </li>
+          <li className="flex items-start gap-2.5 text-base leading-[1.5] text-ink-soft">
+            <Images size={20} className="mt-0.5 shrink-0 text-accent" />
+            모임 사진을 한곳에 모아보기
+          </li>
+          <li className="flex items-start gap-2.5 text-base leading-[1.5] text-ink-soft">
+            <MapPin size={20} className="mt-0.5 shrink-0 text-accent" />
+            사진 위치로 다녀온 곳 자동 기록
+          </li>
+        </ul>
       </div>
 
       <form className="space-y-3" onSubmit={handleSubmit}>
