@@ -1,13 +1,23 @@
 import { useQuery } from '@tanstack/react-query'
+import { useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { getEvent, type EventType } from '../../data/events'
 import { formatDateRange } from '../../lib/format'
+import { SettleTab } from '../expenses/SettleTab'
 
 const TYPE_LABEL: Record<EventType, string> = { dinner: '저녁모임', ride: '라이딩', trip: '여행' }
+
+const TABS = [
+  { key: 'settle', label: '정산' },
+  { key: 'photos', label: '사진' },
+  { key: 'places', label: '다녀온 곳' },
+] as const
+type TabKey = (typeof TABS)[number]['key']
 
 export function EventPage() {
   const { eventId } = useParams<{ eventId: string }>()
   const navigate = useNavigate()
+  const [tab, setTab] = useState<TabKey>('settle')
 
   const { data: event } = useQuery({
     queryKey: ['event', eventId],
@@ -29,32 +39,39 @@ export function EventPage() {
       <header className="mt-2">
         <h1 className="text-[22px] font-bold">{event.title}</h1>
         <p className="mt-1 text-sm text-ink-soft">
-          {formatDateRange(event.starts_at, event.ends_at)} · {TYPE_LABEL[event.type]}
+          {formatDateRange(event.starts_at, event.ends_at)} · {TYPE_LABEL[event.type]} ·{' '}
+          {event.participants.map((p) => p.display_name).join(', ')}
         </p>
-        <div className="mt-3 flex flex-wrap gap-1.5">
-          {event.participants.map((p) => (
-            <span key={p.user_id} className="rounded-full bg-surface px-3 py-1.5 text-sm text-ink-soft">
-              {p.display_name}
-            </span>
-          ))}
-        </div>
       </header>
 
-      {/* M3(정산)·M4(사진)·M5(다녀온 곳)가 이 자리에 탭으로 들어온다 */}
-      <div className="mt-12 space-y-3">
-        <div className="rounded-2xl border border-line p-4">
-          <h2 className="text-[19px] font-semibold">정산</h2>
-          <p className="mt-1 text-sm text-ink-soft">곧 여기서 경비를 정리할 수 있어요.</p>
-        </div>
-        <div className="rounded-2xl border border-line p-4">
-          <h2 className="text-[19px] font-semibold">사진</h2>
-          <p className="mt-1 text-sm text-ink-soft">곧 여기에 사진을 올릴 수 있어요.</p>
-        </div>
-        <div className="rounded-2xl border border-line p-4">
-          <h2 className="text-[19px] font-semibold">다녀온 곳</h2>
-          <p className="mt-1 text-sm text-ink-soft">사진을 올리면 자동으로 정리해 드려요.</p>
-        </div>
-      </div>
+      {/* 화면 이동 없이 탭 전환 (DESIGN.md — 깊이 2단계 제한) */}
+      <nav className="mt-5 grid grid-cols-3 rounded-xl bg-surface p-1" aria-label="이벤트 메뉴">
+        {TABS.map((t) => (
+          <button
+            key={t.key}
+            type="button"
+            aria-current={tab === t.key}
+            className={`h-11 rounded-lg text-base transition-colors ${
+              tab === t.key ? 'bg-white font-semibold text-primary shadow-[0_2px_8px_rgba(26,32,44,0.08)]' : 'text-ink-soft'
+            }`}
+            onClick={() => setTab(t.key)}
+          >
+            {t.label}
+          </button>
+        ))}
+      </nav>
+
+      {tab === 'settle' && <SettleTab event={event} />}
+      {tab === 'photos' && (
+        <p className="mt-12 text-center text-base text-ink-soft">
+          사진 올리기는 곧 열려요.
+        </p>
+      )}
+      {tab === 'places' && (
+        <p className="mt-12 text-center text-base text-ink-soft">
+          사진을 올리면 다녀온 곳을 자동으로 정리해 드려요.
+        </p>
+      )}
     </div>
   )
 }

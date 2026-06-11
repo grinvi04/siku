@@ -5,6 +5,7 @@ import { ProfilePage } from './features/auth/ProfilePage'
 import { useSession } from './features/auth/useSession'
 import { EventNewPage } from './features/events/EventNewPage'
 import { EventPage } from './features/events/EventPage'
+import { ExpenseFormPage } from './features/expenses/ExpenseFormPage'
 import { GroupNewPage } from './features/groups/GroupNewPage'
 import { GroupPage } from './features/groups/GroupPage'
 import { HomePage } from './features/groups/HomePage'
@@ -34,6 +35,8 @@ function App() {
           <Route path="/groups/:groupId" element={<GroupPage />} />
           <Route path="/groups/:groupId/events/new" element={<EventNewPage />} />
           <Route path="/events/:eventId" element={<EventPage />} />
+          <Route path="/events/:eventId/expenses/new" element={<ExpenseFormPage />} />
+          <Route path="/events/:eventId/expenses/:expenseId/edit" element={<ExpenseFormPage />} />
         </Route>
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
