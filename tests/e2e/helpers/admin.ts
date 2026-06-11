@@ -1,6 +1,7 @@
 import { createClient, type Session } from '@supabase/supabase-js'
 import { readFileSync } from 'node:fs'
 import { resolve } from 'node:path'
+import { deflateSync } from 'node:zlib'
 
 // Playwright는 .env를 자동 로드하지 않으므로 직접 읽는다 (테스트 전용, repo 미포함 파일)
 function loadEnv(): Record<string, string> {
@@ -68,6 +69,88 @@ export async function createTestUser(displayName: string): Promise<TestUser> {
   if (verifyError || !verified.session) throw verifyError ?? new Error('세션 발급 실패')
 
   return { id: userId, email, session: verified.session }
+}
+
+/** UI를 거치지 않는 픽스처용 식구 생성 (소유자 포함) */
+export async function adminCreateGroup(
+  ownerId: string,
+  name: string,
+): Promise<{ id: string; invite_code: string }> {
+  const { data, error } = await admin
+    .from('groups')
+    .insert({ name, created_by: ownerId })
+    .select('id, invite_code')
+    .single()
+  if (error) throw error
+  const { error: memberError } = await admin
+    .from('group_members')
+    .insert({ group_id: data.id, user_id: ownerId, role: 'owner' })
+  if (memberError) throw memberError
+  return data
+}
+
+/** 픽스처용 기록 생성 (참가자 = 소유자) */
+export async function adminCreateEvent(
+  groupId: string,
+  ownerId: string,
+  title: string,
+): Promise<string> {
+  const { data, error } = await admin
+    .from('events')
+    .insert({
+      group_id: groupId,
+      title,
+      type: 'dinner',
+      starts_at: new Date().toISOString(),
+      created_by: ownerId,
+    })
+    .select('id')
+    .single()
+  if (error) throw error
+  const { error: pError } = await admin
+    .from('event_participants')
+    .insert({ event_id: data.id, user_id: ownerId })
+  if (pError) throw pError
+  return data.id
+}
+
+/** 업로드 테스트용 단색 PNG (의존성 없이 생성) */
+export function makePng(size = 64, rgb: [number, number, number] = [42, 91, 215]): Buffer {
+  const crcTable = Array.from({ length: 256 }, (_, n) => {
+    let c = n
+    for (let k = 0; k < 8; k++) c = c & 1 ? 0xedb88320 ^ (c >>> 1) : c >>> 1
+    return c >>> 0
+  })
+  const crc = (buf: Buffer) => {
+    let r = 0xffffffff
+    for (const b of buf) r = crcTable[(r ^ b) & 0xff] ^ (r >>> 8)
+    return (r ^ 0xffffffff) >>> 0
+  }
+  const chunk = (type: string, data: Buffer) => {
+    const len = Buffer.alloc(4)
+    len.writeUInt32BE(data.length)
+    const td = Buffer.concat([Buffer.from(type), data])
+    const c = Buffer.alloc(4)
+    c.writeUInt32BE(crc(td))
+    return Buffer.concat([len, td, c])
+  }
+  const ihdr = Buffer.alloc(13)
+  ihdr.writeUInt32BE(size, 0)
+  ihdr.writeUInt32BE(size, 4)
+  ihdr[8] = 8
+  ihdr[9] = 2
+  const row = Buffer.concat([Buffer.from([0]), Buffer.alloc(size * 3)])
+  for (let x = 0; x < size; x++) {
+    row[1 + x * 3] = rgb[0]
+    row[2 + x * 3] = rgb[1]
+    row[3 + x * 3] = rgb[2]
+  }
+  return Buffer.concat([
+    Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]),
+    chunk('IHDR', ihdr),
+    chunk('IDAT', deflateSync(Buffer.concat(Array(size).fill(row)))),
+    chunk('IEND', Buffer.alloc(0)),
+  ])
 }
 
 export async function addMemberDirectly(groupId: string, userId: string): Promise<void> {
