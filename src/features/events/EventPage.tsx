@@ -1,13 +1,13 @@
 import { useQuery } from '@tanstack/react-query'
 import { useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
-import { getEvent, type EventType } from '@/data/events'
+import { EVENT_TYPE_LABEL, getEvent } from '@/data/events'
 import { formatDateRange } from '@/lib/format'
 import { SettleTab } from '@/features/expenses/SettleTab'
 import { PhotosTab } from '@/features/photos/PhotosTab'
 import { VisitsTab } from '@/features/places/VisitsTab'
 
-const TYPE_LABEL: Record<EventType, string> = { dinner: '저녁모임', ride: '라이딩', trip: '여행' }
+
 
 const TABS = [
   { key: 'settle', label: '정산' },
@@ -41,7 +41,7 @@ export function EventPage() {
       <header className="mt-2">
         <h1 className="text-[22px] font-bold">{event.title}</h1>
         <p className="mt-1 text-sm text-ink-soft">
-          {formatDateRange(event.starts_at, event.ends_at)} · {TYPE_LABEL[event.type]} ·{' '}
+          {formatDateRange(event.starts_at, event.ends_at)} · {EVENT_TYPE_LABEL[event.type]} ·{' '}
           {event.participants.map((p) => p.display_name).join(', ')}
         </p>
       </header>

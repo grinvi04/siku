@@ -2,6 +2,12 @@ import { supabase } from './supabase'
 
 export type EventType = 'dinner' | 'ride' | 'trip'
 
+export const EVENT_TYPE_LABEL: Record<EventType, string> = {
+  dinner: '저녁모임',
+  ride: '라이딩',
+  trip: '여행',
+}
+
 export interface EventSummary {
   id: string
   title: string

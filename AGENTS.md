@@ -47,6 +47,10 @@
 ## 코딩 컨벤션
 
 - import는 `@/` 별칭(=src) 사용 — 상대경로는 같은 폴더 sibling(`./x`)만 허용
+- 컴포넌트: 파일당 1개(전용 보조 컴포넌트는 같은 파일 하단 허용), PascalCase 파일명·named export,
+  props는 TS 타입 필수(네이티브 속성은 `ButtonHTMLAttributes` 등 확장), 목록 key에 배열 인덱스 금지
+- 파생 가능한 값은 effect로 동기화하지 말고 렌더 중 계산 (React 공식 'You Might Not Need an Effect')
+- 공용 라벨·상수는 data/ 레이어에서 export — 화면마다 중복 정의 금지
 - 가정하지 말 것 — 불확실하면 묻는다
 - 문제를 풀 수 있는 최소한의 코드 — 요청하지 않은 기능·추상화 금지
 - 외과적 수정 — 꼭 필요한 것만 건드린다

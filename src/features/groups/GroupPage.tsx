@@ -3,10 +3,10 @@ import { Link, useNavigate, useParams } from 'react-router-dom'
 import { Button } from '@/components/Button'
 import { useToast } from '@/components/Toast'
 import { getGroup } from '@/data/groups'
-import { listEvents, type EventType } from '@/data/events'
+import { EVENT_TYPE_LABEL, listEvents } from '@/data/events'
 import { formatDateRange } from '@/lib/format'
 
-const TYPE_LABEL: Record<EventType, string> = { dinner: '저녁모임', ride: '라이딩', trip: '여행' }
+
 
 export function GroupPage() {
   const { groupId } = useParams<{ groupId: string }>()
@@ -73,7 +73,7 @@ export function GroupPage() {
                   <div>
                     <p className="text-base font-semibold">{event.title}</p>
                     <p className="mt-0.5 text-sm text-ink-soft">
-                      {formatDateRange(event.starts_at, event.ends_at)} · {TYPE_LABEL[event.type]} ·{' '}
+                      {formatDateRange(event.starts_at, event.ends_at)} · {EVENT_TYPE_LABEL[event.type]} ·{' '}
                       {event.participant_count}명
                     </p>
                   </div>
