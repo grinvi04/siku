@@ -18,7 +18,7 @@ import {
   type TransferStatus,
 } from '@/data/settlements'
 import { formatDateTime, formatKrw } from '@/lib/format'
-import { ReceiptText } from 'lucide-react'
+import { Check, ReceiptText, RotateCcw } from 'lucide-react'
 import { useSession } from '@/features/auth/useSession'
 
 export function SettleTab({ event }: { event: EventDetail }) {
@@ -338,7 +338,45 @@ export function SettleTab({ event }: { event: EventDetail }) {
   )
 }
 
-const STATUS_LABEL = { pending: '대기', sent: '보냄', confirmed: '완료' } as const
+/** 상태 배지는 정보가 있을 때만 — '대기'는 행동 버튼의 존재 자체가 상태라서 표기하지 않는다 */
+function StatusBadge({ transfer }: { transfer: TransferRow }) {
+  if (transfer.status === 'sent') {
+    return (
+      <span className="flex items-center gap-1 rounded-md bg-warning/10 px-2 py-1 text-sm font-semibold text-warning">
+        보냄
+        {transfer.sent_at && (
+          <span className="font-normal text-ink-soft">{formatDateTime(transfer.sent_at)}</span>
+        )}
+      </span>
+    )
+  }
+  if (transfer.status === 'confirmed') {
+    return (
+      <span className="flex items-center gap-1 rounded-md bg-success/10 px-2 py-1 text-sm font-semibold text-success">
+        <Check size={14} /> 완료
+        {transfer.confirmed_at && (
+          <span className="font-normal text-ink-soft">
+            {formatDateTime(transfer.confirmed_at)}
+          </span>
+        )}
+      </span>
+    )
+  }
+  return null
+}
+
+function UndoButton({ onClick }: { onClick: () => void }) {
+  return (
+    <button
+      type="button"
+      className="flex h-11 items-center gap-1 rounded-xl bg-surface px-3 text-sm font-semibold text-ink-soft"
+      onClick={onClick}
+    >
+      <RotateCcw size={15} />
+      되돌리기
+    </button>
+  )
+}
 
 function TransferItem({
   transfer,
@@ -363,11 +401,11 @@ function TransferItem({
     <li className="border-b border-line py-3">
       <div className="flex items-center justify-between">
         <span className="text-base">
-          <span className={`font-semibold ${me === transfer.from_user ? 'text-primary' : ''}`}>
+          <span className={`font-semibold ${isSender ? 'text-primary' : ''}`}>
             {nameOf(transfer.from_user)}
           </span>{' '}
           →{' '}
-          <span className={`font-semibold ${me === transfer.to_user ? 'text-primary' : ''}`}>
+          <span className={`font-semibold ${isReceiver ? 'text-primary' : ''}`}>
             {nameOf(transfer.to_user)}
           </span>
           {holder && <span className="ml-1 text-sm text-ink-soft">(예금주 {holder})</span>}
@@ -376,23 +414,11 @@ function TransferItem({
           {formatKrw(transfer.amount)}
         </span>
       </div>
-      <div className="mt-2 flex items-center gap-2">
-        <span
-          className={`rounded-md px-2 py-1 text-sm font-semibold ${
-            done
-              ? 'bg-success/10 text-success'
-              : transfer.status === 'sent'
-                ? 'bg-warning/10 text-warning'
-                : 'bg-surface text-ink-soft'
-          }`}
-        >
-          {STATUS_LABEL[transfer.status]}
-        </span>
-        {transfer.status === 'sent' && transfer.sent_at && (
-          <span className="text-sm text-ink-soft">{formatDateTime(transfer.sent_at)}</span>
-        )}
-        {transfer.status === 'confirmed' && transfer.confirmed_at && (
-          <span className="text-sm text-ink-soft">{formatDateTime(transfer.confirmed_at)}</span>
+      <div className="mt-2 flex flex-wrap items-center gap-2">
+        <StatusBadge transfer={transfer} />
+        {/* 보내기 전 + 내가 당사자가 아니면 상태를 글로 알려준다 (배지 없는 유일한 경우) */}
+        {transfer.status === 'pending' && !isSender && !isReceiver && (
+          <span className="text-sm text-ink-soft">아직 보내기 전이에요</span>
         )}
         {!done && isSender && (
           <>
@@ -412,13 +438,7 @@ function TransferItem({
                 보냈어요
               </button>
             ) : (
-              <button
-                type="button"
-                className="h-11 px-2 text-sm text-ink-soft"
-                onClick={() => onMark('pending')}
-              >
-                잘못 눌렀어요 (되돌리기)
-              </button>
+              <UndoButton onClick={() => onMark('pending')} />
             )}
           </>
         )}
@@ -432,13 +452,7 @@ function TransferItem({
           </button>
         )}
         {done && isReceiver && (
-          <button
-            type="button"
-            className="h-11 px-2 text-sm text-ink-soft"
-            onClick={() => onMark(transfer.sent_at ? 'sent' : 'pending')}
-          >
-            잘못 눌렀어요 (되돌리기)
-          </button>
+          <UndoButton onClick={() => onMark(transfer.sent_at ? 'sent' : 'pending')} />
         )}
       </div>
     </li>
