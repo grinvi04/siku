@@ -9,6 +9,8 @@ export interface GroupStats {
   visitCount: number
   /** user_id → 참석 횟수 */
   attendCounts: Map<string, number>
+  /** 장소 이름 → 방문 횟수 (확정된 장소, 2회 이상만 의미) */
+  placeCounts: Map<string, number>
 }
 
 export async function getGroupStats(groupId: string): Promise<GroupStats> {
@@ -28,7 +30,7 @@ export async function getGroupStats(groupId: string): Promise<GroupStats> {
       .eq('events.group_id', groupId),
     supabase
       .from('visits')
-      .select('id, events!inner(group_id)', { count: 'exact', head: true })
+      .select('name, events!inner(group_id)')
       .eq('events.group_id', groupId)
       .eq('status', 'confirmed'),
   ])
@@ -52,12 +54,20 @@ export async function getGroupStats(groupId: string): Promise<GroupStats> {
     totalSpent += e.amount
   }
 
+  const placeCounts = new Map<string, number>()
+  for (const v of visits.data ?? []) {
+    const name = (v.name ?? '').trim()
+    if (!name) continue
+    placeCounts.set(name, (placeCounts.get(name) ?? 0) + 1)
+  }
+
   return {
     eventCount: events.data?.length ?? 0,
     typeCounts,
     totalSpent,
     photoCount: photos.count ?? 0,
-    visitCount: visits.count ?? 0,
+    visitCount: visits.data?.length ?? 0,
     attendCounts,
+    placeCounts,
   }
 }

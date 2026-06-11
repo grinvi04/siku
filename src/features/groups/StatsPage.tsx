@@ -141,6 +141,31 @@ export function StatsPage() {
             nameOf={nameOf}
             format={(n) => `${n}회`}
           />
+
+          {/* 자주 간 곳 — 2회 이상 방문한 단골만 (전부 1회면 의미가 없어 숨김) */}
+          {(() => {
+            const favorites = sortDesc(stats.placeCounts).filter(([, n]) => n >= 2)
+            if (favorites.length === 0) return null
+            return (
+              <section className="mt-6">
+                <h2 className="flex items-center gap-1.5 text-[19px] font-semibold">
+                  <MapPin size={18} className="text-accent" /> 자주 간 곳
+                </h2>
+                <ul className="mt-2 space-y-2">
+                  {favorites.slice(0, 3).map(([name, count], i) => (
+                    <li
+                      key={name}
+                      className="flex items-center gap-3 rounded-2xl border border-line bg-white px-4 py-3"
+                    >
+                      <span className="w-5 text-base font-bold text-ink-soft">{i + 1}</span>
+                      <span className="flex-1 truncate text-base font-semibold">{name}</span>
+                      <span className="amount text-base text-ink-soft">{count}회</span>
+                    </li>
+                  ))}
+                </ul>
+              </section>
+            )
+          })()}
         </>
       )}
     </div>
