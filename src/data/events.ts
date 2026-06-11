@@ -24,6 +24,7 @@ export interface EventDetail {
   type: EventType
   starts_at: string
   ends_at: string | null
+  created_by: string
   participants: { user_id: string; display_name: string; avatar_url: string | null }[]
 }
 
@@ -48,7 +49,7 @@ export async function getEvent(eventId: string): Promise<EventDetail> {
   const { data, error } = await supabase
     .from('events')
     .select(
-      'id, group_id, title, type, starts_at, ends_at, event_participants(user_id, profile:profiles(display_name, avatar_url))',
+      'id, group_id, title, type, starts_at, ends_at, created_by, event_participants(user_id, profile:profiles(display_name, avatar_url))',
     )
     .eq('id', eventId)
     .single()
@@ -66,7 +67,38 @@ export async function getEvent(eventId: string): Promise<EventDetail> {
     type: data.type as EventType,
     starts_at: data.starts_at,
     ends_at: data.ends_at,
+    created_by: data.created_by,
     participants,
+  }
+}
+
+/**
+ * 기록 삭제 — DB row는 cascade로 정리되지만 storage 사진 파일은 직접 지워야 한다.
+ * 권한(작성자·모임장)은 RLS가 강제. 확정된 정산이 있으면 잠금 트리거가 막는다.
+ */
+export async function deleteEvent(eventId: string): Promise<void> {
+  // 확정된 정산이 있으면 삭제 불가 (지출 잠금과 동일한 원칙 — 먼저 정산 취소)
+  const { data: closed } = await supabase
+    .from('settlements')
+    .select('id')
+    .eq('event_id', eventId)
+    .eq('status', 'closed')
+    .maybeSingle()
+  if (closed) throw new Error('SETTLEMENT_CLOSED')
+
+  const { data: photoRows, error: photoError } = await supabase
+    .from('photos')
+    .select('storage_path, thumb_path')
+    .eq('event_id', eventId)
+  if (photoError) throw photoError
+
+  const { error } = await supabase.from('events').delete().eq('id', eventId)
+  if (error) throw error
+
+  if (photoRows.length > 0) {
+    await supabase.storage
+      .from('photos')
+      .remove(photoRows.flatMap((p) => [p.storage_path, p.thumb_path]))
   }
 }
 
