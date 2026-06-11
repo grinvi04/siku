@@ -7,7 +7,7 @@
 > **워드마크**: 한글 마크 `식`(Primary 사각 배지) + 라틴 `SIKU`(자간 0.25em, Bold).
 >
 > 소규모 모임의 기록·사진·정산을 위한 모바일 우선 PWA의 디자인 시스템.
-> **주 사용자는 40대** — 크고 분명한 글자, 면으로 채운 버튼, 얕은 화면 구조를 기본값으로 한다.
+> **주 사용자는 40~60대** — 크고 분명한 글자, 면으로 채운 버튼, 얕은 화면 구조를 기본값으로 한다.
 > 돈이 오가는 앱이므로 신뢰감 있는 차분한 블루를 중심으로, 추억(사진·장소)에는
 > 절제된 웜 톤을 포인트로 쓴다. 모든 색상·폰트는 자체 정의 또는 오픈 라이선스(OFL)로
 > 저작권 문제가 없다.
@@ -46,7 +46,7 @@
 폰트: **Pretendard Variable** (SIL OFL 1.1 — 상업 사용·재배포 자유).
 Fallback: `Pretendard Variable, Pretendard, -apple-system, "Apple SD Gothic Neo", "Noto Sans KR", system-ui, sans-serif`
 
-주 사용자(40대)의 한글 가독성을 위해 **본문 17px 기준, 어떤 텍스트도 14px 미만 금지**,
+주 사용자(40~60대)의 한글 가독성을 위해 **본문 17px 기준, 어떤 텍스트도 14px 미만 금지**,
 행간은 한글 기준 1.5 이상.
 
 - **Display**: 28px, Bold(700), line-height 1.35 — 정산 결과 총액 등 화면 1곳
@@ -64,7 +64,7 @@ Fallback: `Pretendard Variable, Pretendard, -apple-system, "Apple SD Gothic Neo"
 - 화면 좌우 패딩: 20px
 - 카드 내부 패딩: 16px
 - 섹션 간 간격: 24px
-- 목록 행 높이: 최소 56px (터치 타깃 **48px 이상** 보장 — 40대 오터치 방지)
+- 목록 행 높이: 최소 56px (터치 타깃 **48px 이상** 보장 — 40~60대 오터치 방지)
 - 하단 고정 버튼: safe-area inset + 16px
 
 ## Components
@@ -82,7 +82,7 @@ Fallback: `Pretendard Variable, Pretendard, -apple-system, "Apple SD Gothic Neo"
 - **Amount Display**: 받을 돈은 Receive 색 + `+` 접두, 낼 돈은 Pay 색 + `−` 접두, 원화는 `33,300원` 형식(콤마 + 원 접미사, ₩ 기호 미사용)
 - **Photo Grid**: 3열, 2px 간격, radius 없음(그리드) / 단독 사진은 radius 12px
 - **Toast**: 하단에서 16px 위, bg #1A202C 90%, 흰 텍스트 15px, radius 12px, **3초** 자동 소멸
-  (40대 읽기 속도 고려). 화면당 1개, 새 토스트가 이전 토스트를 교체
+  (40~60대 읽기 속도 고려). 화면당 1개, 새 토스트가 이전 토스트를 교체
 - **Icon**: lucide 라인 아이콘. 목록 아이콘은 Accent Container 원각 배지(44px) 안에 22px,
   탭·불릿은 18~20px. 텍스트 라벨 항상 동반 (아이콘 단독 금지 원칙)
 - **Avatar**: 이니셜 원형, 사용자 id 기반 고정 팔레트 7색(흰 글자 대비 확보). 칩 24px, 프로필 52px
@@ -108,7 +108,7 @@ Fallback: `Pretendard Variable, Pretendard, -apple-system, "Apple SD Gothic Neo"
 6. **시스템 폰트 폴백 허용**: Pretendard 로딩 실패 시에도 레이아웃이 깨지지 않게 시스템 한글 폰트로 자연 폴백
 7. **모션 최소화**: 페이지 전환·토스트 외 애니메이션 자제, `prefers-reduced-motion` 존중
 
-### UX 원칙 (주 사용자 40대)
+### UX 원칙 (주 사용자 40~60대)
 
 8. **화면 구조는 2단계까지만**: 홈(모임 목록) → 이벤트 상세. 이벤트 안의 지출·사진·장소는
    화면 이동 없이 **탭으로 전환** — 3단계 이상 들어가는 메뉴를 만들지 않는다

@@ -4,6 +4,7 @@ import { Input } from '@/components/Input'
 import { useToast } from '@/components/Toast'
 import { getMyProfile, updateMyProfile } from '@/data/profiles'
 import { Avatar } from '@/components/Avatar'
+import { LogOut } from 'lucide-react'
 import { supabase } from '@/data/supabase'
 
 /** 프로필 + 정산 계좌 입력 — 계좌는 정산 송금 안내에 그대로 노출된다 */
@@ -43,7 +44,7 @@ export function ProfilePage() {
         <Avatar name={profile.display_name} id={profile.id} size={52} />
         <div>
           <h1 className="text-[22px] font-bold">내 정보</h1>
-          <p className="mt-0.5 text-sm text-ink-soft">계좌는 정산할 때 멤버들에게 보여져요.</p>
+          <p className="mt-0.5 text-sm text-ink-soft">계좌는 정산할 때 식구들에게 보여져요.</p>
         </div>
       </div>
 
@@ -84,9 +85,16 @@ export function ProfilePage() {
         <Button type="submit" disabled={save.isPending}>
           {save.isPending ? '저장하고 있어요…' : '저장'}
         </Button>
-        <Button type="button" variant="text" onClick={() => void supabase.auth.signOut()}>
-          로그아웃
-        </Button>
+      </div>
+
+      <div className="mt-10 border-t border-line pt-4">
+        <button
+          type="button"
+          className="flex h-11 w-full items-center justify-center gap-1.5 text-base font-semibold text-ink-soft"
+          onClick={() => void supabase.auth.signOut()}
+        >
+          <LogOut size={17} /> 로그아웃
+        </button>
       </div>
       <p className="mt-10 text-center text-sm text-ink-soft">버전 {__BUILD_TIME__}</p>
     </form>

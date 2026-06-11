@@ -15,7 +15,7 @@ export function WelcomePage() {
     mutationFn: (displayName: string) => updateMyProfile({ display_name: displayName }),
     onSuccess: () => {
       void queryClient.invalidateQueries({ queryKey: ['myProfile'] })
-      toast('반가워요! 모임을 시작해 보세요')
+      toast('반가워요! 이제 식구를 만들어 보세요')
       navigate('/', { replace: true })
     },
     onError: () => toast('저장하지 못했어요. 다시 시도해 주세요'),
@@ -35,7 +35,7 @@ export function WelcomePage() {
         <br />
         어떻게 불러드릴까요?
       </h1>
-      <p className="mt-2 text-base text-ink-soft">멤버들에게 보여질 이름이에요.</p>
+      <p className="mt-2 text-base text-ink-soft">식구들에게 보여질 이름이에요.</p>
 
       <div className="mt-8">
         <Input

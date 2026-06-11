@@ -36,8 +36,8 @@ export function GroupPage() {
     if (navigator.share) {
       try {
         await navigator.share({
-          title: '모임 초대',
-          text: `'${group.name}' 모임에 초대해요. 아래 링크로 들어오세요!`,
+          title: '식구 초대',
+          text: `'${group.name}' 식구로 초대해요. 같이 먹고, 같이 기록해요!`,
           url,
         })
       } catch {
@@ -54,7 +54,7 @@ export function GroupPage() {
   return (
     <div className="min-h-dvh px-5 pt-6 pb-[calc(env(safe-area-inset-bottom)+16px)]">
       <button type="button" className="h-11 text-base text-ink-soft" onClick={() => navigate('/')}>
-        ‹ 내 모임
+        ‹ 내 식구
       </button>
       <header className="mt-2">
         <h1 className="text-[22px] font-bold">{group.name}</h1>
@@ -79,7 +79,7 @@ export function GroupPage() {
             onClick={() => void shareInvite()}
             className="rounded-full bg-primary px-3 py-1.5 text-sm font-semibold text-white active:bg-primary-pressed"
           >
-            + 멤버 초대
+            + 식구 초대
           </button>
         </div>
       </header>
