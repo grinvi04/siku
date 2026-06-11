@@ -69,11 +69,13 @@ export function VisitsTab({ event }: { event: EventDetail }) {
     },
     onSuccess: (count) => {
       invalidate()
-      toast(
-        count > 0
-          ? `머문 장소 ${count}곳을 찾았어요. 이름을 붙여 주세요`
-          : '새로 찾은 장소가 없어요',
-      )
+      if (count > 0) {
+        toast(`머문 장소 ${count}곳을 찾았어요. 이름을 붙여 주세요`)
+      } else if (gpsPhotos.length < 2) {
+        toast('위치 정보가 있는 사진이 2장 이상 있어야 찾을 수 있어요')
+      } else {
+        toast('같은 곳에서 30분 이상 머문 사진 묶음이 없어요. 시간차가 있는 사진을 더 올려 보세요')
+      }
     },
     onError: () => toast('장소를 찾지 못했어요. 다시 시도해 주세요'),
   })
