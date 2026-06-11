@@ -4,10 +4,11 @@ import { Button } from '@/components/Button'
 import { Input } from '@/components/Input'
 import { sendMagicLink } from '@/data/supabase'
 import { isKakaoInAppBrowser, openInExternalBrowser } from './inAppBrowser'
+import { sanitizeNextPath } from './nextPath'
 
 export function LoginPage() {
   const [searchParams] = useSearchParams()
-  const next = searchParams.get('next') ?? undefined
+  const next = sanitizeNextPath(searchParams.get('next'))
   const [sentTo, setSentTo] = useState<string | null>(null)
   const [pending, setPending] = useState(false)
   const [error, setError] = useState<string | null>(null)

@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import { ensureProfile } from '@/data/profiles'
 import { supabase } from '@/data/supabase'
+import { sanitizeNextPath } from './nextPath'
 
 /** 매직링크 리다이렉트 처리 — supabase-js의 토큰→세션 교환이 끝날 때까지 기다린다 */
 export function AuthCallbackPage() {
@@ -11,7 +12,7 @@ export function AuthCallbackPage() {
 
   useEffect(() => {
     let done = false
-    const next = searchParams.get('next')
+    const next = sanitizeNextPath(searchParams.get('next')) ?? null
 
     const complete = async () => {
       if (done) return
