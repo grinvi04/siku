@@ -39,3 +39,22 @@ npm run dev
    Authentication → SMTP Settings에 자체 SMTP(예: Resend 무료 티어) 연결
 
 > 소셜 로그인(카카오 등)은 필요해지면 Supabase Provider 추가로 확장 — 현 코드는 auth 레이어만 바꾸면 됨.
+
+## 영수증 OCR 셋업 (Google Vision 무료 티어, 1회)
+
+지출 추가 화면의 "영수증 찍어서 자동 입력"이 사용하는 기능. 월 1,000장까지 무료.
+GCP 키는 Edge Function 시크릿에만 저장되고 클라이언트에 노출되지 않는다.
+
+1. [console.cloud.google.com](https://console.cloud.google.com) → 프로젝트 생성 (결제수단 등록 필요 — 무료 한도 내에서는 과금 없음)
+2. API 및 서비스 → 라이브러리 → **Cloud Vision API** 활성화
+3. API 및 서비스 → 사용자 인증 정보 → **API 키** 생성 → 키 제한에서 "Cloud Vision API"만 허용
+4. Supabase CLI 로그인 후 시크릿 등록 + 함수 배포:
+
+```bash
+npx supabase login                       # 브라우저 인증 (1회)
+npx supabase link --project-ref qbqxhlqjrfdbzlewsdym
+npx supabase secrets set GOOGLE_VISION_API_KEY=<발급한 키>
+npx supabase functions deploy parse-receipt
+```
+
+배포 전까지는 버튼을 눌러도 "영수증을 읽지 못했어요"가 떠서 수동 입력으로 동작한다.

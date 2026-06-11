@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { Button } from '@/components/Button'
 import { Chip } from '@/components/Chip'
@@ -9,6 +9,7 @@ import { useToast } from '@/components/Toast'
 import { getEvent } from '@/data/events'
 import { createExpense, deleteExpense, getExpense, updateExpense } from '@/data/expenses'
 import { useSession } from '@/features/auth/useSession'
+import { recognizeReceipt } from '@/services/web/receiptOcr'
 
 /** 지출 추가(/expenses/new)와 수정(/expenses/:expenseId/edit)을 한 폼으로 */
 export function ExpenseFormPage() {
@@ -34,10 +35,34 @@ export function ExpenseFormPage() {
   const [isRefund, setIsRefund] = useState<boolean | null>(null)
   const [payerId, setPayerId] = useState<string | null>(null)
   const [touched, setTouched] = useState<Set<string> | null>(null)
+  const [titleValue, setTitleValue] = useState<string | null>(null)
+  const [amountValue, setAmountValue] = useState<string | null>(null)
+  const [scanning, setScanning] = useState(false)
+  const receiptInputRef = useRef<HTMLInputElement>(null)
 
   // 기본값: 수정이면 기존 값, 추가면 결제자=나·참여자=전원·지출
   const refund = isRefund ?? (existing ? existing.amount < 0 : false)
   const payer = payerId ?? existing?.payer_id ?? session?.user.id ?? null
+  const title = titleValue ?? existing?.title ?? ''
+  const amount = amountValue ?? (existing ? String(Math.abs(existing.amount)) : '')
+
+  const handleReceipt = async (file: File) => {
+    setScanning(true)
+    try {
+      const parsed = await recognizeReceipt(file)
+      if (!parsed.title && !parsed.amount) {
+        toast('영수증에서 정보를 찾지 못했어요. 직접 입력해 주세요')
+        return
+      }
+      if (parsed.title) setTitleValue(parsed.title)
+      if (parsed.amount) setAmountValue(String(parsed.amount))
+      toast('영수증을 읽었어요. 내용과 금액을 확인해 주세요')
+    } catch {
+      toast('영수증을 읽지 못했어요. 직접 입력해 주세요')
+    } finally {
+      setScanning(false)
+    }
+  }
   const participantIds =
     touched ??
     new Set(
@@ -127,12 +152,38 @@ export function ExpenseFormPage() {
           </div>
         </div>
 
+        {!refund && (
+          <div>
+            <input
+              ref={receiptInputRef}
+              type="file"
+              accept="image/*"
+              capture="environment"
+              className="hidden"
+              onChange={(e) => {
+                const file = e.target.files?.[0]
+                e.target.value = ''
+                if (file) void handleReceipt(file)
+              }}
+            />
+            <Button
+              type="button"
+              variant="secondary"
+              disabled={scanning}
+              onClick={() => receiptInputRef.current?.click()}
+            >
+              {scanning ? '영수증을 읽고 있어요…' : '영수증 찍어서 자동 입력'}
+            </Button>
+          </div>
+        )}
+
         <Input
           id="title"
           name="title"
           label="내용"
           placeholder={refund ? '예: 숙소 보증금 환급' : '예: 저녁 식사, 숙소'}
-          defaultValue={existing?.title}
+          value={title}
+          onChange={(e) => setTitleValue(e.target.value)}
           required
         />
         <Input
@@ -141,7 +192,8 @@ export function ExpenseFormPage() {
           label="금액 (원)"
           inputMode="numeric"
           placeholder="예: 120000"
-          defaultValue={existing ? String(Math.abs(existing.amount)) : ''}
+          value={amount}
+          onChange={(e) => setAmountValue(e.target.value)}
           required
         />
 
