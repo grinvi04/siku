@@ -16,7 +16,7 @@ export default defineConfig({
         description: '소규모 모임 기록·사진·정산',
         lang: 'ko',
         display: 'standalone',
-        theme_color: '#0f172a',
+        theme_color: '#ffffff',
         background_color: '#ffffff',
         icons: [
           { src: '/icons/icon-192.png', sizes: '192x192', type: 'image/png' },
