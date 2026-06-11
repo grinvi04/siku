@@ -17,7 +17,7 @@ export function GroupNewPage() {
       toast('식구를 만들었어요')
       navigate(`/groups/${groupId}`, { replace: true })
     },
-    onError: () => toast('모임을 만들지 못했어요. 다시 시도해 주세요'),
+    onError: () => toast('식구를 만들지 못했어요. 다시 시도해 주세요'),
   })
 
   return (
@@ -34,7 +34,7 @@ export function GroupNewPage() {
       </button>
       <h1 className="mt-2 text-[22px] font-bold">새 식구 만들기</h1>
       <p className="mt-1 text-sm text-ink-soft">
-        식구를 만들면 초대 링크로 사람들을 부를 수 있어요.
+        자주 보는 얼굴들을 한곳에 모아보세요. 초대는 링크 하나면 충분해요.
       </p>
 
       <div className="mt-6">

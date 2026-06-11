@@ -96,7 +96,7 @@ export function StatsPage() {
         className="h-11 text-base text-ink-soft"
         onClick={() => navigate(`/groups/${groupId}`)}
       >
-        ‹ 모임으로
+        ‹ 식구 홈
       </button>
       <h1 className="mt-2 text-[22px] font-bold">
         {group ? `${group.name} 통계` : '모임 통계'}

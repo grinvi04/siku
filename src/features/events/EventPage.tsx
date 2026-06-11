@@ -69,7 +69,7 @@ export function EventPage() {
         className="h-11 text-base text-ink-soft"
         onClick={() => navigate(`/groups/${event.group_id}`)}
       >
-        ‹ 모임으로
+        ‹ 식구 홈
       </button>
       <header className="mt-2">
         <div className="flex items-start justify-between gap-2">

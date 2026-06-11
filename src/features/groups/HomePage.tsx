@@ -5,6 +5,7 @@ import { getMyProfile } from '@/data/profiles'
 import { listMyGroups } from '@/data/groups'
 import { ChevronRight, UsersRound } from 'lucide-react'
 import { CardListSkeleton } from '@/components/Skeleton'
+import { Avatar } from '@/components/Avatar'
 
 export function HomePage() {
   const navigate = useNavigate()
@@ -16,9 +17,7 @@ export function HomePage() {
       <header className="flex items-center justify-between">
         <h1 className="text-[22px] font-bold">내 식구</h1>
         <Link to="/profile" className="flex h-11 items-center gap-2 text-sm text-ink-soft">
-          {profile?.avatar_url && (
-            <img src={profile.avatar_url} alt="" className="h-8 w-8 rounded-full" />
-          )}
+          {profile && <Avatar name={profile.display_name} id={profile.id} size={28} />}
           {profile?.display_name} ›
         </Link>
       </header>
@@ -48,8 +47,8 @@ export function HomePage() {
       ) : (
         <div className="mt-24 text-center">
           <UsersRound size={40} className="mx-auto text-ink-faint" />
-          <p className="mt-3 text-base text-ink-soft">아직 식구가 없어요.</p>
-          <p className="mt-1 text-sm text-ink-soft">아래 버튼으로 첫 식구를 만들어 보세요.</p>
+          <p className="mt-3 text-base text-ink-soft">아직 함께하는 식구가 없어요.</p>
+          <p className="mt-1 text-sm text-ink-soft">자주 만나는 사람들을 식구로 모아보세요.</p>
         </div>
       )}
 

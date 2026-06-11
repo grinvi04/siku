@@ -129,7 +129,11 @@ export function PhotosTab({ event }: { event: EventDetail }) {
       )}
 
       {isLoading ? (
-        <p className="mt-8 text-center text-ink-soft">불러오는 중…</p>
+        <div className="mt-4 grid grid-cols-3 gap-0.5">
+          {Array.from({ length: 9 }, (_, i) => (
+            <div key={i} className="aspect-square animate-pulse bg-surface" />
+          ))}
+        </div>
       ) : photos && photos.length > 0 ? (
         <div className="mt-4 grid grid-cols-3 gap-0.5">
           {photos.map((photo) => {
@@ -163,7 +167,7 @@ export function PhotosTab({ event }: { event: EventDetail }) {
         <div className="mt-10 text-center">
           <Images size={40} className="mx-auto text-ink-faint" />
           <p className="mt-3 text-base text-ink-soft">
-            아직 사진이 없어요. 모임에서 찍은 사진을 올려 보세요.
+            함께 찍은 사진을 올려보세요. 오늘의 한 컷이 추억이 돼요.
           </p>
         </div>
       )}

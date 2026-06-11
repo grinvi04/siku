@@ -77,7 +77,7 @@ export function GroupPage() {
           <button
             type="button"
             onClick={() => void shareInvite()}
-            className="rounded-full bg-primary px-3 py-1.5 text-sm font-semibold text-white active:bg-primary-pressed"
+            className="h-11 rounded-full bg-primary px-4 text-sm font-semibold text-white active:bg-primary-pressed"
           >
             + 식구 초대
           </button>
@@ -86,7 +86,7 @@ export function GroupPage() {
 
       <section className="mt-8">
         <div className="flex items-center justify-between">
-          <h2 className="text-[19px] font-semibold">지난 기록</h2>
+          <h2 className="text-[19px] font-semibold">함께한 기록</h2>
           <Link
             to={`/groups/${group.id}/stats`}
             className="flex h-11 items-center gap-1 px-2 text-sm font-semibold text-primary"
@@ -141,16 +141,14 @@ export function GroupPage() {
           <div className="mt-12 text-center">
             <CalendarPlus size={40} className="mx-auto text-ink-faint" />
             <p className="mt-3 text-base text-ink-soft">아직 기록이 없어요.</p>
-            <p className="mt-1 text-sm text-ink-soft">
-              저녁모임이나 여행을 다녀왔다면 아래에서 기록해 보세요.
-            </p>
+            <p className="mt-1 text-sm text-ink-soft">같이 먹은 한 끼부터 시작해 보세요.</p>
           </div>
         )}
       </section>
 
       <div className="mt-8">
         <Button onClick={() => navigate(`/groups/${group.id}/events/new`)}>
-          새 모임 기록하기
+          새 기록 남기기
         </Button>
       </div>
     </div>

@@ -199,7 +199,7 @@ export function SettleTab({ event }: { event: EventDetail }) {
         ) : (
           <div className="mt-8 text-center">
             <ReceiptText size={36} className="mx-auto text-ink-faint" />
-            <p className="mt-2 text-base text-ink-soft">아직 등록한 지출이 없어요.</p>
+            <p className="mt-2 text-base text-ink-soft">아직 적어둔 지출이 없어요.</p>
           </div>
         )}
         {!isLocked && (
@@ -307,7 +307,7 @@ export function SettleTab({ event }: { event: EventDetail }) {
             </div>
           </>
         ) : (
-          <p className="mt-2 text-base text-ink-soft">지출을 등록하면 여기서 정산해 드려요.</p>
+          <p className="mt-2 text-base text-ink-soft">지출을 남기면 누가 얼마 보낼지 알아서 계산해 드려요.</p>
         )}
       </section>
 

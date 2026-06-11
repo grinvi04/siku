@@ -36,11 +36,11 @@ function NearbyNameChips({ visit, onPick }: { visit: VisitRow; onPick: (name: st
         <button
           key={p.name}
           type="button"
-          className="rounded-full bg-white px-3 py-1.5 text-sm text-ink-soft"
+          className="flex min-h-11 items-center rounded-full bg-white px-3.5 text-sm text-ink"
           onClick={() => onPick(p.name)}
         >
           {p.name}
-          {p.distance > 0 && <span className="text-ink-faint"> {p.distance}m</span>}
+          {p.distance > 0 && <span className="text-ink-soft">&nbsp;{p.distance}m</span>}
         </button>
       ))}
     </div>

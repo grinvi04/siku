@@ -21,11 +21,11 @@
 
   --color-receive: #2a5bd7;
   --color-pay: #e03131;
-  --color-success: #2f9e44;
-  --color-warning: #f08c00;
+  --color-success: #15803d;
+  --color-warning: #b45309;
   --color-error: #e03131;
 
-  /* 주 사용자 40대 — 본문 17px 기준 (DESIGN.md Typography) */
+  /* 주 사용자 40~60대 — 본문 17px 기준 (DESIGN.md Typography) */
   --text-base: 17px;
   --text-base--line-height: 1.55;
   --text-sm: 14px;

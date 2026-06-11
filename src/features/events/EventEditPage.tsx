@@ -97,7 +97,7 @@ export function EventEditPage() {
             id="end_date"
             name="end_date"
             type="date"
-            label="종료일 (여행이면)"
+            label="종료일 (1박 이상이면)"
             defaultValue={event.ends_at?.slice(0, 10) ?? ''}
           />
         </div>

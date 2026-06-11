@@ -41,10 +41,10 @@ export function EventNewPage() {
     mutationFn: createEvent,
     onSuccess: (eventId) => {
       void queryClient.invalidateQueries({ queryKey: ['events', groupId] })
-      toast('기록을 만들었어요')
+      toast('기록을 남겼어요')
       navigate(`/events/${eventId}`, { replace: true })
     },
-    onError: () => toast('기록을 만들지 못했어요. 다시 시도해 주세요'),
+    onError: () => toast('기록을 남기지 못했어요. 다시 시도해 주세요'),
   })
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -93,7 +93,7 @@ export function EventNewPage() {
 
         <div className="grid grid-cols-2 gap-3">
           <Input id="start_date" name="start_date" type="date" label="시작일" defaultValue={today} required />
-          <Input id="end_date" name="end_date" type="date" label="종료일 (여행이면)" />
+          <Input id="end_date" name="end_date" type="date" label="종료일 (1박 이상이면)" />
         </div>
 
         <div>
@@ -116,7 +116,7 @@ export function EventNewPage() {
 
       <div className="mt-8">
         <Button type="submit" disabled={create.isPending}>
-          {create.isPending ? '만들고 있어요…' : '기록 만들기'}
+          {create.isPending ? '남기고 있어요…' : '기록 남기기'}
         </Button>
       </div>
     </form>
