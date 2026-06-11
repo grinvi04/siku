@@ -163,6 +163,16 @@ export async function addMemberDirectly(groupId: string, userId: string): Promis
 /** 테스트가 만든 데이터 정리 — 실DB를 더럽히지 않는다 */
 export async function cleanup(groupIds: string[], userIds: string[]): Promise<void> {
   if (groupIds.length > 0) {
+    // 확정된 정산이 있으면 잠금 트리거가 cascade 삭제를 막으므로 먼저 해제
+    const { data: events } = await admin.from('events').select('id').in('group_id', groupIds)
+    const eventIds = (events ?? []).map((e) => e.id)
+    if (eventIds.length > 0) {
+      await admin
+        .from('settlements')
+        .update({ status: 'reopened' })
+        .in('event_id', eventIds)
+        .eq('status', 'closed')
+    }
     await admin.from('groups').delete().in('id', groupIds)
   }
   for (const id of userIds) {
