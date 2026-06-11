@@ -24,10 +24,24 @@ export function GroupPage() {
     enabled: !!groupId,
   })
 
-  const copyInviteLink = async () => {
+  const shareInvite = async () => {
     if (!group) return
-    await navigator.clipboard.writeText(`${window.location.origin}/invite/${group.invite_code}`)
-    toast('초대 링크를 복사했어요. 카카오톡에 붙여넣어 보내세요')
+    const url = `${window.location.origin}/invite/${group.invite_code}`
+    // 모바일: 네이티브 공유 시트 — 카카오톡을 누르면 대화방 선택으로 바로 이어진다
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: '모임 초대',
+          text: `'${group.name}' 모임에 초대해요. 아래 링크로 들어오세요!`,
+          url,
+        })
+      } catch {
+        // 사용자가 공유 시트를 닫은 경우 — 아무것도 하지 않음
+      }
+    } else {
+      await navigator.clipboard.writeText(url)
+      toast('초대 링크를 복사했어요. 카카오톡 등에 붙여넣어 보내세요')
+    }
   }
 
   if (!group) return <p className="px-5 pt-24 text-center text-ink-soft">불러오는 중…</p>
@@ -50,7 +64,7 @@ export function GroupPage() {
           ))}
           <button
             type="button"
-            onClick={copyInviteLink}
+            onClick={() => void shareInvite()}
             className="shrink-0 rounded-full bg-primary-container px-3 py-1.5 text-sm font-semibold text-primary"
           >
             + 멤버 초대
