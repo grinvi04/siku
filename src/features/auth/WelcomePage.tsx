@@ -46,7 +46,6 @@ export function WelcomePage() {
           autoComplete="nickname"
           maxLength={20}
           required
-          autoFocus
         />
       </div>
 

@@ -78,6 +78,48 @@ describe('detectStayPoints', () => {
   })
 })
 
+describe('detectStayPoints — 경계·옵션', () => {
+  it('빈 입력 → 빈 결과', () => {
+    expect(detectStayPoints([])).toEqual([])
+  })
+
+  it('정확히 30분 체류는 포함 (경계 이상)', () => {
+    expect(detectStayPoints([photo('p1', 0), photo('p2', 30)])).toHaveLength(1)
+  })
+
+  it('30분에서 1초 모자라면 제외', () => {
+    const almost = [
+      { ...photo('p1', 0) },
+      { ...photo('p2', 30), takenAt: 30 * MIN - 1000 },
+    ]
+    expect(detectStayPoints(almost)).toHaveLength(0)
+  })
+
+  it('반경 안(~149m)은 같은 클러스터, 밖(~155m)은 분리', () => {
+    // 위도 0.00134° ≈ 149m, 0.0014° ≈ 156m
+    const inside = detectStayPoints([photo('p1', 0), photo('p2', 35, 0.00134)])
+    expect(inside).toHaveLength(1)
+    const outside = detectStayPoints([photo('p1', 0), photo('p2', 35, 0.0014), photo('p3', 70, 0.0014)])
+    expect(outside.map((s) => s.photoIds)).toEqual([['p2', 'p3']])
+  })
+
+  it('옵션으로 반경·최소 체류시간을 조정할 수 있다', () => {
+    const photos = [photo('p1', 0), photo('p2', 15)]
+    expect(detectStayPoints(photos)).toHaveLength(0) // 기본 30분
+    expect(detectStayPoints(photos, { minStayMs: 10 * MIN })).toHaveLength(1)
+  })
+
+  it('같은 시각 사진 여러 장은 체류시간 0 → 방문 아님', () => {
+    expect(detectStayPoints([photo('p1', 5), photo('p2', 5), photo('p3', 5)])).toHaveLength(0)
+  })
+
+  it('점진 이동(드리프트): 각 사진이 갱신된 중심 반경 안이면 한 클러스터로 유지', () => {
+    // 10분마다 ~55m씩 이동 — 누적 이동은 150m를 넘지만 중심이 따라가므로 단일 클러스터 (알고리즘 특성)
+    const drift = [0, 1, 2, 3].map((i) => photo(`p${i}`, i * 10, i * 0.0005))
+    expect(detectStayPoints(drift)).toHaveLength(1)
+  })
+})
+
 describe('assignPhotoToStayPoint', () => {
   const visits = [
     { lat: BASE.lat, lng: BASE.lng, startedAt: 0, endedAt: 60 * MIN, radiusM: 150 },
@@ -91,6 +133,20 @@ describe('assignPhotoToStayPoint', () => {
 
   it('도착 직전 사진은 허용 오차(10분)로 배정된다', () => {
     expect(assignPhotoToStayPoint(photo('p', 85, 0.01), visits)).toBe(1)
+  })
+
+  it('허용 오차 경계 정확히 10분 전은 배정, 그보다 1초 전은 미배정', () => {
+    expect(assignPhotoToStayPoint(photo('p', 80, 0.01), visits)).toBe(1)
+    const justBefore = { ...photo('p', 80, 0.01), takenAt: 80 * MIN - 1000 }
+    expect(assignPhotoToStayPoint(justBefore, visits)).toBeNull()
+  })
+
+  it('시간 구간이 겹치는 두 방문이면 앞선 방문을 선택한다', () => {
+    const overlapping = [
+      { lat: BASE.lat, lng: BASE.lng, startedAt: 0, endedAt: 60 * MIN, radiusM: 150 },
+      { lat: BASE.lat, lng: BASE.lng, startedAt: 30 * MIN, endedAt: 90 * MIN, radiusM: 150 },
+    ]
+    expect(assignPhotoToStayPoint(photo('p', 40), overlapping)).toBe(0)
   })
 
   it('시간은 맞지만 위치가 멀면 null', () => {

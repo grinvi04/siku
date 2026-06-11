@@ -64,6 +64,39 @@ describe('parseReceiptText', () => {
     expect(result.title).toBe('coupang eats')
   })
 
+  it('마스킹된 카드번호·사업자번호는 금액 후보가 아니다 (콤마·원 없음)', () => {
+    const text = `구이집\n카드번호: 1234-56**-****-7890\n123-45-67890\n저녁 15,000`
+    expect(parseReceiptText(text).amount).toBe(15000)
+  })
+
+  it('부가세 분리 영수증: 합계가 공급가액·세액보다 우선', () => {
+    const text = `식당\n공급가액 9,091\n부가세 909\n합계 10,000`
+    expect(parseReceiptText(text).amount).toBe(10000)
+  })
+
+  it('합계 줄에 건수 등 다른 숫자가 섞여도 마지막 숫자(금액 열)를 채택', () => {
+    expect(parseReceiptText('합계 3 45,000').amount).toBe(45000)
+  })
+
+  it('첫 줄이 전화번호면 다음 줄에서 상호를 찾는다', () => {
+    const text = `02-1234-5678\n바다회집\n합계 88,000`
+    expect(parseReceiptText(text).title).toBe('바다회집')
+  })
+
+  it('영문 영수증: TOTAL 키워드와 영문 상호', () => {
+    const result = parseReceiptText('STARBUCKS\nAmericano 2\nTOTAL 12,500')
+    expect(result.amount).toBe(12500)
+    expect(result.title).toBe('STARBUCKS')
+  })
+
+  it('금액이 100원 미만뿐이면 null', () => {
+    expect(parseReceiptText('주차 도장\n확인 50원').amount).toBeNull()
+  })
+
+  it('두 자리 연도(26-06-08)는 날짜로 인식하지 않는다 (오인 방지)', () => {
+    expect(parseReceiptText('거래일: 26-06-08').date).toBeNull()
+  })
+
   it('배달앱 영수증: 주문금액 키워드 + 상호 첫 줄', () => {
     const text = `coupang eats\n26P56K\n[수저포크O]\n메뉴 수량 금액\n더블 햄치즈 샌드위치+커피세트 1 10,500\n* ICE 1 0\n주문금액 10,500\n거래일시: 2026-06-08 20:05:09`
     const result = parseReceiptText(text)
