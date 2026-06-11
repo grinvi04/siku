@@ -11,6 +11,8 @@ export function LoginPage() {
   const [searchParams] = useSearchParams()
   const next = sanitizeNextPath(searchParams.get('next'))
   const [sentTo, setSentTo] = useState<string | null>(null)
+  // 로그인이 풀려도(브라우저 데이터 삭제 등) 이메일은 다시 안 치게 기억해 둔다
+  const [savedEmail] = useState(() => localStorage.getItem('moim:lastEmail') ?? '')
   const [pending, setPending] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
@@ -22,8 +24,12 @@ export function LoginPage() {
     setError(null)
     const { error } = await sendMagicLink(email, next)
     setPending(false)
-    if (error) setError('링크를 보내지 못했어요. 이메일 주소를 확인하고 다시 시도해 주세요')
-    else setSentTo(email)
+    if (error) {
+      setError('링크를 보내지 못했어요. 이메일 주소를 확인하고 다시 시도해 주세요')
+    } else {
+      localStorage.setItem('moim:lastEmail', email)
+      setSentTo(email)
+    }
   }
 
   if (sentTo) {
@@ -91,6 +97,7 @@ export function LoginPage() {
           placeholder="example@email.com"
           autoComplete="email"
           inputMode="email"
+          defaultValue={savedEmail}
           required
         />
         <Button type="submit" disabled={pending}>
