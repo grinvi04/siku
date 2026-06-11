@@ -141,12 +141,6 @@ export function StatsPage() {
             nameOf={nameOf}
             format={(n) => `${n}회`}
           />
-          <TopList
-            title="결제왕"
-            entries={sortDesc(stats.paidSums)}
-            nameOf={nameOf}
-            format={formatKrw}
-          />
         </>
       )}
     </div>

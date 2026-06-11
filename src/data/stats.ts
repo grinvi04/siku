@@ -9,8 +9,6 @@ export interface GroupStats {
   visitCount: number
   /** user_id → 참석 횟수 */
   attendCounts: Map<string, number>
-  /** user_id → 결제 합계 (양수 지출만) */
-  paidSums: Map<string, number>
 }
 
 export async function getGroupStats(groupId: string): Promise<GroupStats> {
@@ -22,7 +20,7 @@ export async function getGroupStats(groupId: string): Promise<GroupStats> {
       .eq('events.group_id', groupId),
     supabase
       .from('expenses')
-      .select('payer_id, amount, events!inner(group_id)')
+      .select('amount, events!inner(group_id)')
       .eq('events.group_id', groupId),
     supabase
       .from('photos')
@@ -49,13 +47,9 @@ export async function getGroupStats(groupId: string): Promise<GroupStats> {
     attendCounts.set(p.user_id, (attendCounts.get(p.user_id) ?? 0) + 1)
   }
 
-  const paidSums = new Map<string, number>()
   let totalSpent = 0
   for (const e of expenses.data ?? []) {
     totalSpent += e.amount
-    if (e.amount > 0) {
-      paidSums.set(e.payer_id, (paidSums.get(e.payer_id) ?? 0) + e.amount)
-    }
   }
 
   return {
@@ -65,6 +59,5 @@ export async function getGroupStats(groupId: string): Promise<GroupStats> {
     photoCount: photos.count ?? 0,
     visitCount: visits.count ?? 0,
     attendCounts,
-    paidSums,
   }
 }
