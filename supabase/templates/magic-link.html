@@ -7,11 +7,14 @@
       <div style="width:48px;height:48px;border-radius:14px;background-color:#2a5bd7;color:#ffffff;font-size:22px;font-weight:700;text-align:center;line-height:48px;">식</div>
       <h1 style="margin:20px 0 0;font-size:22px;line-height:1.4;color:#1a202c;">식구에 로그인하세요</h1>
       <p style="margin:10px 0 0;font-size:16px;line-height:1.6;color:#64707d;">
-        아래 버튼을 누르면 비밀번호 없이 바로 로그인돼요.<br />
-        이 링크는 <strong style="color:#1a202c;">1시간 동안, 한 번만</strong> 사용할 수 있어요.
+        비밀번호 없이 코드 입력이나 버튼으로 로그인해요.<br />
+        <strong style="color:#1a202c;">1시간 동안, 한 번만</strong> 사용할 수 있어요.
       </p>
     </div>
     <div style="padding:28px;">
+      <p style="margin:0 0 8px;font-size:14px;color:#64707d;">앱 화면에 이 코드를 입력하세요</p>
+      <div style="margin:0 0 20px;padding:14px 0;background-color:#f7f8fa;border:1px solid #e5e8eb;border-radius:12px;text-align:center;font-size:30px;font-weight:800;letter-spacing:10px;color:#1a202c;">{{ .Token }}</div>
+      <p style="margin:0 0 8px;font-size:14px;color:#64707d;">또는 버튼으로 바로 로그인</p>
       <a href="{{ .ConfirmationURL }}"
          style="display:block;background-color:#2a5bd7;color:#ffffff;text-decoration:none;text-align:center;font-size:17px;font-weight:700;padding:16px 0;border-radius:12px;">
         식구 로그인하기

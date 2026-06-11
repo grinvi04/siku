@@ -1,14 +1,20 @@
 import { useState } from 'react'
-import { useSearchParams } from 'react-router-dom'
+import { useNavigate, useSearchParams } from 'react-router-dom'
 import { Button } from '@/components/Button'
 import { Input } from '@/components/Input'
-import { sendMagicLink } from '@/data/supabase'
+import { ensureProfile } from '@/data/profiles'
+import { sendMagicLink, supabase } from '@/data/supabase'
+import { useToast } from '@/components/Toast'
 import { Images, MapPin, ReceiptText } from 'lucide-react'
 import { isKakaoInAppBrowser, openInExternalBrowser } from './inAppBrowser'
 import { sanitizeNextPath } from './nextPath'
 
 export function LoginPage() {
+  const navigate = useNavigate()
+  const toast = useToast()
   const [searchParams] = useSearchParams()
+  const [code, setCode] = useState('')
+  const [verifying, setVerifying] = useState(false)
   const next = sanitizeNextPath(searchParams.get('next'))
   const [sentTo, setSentTo] = useState<string | null>(null)
   // 로그인이 풀려도(브라우저 데이터 삭제 등) 이메일은 다시 안 치게 기억해 둔다
@@ -32,19 +38,64 @@ export function LoginPage() {
     }
   }
 
+  const verifyCode = async () => {
+    const token = code.trim()
+    if (token.length !== 6) {
+      toast('메일에 적힌 6자리 코드를 입력해 주세요')
+      return
+    }
+    setVerifying(true)
+    const { error } = await supabase.auth.verifyOtp({ email: sentTo!, token, type: 'email' })
+    if (error) {
+      setVerifying(false)
+      toast('코드가 맞지 않아요. 메일을 다시 확인해 주세요')
+      return
+    }
+    try {
+      const { created } = await ensureProfile()
+      navigate(next ?? (created ? '/welcome' : '/'), { replace: true })
+    } catch {
+      setVerifying(false)
+      toast('로그인 처리에 실패했어요. 다시 시도해 주세요')
+    }
+  }
+
   if (sentTo) {
     return (
-      <div className="flex min-h-dvh flex-col justify-center px-5 text-center">
-        <h1 className="text-[22px] font-bold">메일함을 확인해 주세요</h1>
-        <p className="mt-3 text-base leading-[1.55] text-ink-soft">
+      <div className="flex min-h-dvh flex-col justify-center px-5">
+        <h1 className="text-center text-[22px] font-bold">메일함을 확인해 주세요</h1>
+        <p className="mt-3 text-center text-base leading-[1.55] text-ink-soft">
           <span className="font-semibold text-ink">{sentTo}</span>
-          (으)로 로그인 링크를 보냈어요.
+          (으)로 보냈어요.
           <br />
-          메일 속 버튼을 누르면 바로 로그인돼요.
+          메일에 적힌 <strong className="text-ink">6자리 코드</strong>를 여기에 입력하세요.
+        </p>
+        <div className="mt-6">
+          <Input
+            id="otp"
+            inputMode="numeric"
+            autoComplete="one-time-code"
+            maxLength={6}
+            placeholder="123456"
+            className="text-center text-[22px] tracking-[0.3em]"
+            value={code}
+            onChange={(e) => setCode(e.target.value.replace(/\D/g, ''))}
+          />
+        </div>
+        <div className="mt-4">
+          <Button onClick={() => void verifyCode()} disabled={verifying}>
+            {verifying ? '확인하고 있어요…' : '코드로 로그인'}
+          </Button>
+        </div>
+        <p className="mt-4 text-center text-sm leading-[1.5] text-ink-soft">
+          메일 속 버튼을 눌러도 로그인돼요.
         </p>
         <button
-          className="mt-8 text-base font-semibold text-primary"
-          onClick={() => setSentTo(null)}
+          className="mt-6 h-11 text-base font-semibold text-primary"
+          onClick={() => {
+            setSentTo(null)
+            setCode('')
+          }}
         >
           다른 이메일로 받기
         </button>
