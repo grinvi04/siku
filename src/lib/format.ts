@@ -26,3 +26,10 @@ export function formatDateRange(startIso: string, endIso: string | null): string
 export function formatKrw(amount: number): string {
   return `${amount.toLocaleString('ko-KR')}원`
 }
+
+const timeFmt = new Intl.DateTimeFormat('ko-KR', { hour: '2-digit', minute: '2-digit', hour12: false })
+
+/** '18:30 ~ 20:40' */
+export function formatTimeRange(startIso: string, endIso: string): string {
+  return `${timeFmt.format(new Date(startIso))} ~ ${timeFmt.format(new Date(endIso))}`
+}

@@ -5,6 +5,7 @@ import { getEvent, type EventType } from '@/data/events'
 import { formatDateRange } from '@/lib/format'
 import { SettleTab } from '@/features/expenses/SettleTab'
 import { PhotosTab } from '@/features/photos/PhotosTab'
+import { VisitsTab } from '@/features/places/VisitsTab'
 
 const TYPE_LABEL: Record<EventType, string> = { dinner: '저녁모임', ride: '라이딩', trip: '여행' }
 
@@ -64,11 +65,7 @@ export function EventPage() {
 
       {tab === 'settle' && <SettleTab event={event} />}
       {tab === 'photos' && <PhotosTab event={event} />}
-      {tab === 'places' && (
-        <p className="mt-12 text-center text-base text-ink-soft">
-          사진을 올리면 다녀온 곳을 자동으로 정리해 드려요.
-        </p>
-      )}
+      {tab === 'places' && <VisitsTab event={event} />}
     </div>
   )
 }
