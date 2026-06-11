@@ -90,7 +90,15 @@ export function ExpenseFormPage() {
       toast(isEdit ? '지출을 고쳤어요' : '지출을 추가했어요')
       goBack()
     },
-    onError: () => toast('저장하지 못했어요. 다시 시도해 주세요'),
+    onError: (e) => {
+      if (e instanceof Error && e.message.includes('정산이 확정된')) {
+        void queryClient.invalidateQueries({ queryKey: ['settlement', eventId] })
+        toast('그 사이 정산이 확정되어 잠겼어요. 정산을 취소하면 고칠 수 있어요')
+        goBack()
+      } else {
+        toast('저장하지 못했어요. 다시 시도해 주세요')
+      }
+    },
   })
   const remove = useMutation({
     mutationFn: () => deleteExpense(expenseId!),
