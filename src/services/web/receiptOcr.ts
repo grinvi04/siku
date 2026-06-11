@@ -8,8 +8,8 @@ import { blobToBase64, resizeImage } from './image'
  */
 export async function recognizeReceipt(file: File): Promise<ParsedReceipt> {
   // OCR 정확도와 전송량의 균형 — 장변 1600px JPEG
-  const resized = await resizeImage(file, 1600)
-  const image = await blobToBase64(resized)
+  const { blob } = await resizeImage(file, 1600)
+  const image = await blobToBase64(blob)
 
   const { data, error } = await supabase.functions.invoke('parse-receipt', {
     body: { image },

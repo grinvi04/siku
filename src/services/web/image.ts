@@ -12,12 +12,18 @@ async function decodeBitmap(file: File): Promise<ImageBitmap> {
   }
 }
 
+export interface ResizedImage {
+  blob: Blob
+  width: number
+  height: number
+}
+
 export async function resizeImage(
   file: File,
   maxDimension: number,
   quality = 0.85,
   mimeType = 'image/jpeg',
-): Promise<Blob> {
+): Promise<ResizedImage> {
   const bitmap = await decodeBitmap(file)
   const scale = Math.min(1, maxDimension / Math.max(bitmap.width, bitmap.height))
   const width = Math.round(bitmap.width * scale)
@@ -31,7 +37,8 @@ export async function resizeImage(
 
   return new Promise((resolve, reject) => {
     canvas.toBlob(
-      (blob) => (blob ? resolve(blob) : reject(new Error('이미지 변환에 실패했습니다.'))),
+      (blob) =>
+        blob ? resolve({ blob, width, height }) : reject(new Error('이미지 변환에 실패했습니다.')),
       mimeType,
       quality,
     )
