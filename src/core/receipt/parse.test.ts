@@ -50,4 +50,12 @@ describe('parseReceiptText', () => {
     const text = `식당\n합계 50,000\n할인 -5,000\n결제금액 45,000`
     expect(parseReceiptText(text).amount).toBe(45000)
   })
+
+  it('배달앱 영수증: 주문금액 키워드 + 상호 첫 줄', () => {
+    const text = `coupang eats\n26P56K\n[수저포크O]\n메뉴 수량 금액\n더블 햄치즈 샌드위치+커피세트 1 10,500\n* ICE 1 0\n주문금액 10,500\n거래일시: 2026-06-08 20:05:09`
+    const result = parseReceiptText(text)
+    expect(result.amount).toBe(10500)
+    expect(result.title).toBe('coupang eats')
+    expect(result.date).toBe('2026-06-08')
+  })
 })
