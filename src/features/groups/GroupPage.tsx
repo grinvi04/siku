@@ -54,11 +54,12 @@ export function GroupPage() {
       </button>
       <header className="mt-2">
         <h1 className="text-[22px] font-bold">{group.name}</h1>
-        <div className="mt-2 flex items-center gap-1.5 overflow-x-auto">
+        {/* 멤버가 많아도 가려지지 않게 여러 줄로 감싼다 */}
+        <div className="mt-2 flex flex-wrap items-center gap-1.5">
           {group.members.map((m) => (
             <span
               key={m.user_id}
-              className={`shrink-0 rounded-full px-3 py-1.5 text-sm ${
+              className={`rounded-full px-3 py-1.5 text-sm ${
                 m.user_id === me
                   ? 'bg-primary-container font-semibold text-primary'
                   : 'bg-surface text-ink-soft'
@@ -68,10 +69,11 @@ export function GroupPage() {
               {m.user_id === me && ' (나)'}
             </span>
           ))}
+          {/* 정보 칩(나)과 구분되는 행동 버튼 — 점선 테두리 */}
           <button
             type="button"
             onClick={() => void shareInvite()}
-            className="shrink-0 rounded-full bg-primary-container px-3 py-1.5 text-sm font-semibold text-primary"
+            className="rounded-full border border-dashed border-primary bg-white px-3 py-1.5 text-sm font-semibold text-primary"
           >
             + 멤버 초대
           </button>
@@ -83,25 +85,40 @@ export function GroupPage() {
         {isLoading ? (
           <p className="mt-8 text-center text-ink-soft">불러오는 중…</p>
         ) : events && events.length > 0 ? (
-          <ul className="mt-2">
-            {events.map((event) => (
-              <li key={event.id} className="border-b border-line">
-                <Link
-                  to={`/events/${event.id}`}
-                  className="flex min-h-14 items-center justify-between py-4"
-                >
-                  <div>
-                    <p className="text-base font-semibold">{event.title}</p>
-                    <p className="mt-0.5 text-sm text-ink-soft">
-                      {formatDateRange(event.starts_at, event.ends_at)} · {EVENT_TYPE_LABEL[event.type]} ·{' '}
-                      {event.participant_count}명
-                    </p>
-                  </div>
-                  <span className="text-ink-soft">›</span>
-                </Link>
-              </li>
-            ))}
-          </ul>
+          // 월별 섹션으로 묶어 표시 — 기록이 쌓여도 훑기 쉽게
+          events
+            .reduce<{ month: string; items: typeof events }[]>((groups, e) => {
+              const d = new Date(e.starts_at)
+              const month = `${d.getFullYear()}년 ${d.getMonth() + 1}월`
+              const last = groups[groups.length - 1]
+              if (last?.month === month) last.items.push(e)
+              else groups.push({ month, items: [e] })
+              return groups
+            }, [])
+            .map(({ month, items: monthEvents }) => (
+            <div key={month}>
+              <h3 className="mt-5 text-sm font-semibold text-ink-soft">{month}</h3>
+              <ul className="mt-1">
+                {monthEvents.map((event) => (
+                  <li key={event.id} className="border-b border-line">
+                    <Link
+                      to={`/events/${event.id}`}
+                      className="flex min-h-14 items-center justify-between py-4"
+                    >
+                      <div>
+                        <p className="text-base font-semibold">{event.title}</p>
+                        <p className="mt-0.5 text-sm text-ink-soft">
+                          {formatDateRange(event.starts_at, event.ends_at)} ·{' '}
+                          {EVENT_TYPE_LABEL[event.type]} · {event.participant_count}명
+                        </p>
+                      </div>
+                      <span className="text-ink-soft">›</span>
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))
         ) : (
           <div className="mt-12 text-center">
             <p className="text-base text-ink-soft">아직 기록이 없어요.</p>
