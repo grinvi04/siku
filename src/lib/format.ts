@@ -28,6 +28,18 @@ export function formatKrw(amount: number): string {
 }
 
 const timeFmt = new Intl.DateTimeFormat('ko-KR', { hour: '2-digit', minute: '2-digit', hour12: false })
+const dateTimeFmt = new Intl.DateTimeFormat('ko-KR', {
+  month: 'numeric',
+  day: 'numeric',
+  hour: '2-digit',
+  minute: '2-digit',
+  hour12: false,
+})
+
+/** '6. 12. 14:30' */
+export function formatDateTime(iso: string): string {
+  return dateTimeFmt.format(new Date(iso))
+}
 
 /** '18:30 ~ 20:40' */
 export function formatTimeRange(startIso: string, endIso: string): string {

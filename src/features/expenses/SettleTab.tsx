@@ -17,7 +17,7 @@ import {
   type TransferRow,
   type TransferStatus,
 } from '@/data/settlements'
-import { formatKrw } from '@/lib/format'
+import { formatDateTime, formatKrw } from '@/lib/format'
 import { useSession } from '@/features/auth/useSession'
 
 export function SettleTab({ event }: { event: EventDetail }) {
@@ -203,7 +203,16 @@ export function SettleTab({ event }: { event: EventDetail }) {
             {closed.transfers.length === 0 ? (
               <p className="mt-2 text-base text-ink-soft">주고받을 돈 없이 정산이 끝났어요.</p>
             ) : (
-              <ul className="mt-1">
+              <>
+                <p className="mt-1 text-sm text-ink-soft">
+                  송금 {closed.transfers.length}건 중{' '}
+                  <span className="font-semibold text-success">
+                    {closed.transfers.filter((t) => t.status === 'confirmed').length}건 완료
+                  </span>
+                  {closed.transfers.some((t) => t.status === 'sent') &&
+                    ` · ${closed.transfers.filter((t) => t.status === 'sent').length}건 확인 대기`}
+                </p>
+                <ul className="mt-1">
                 {closed.transfers.map((t) => (
                   <TransferItem
                     key={t.id}
@@ -215,7 +224,8 @@ export function SettleTab({ event }: { event: EventDetail }) {
                     onMark={(status) => mark.mutate({ id: t.id, status })}
                   />
                 ))}
-              </ul>
+                </ul>
+              </>
             )}
             <button
               type="button"
@@ -337,6 +347,12 @@ function TransferItem({
         >
           {STATUS_LABEL[transfer.status]}
         </span>
+        {transfer.status === 'sent' && transfer.sent_at && (
+          <span className="text-sm text-ink-soft">{formatDateTime(transfer.sent_at)}</span>
+        )}
+        {transfer.status === 'confirmed' && transfer.confirmed_at && (
+          <span className="text-sm text-ink-soft">{formatDateTime(transfer.confirmed_at)}</span>
+        )}
         {!done && isSender && (
           <>
             <button
