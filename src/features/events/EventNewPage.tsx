@@ -6,13 +6,12 @@ import { Chip } from '@/components/Chip'
 import { Input } from '@/components/Input'
 import { useToast } from '@/components/Toast'
 import { getGroup } from '@/data/groups'
-import { createEvent, type EventType } from '@/data/events'
+import { createEvent, EVENT_TYPE_LABEL, type EventType } from '@/data/events'
 
-const TYPES: { value: EventType; label: string }[] = [
-  { value: 'dinner', label: '저녁모임' },
-  { value: 'ride', label: '라이딩' },
-  { value: 'trip', label: '여행' },
-]
+const TYPES = (Object.keys(EVENT_TYPE_LABEL) as EventType[]).map((value) => ({
+  value,
+  label: EVENT_TYPE_LABEL[value],
+}))
 
 export function EventNewPage() {
   const { groupId } = useParams<{ groupId: string }>()
@@ -81,7 +80,7 @@ export function EventNewPage() {
       <div className="mt-6 space-y-5">
         <div>
           <span className="mb-1.5 block text-sm text-ink-soft">어떤 모임이었나요?</span>
-          <div className="flex gap-2">
+          <div className="flex flex-wrap gap-2">
             {TYPES.map((t) => (
               <Chip key={t.value} selected={type === t.value} onClick={() => setType(t.value)}>
                 {t.label}

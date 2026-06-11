@@ -1,10 +1,13 @@
 import { supabase } from './supabase'
 
-export type EventType = 'dinner' | 'ride' | 'trip'
+export type EventType = 'lunch' | 'dinner' | 'snack' | 'ride' | 'outing' | 'trip'
 
 export const EVENT_TYPE_LABEL: Record<EventType, string> = {
+  lunch: '점심모임',
   dinner: '저녁모임',
+  snack: '간식·카페',
   ride: '라이딩',
+  outing: '나들이',
   trip: '여행',
 }
 
