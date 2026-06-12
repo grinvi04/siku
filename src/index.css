@@ -1,5 +1,47 @@
+@import 'pretendard/dist/web/variable/pretendardvariable-dynamic-subset.css';
 @import 'tailwindcss';
+
+/* DESIGN.md 토큰 — 색상·폰트의 단일 출처는 DESIGN.md */
+@theme {
+  --font-sans:
+    'Pretendard Variable', Pretendard, -apple-system, 'Apple SD Gothic Neo',
+    'Noto Sans KR', system-ui, sans-serif;
+
+  --color-primary: #2a5bd7;
+  --color-primary-pressed: #1e46ac;
+  --color-primary-container: #eaf0fd;
+  --color-accent: #e8865d;
+  --color-accent-container: #fceee6;
+
+  --color-surface: #f7f8fa;
+  --color-line: #e5e8eb;
+  --color-ink: #1a202c;
+  --color-ink-soft: #64707d;
+  --color-ink-faint: #adb5bd;
+
+  --color-receive: #2a5bd7;
+  --color-pay: #e03131;
+  --color-success: #15803d;
+  --color-warning: #b45309;
+  --color-error: #e03131;
+
+  /* 주 사용자 40~60대 — 본문 17px 기준 (DESIGN.md Typography) */
+  --text-base: 17px;
+  --text-base--line-height: 1.55;
+  --text-sm: 14px;
+  --text-sm--line-height: 1.5;
+}
 
 html {
   -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  @apply bg-white font-sans text-ink antialiased;
+}
+
+/* 금액 숫자 자릿수 정렬 (DESIGN.md Typography — Amount) */
+.amount {
+  font-variant-numeric: tabular-nums;
+  @apply font-semibold;
 }

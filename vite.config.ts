@@ -1,3 +1,4 @@
+import { fileURLToPath, URL } from 'node:url'
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import tailwindcss from '@tailwindcss/vite'
@@ -5,18 +6,24 @@ import { VitePWA } from 'vite-plugin-pwa'
 
 // https://vite.dev/config/
 export default defineConfig({
+  define: {
+    __BUILD_TIME__: JSON.stringify(new Date().toISOString().slice(0, 16).replace('T', ' ')),
+  },
+  resolve: {
+    alias: { '@': fileURLToPath(new URL('./src', import.meta.url)) },
+  },
   plugins: [
     react(),
     tailwindcss(),
     VitePWA({
       registerType: 'autoUpdate',
       manifest: {
-        name: '모임',
-        short_name: '모임',
-        description: '소규모 모임 기록·사진·정산',
+        name: '식구 (SIKU)',
+        short_name: '식구',
+        description: '밥 같이 먹는 사이의 기록·사진·정산',
         lang: 'ko',
         display: 'standalone',
-        theme_color: '#0f172a',
+        theme_color: '#ffffff',
         background_color: '#ffffff',
         icons: [
           { src: '/icons/icon-192.png', sizes: '192x192', type: 'image/png' },
