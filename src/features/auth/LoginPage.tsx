@@ -119,7 +119,8 @@ export function LoginPage() {
             식
           </div>
           <p className="mt-3 text-sm font-bold tracking-[0.25em] text-primary">SIKU</p>
-          <h1 className="mt-1.5 text-[30px] leading-[1.3] font-bold">
+          {/* pr-24: OS 폰트 확대 시에도 우측 일러스트와 겹치지 않게 줄바꿈 영역 확보 */}
+          <h1 className="mt-1.5 pr-24 text-[30px] leading-[1.3] font-bold">
             밥 같이 먹는 사이,
             <br />
             식구<span className="text-accent">.</span>

@@ -52,7 +52,10 @@ export function HomePage() {
                 <span
                   aria-hidden
                   className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl text-[19px] font-bold"
-                  style={{ backgroundColor: `${colorOf(group.id)}1a`, color: colorOf(group.id) }}
+                  style={{
+                    backgroundColor: `color-mix(in srgb, ${colorOf(group.id)} 12%, white)`,
+                    color: colorOf(group.id),
+                  }}
                 >
                   {group.name.slice(0, 1)}
                 </span>
