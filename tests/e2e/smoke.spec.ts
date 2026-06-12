@@ -46,13 +46,13 @@ test('형식이 잘못된 이메일도 제출이 막힌다', async ({ page }) =>
 })
 
 test('마지막 로그인 이메일이 자동으로 채워진다', async ({ page }) => {
-  await page.addInitScript(() => localStorage.setItem('moim:lastEmail', 'siku@example.com'))
+  await page.addInitScript(() => localStorage.setItem('siku:lastEmail', 'siku@example.com'))
   await page.goto('/login')
   await expect(page.getByLabel('이메일')).toHaveValue('siku@example.com')
 })
 
 test('악성 next 파라미터는 무시된다 (open redirect 방지)', async ({ page }) => {
-  await page.addInitScript(() => localStorage.setItem('moim:lastEmail', 'siku@example.com'))
+  await page.addInitScript(() => localStorage.setItem('siku:lastEmail', 'siku@example.com'))
   await page.goto('/login?next=https://evil.example.com')
   // sanitizeNextPath가 외부 URL을 버리므로 화면은 정상 로그인 화면
   await expect(page.getByLabel('이메일')).toBeVisible()

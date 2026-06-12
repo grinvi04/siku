@@ -18,7 +18,10 @@ export function LoginPage() {
   const next = sanitizeNextPath(searchParams.get('next'))
   const [sentTo, setSentTo] = useState<string | null>(null)
   // 로그인이 풀려도(브라우저 데이터 삭제 등) 이메일은 다시 안 치게 기억해 둔다
-  const [savedEmail] = useState(() => localStorage.getItem('moim:lastEmail') ?? '')
+  // 'moim:' 키는 이름 변경 전 저장분 — 한 번 읽어주고 새 키로 넘어간다
+  const [savedEmail] = useState(
+    () => localStorage.getItem('siku:lastEmail') ?? localStorage.getItem('moim:lastEmail') ?? '',
+  )
   const [pending, setPending] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
@@ -33,7 +36,7 @@ export function LoginPage() {
     if (error) {
       setError('링크를 보내지 못했어요. 이메일 주소를 확인하고 다시 시도해 주세요')
     } else {
-      localStorage.setItem('moim:lastEmail', email)
+      localStorage.setItem('siku:lastEmail', email)
       setSentTo(email)
     }
   }
