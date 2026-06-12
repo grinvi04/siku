@@ -17,6 +17,10 @@ export default defineConfig({
     // vitest는 단위 테스트만 — tests/e2e/*.spec.ts는 Playwright 전용 (npm run test:e2e)
     include: ['src/**/*.test.{ts,tsx}'],
   },
+  build: {
+    // heic2any(외부 라이브러리, lazy 청크) 1.35MB가 알려진 상한 — 그보다 큰 청크가 새로 생기면 경고
+    chunkSizeWarningLimit: 1400,
+  },
   plugins: [
     react(),
     tailwindcss(),
@@ -38,6 +42,8 @@ export default defineConfig({
       },
       workbox: {
         navigateFallbackDenylist: [/^\/i\//], // 초대 OG edge function 경로는 SW가 가로채지 않음
+        // heic2any(1.35MB, lazy 청크)는 HEIC 업로드 때만 쓰므로 설치 시 미리 받지 않는다
+        globIgnores: ['**/heic2any-*.js'],
       },
     }),
   ],
