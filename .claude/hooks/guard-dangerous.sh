@@ -17,7 +17,7 @@ COMMAND=$(echo "$INPUT" | python3 -c "import sys,json; print(json.load(sys.stdin
 if [[ "$TOOL" != "Bash" ]]; then exit 0; fi
 
 # Supabase 마이그레이션 파일 삭제 금지 (forward-only — AGENTS.md 도메인 규칙)
-if echo "$COMMAND" | grep -qE "rm[[:space:]]+.*supabase/migrations"; then
+if echo "$COMMAND" | grep -qE "\brm[[:space:]]+.*supabase/migrations"; then
   echo "⛔ [guard] 마이그레이션 파일 삭제 금지 — forward-only" >&2
   echo "   해결: 되돌리려면 새 버전의 마이그레이션 추가" >&2
   exit 2
