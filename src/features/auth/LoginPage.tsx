@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import { Button } from '@/components/Button'
 import { Input } from '@/components/Input'
+import { RiceBowl } from '@/components/RiceBowl'
 import { ensureProfile } from '@/data/profiles'
 import { sendMagicLink, supabase } from '@/data/supabase'
 import { useToast } from '@/components/Toast'
@@ -107,31 +108,44 @@ export function LoginPage() {
   }
 
   return (
-    <div className="flex min-h-dvh flex-col justify-between bg-gradient-to-b from-accent-container/70 via-white to-white px-5 pt-24 pb-[calc(env(safe-area-inset-bottom)+24px)]">
+    <div className="flex min-h-dvh flex-col justify-between bg-gradient-to-b from-accent-container/70 via-white to-white px-5 pt-20 pb-[calc(env(safe-area-inset-bottom)+24px)]">
       <div>
-        <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-primary text-[26px] font-bold text-white">
-          식
+        {/* 히어로 — 밥상 일러스트를 타이틀 옆에 비대칭 배치 */}
+        <div className="relative">
+          <div className="absolute -top-4 right-0" aria-hidden>
+            <RiceBowl size={92} />
+          </div>
+          <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-primary text-[26px] font-bold text-white">
+            식
+          </div>
+          <p className="mt-3 text-sm font-bold tracking-[0.25em] text-primary">SIKU</p>
+          {/* pr-24: OS 폰트 확대 시에도 우측 일러스트와 겹치지 않게 줄바꿈 영역 확보 */}
+          <h1 className="mt-1.5 pr-24 text-[30px] leading-[1.3] font-bold">
+            밥 같이 먹는 사이,
+            <br />
+            식구<span className="text-accent">.</span>
+          </h1>
+          <p className="mt-3 text-base leading-[1.6] text-ink-soft">
+            오늘 같이 먹은 한 끼, 잊기 전에 남겨요.
+          </p>
         </div>
-        <p className="mt-3 text-sm font-bold tracking-[0.25em] text-primary">SIKU</p>
-        <h1 className="mt-1.5 text-[28px] leading-[1.35] font-bold">
-          밥 같이 먹는 사이,
-          <br />
-          식구
-        </h1>
-        <p className="mt-3 text-base leading-[1.6] text-ink-soft">
-          오늘 같이 먹은 한 끼, 잊기 전에 남겨요.
-        </p>
-        <ul className="mt-5 space-y-3">
-          <li className="flex items-start gap-2.5 text-base leading-[1.5] text-ink-soft">
-            <ReceiptText size={20} className="mt-0.5 shrink-0 text-primary" />
+        <ul className="mt-6 divide-y divide-line/60 rounded-2xl bg-white/70 ring-1 ring-line/60">
+          <li className="flex items-center gap-3 px-4 py-3.5 text-base leading-[1.5] text-ink-soft">
+            <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-primary-container text-primary">
+              <ReceiptText size={18} />
+            </span>
             계좌번호 복사 한 번으로 끝나는 정산
           </li>
-          <li className="flex items-start gap-2.5 text-base leading-[1.5] text-ink-soft">
-            <Images size={20} className="mt-0.5 shrink-0 text-accent" />
+          <li className="flex items-center gap-3 px-4 py-3.5 text-base leading-[1.5] text-ink-soft">
+            <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-accent-container text-accent">
+              <Images size={18} />
+            </span>
             모임 사진을 한곳에 모아보기
           </li>
-          <li className="flex items-start gap-2.5 text-base leading-[1.5] text-ink-soft">
-            <MapPin size={20} className="mt-0.5 shrink-0 text-accent" />
+          <li className="flex items-center gap-3 px-4 py-3.5 text-base leading-[1.5] text-ink-soft">
+            <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-accent-container text-accent">
+              <MapPin size={18} />
+            </span>
             사진 위치로 다녀온 곳 자동 기록
           </li>
         </ul>
