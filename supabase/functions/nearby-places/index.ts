@@ -1,9 +1,22 @@
 // 좌표 → 주변 장소 이름 후보 (카카오 로컬 API)
 // 시크릿: KAKAO_REST_API_KEY / 인증: verify_jwt 기본값(true)
 
-const corsHeaders = {
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+// CORS: ALLOWED_ORIGINS 시크릿(쉼표 구분 origin 목록) 설정 시 allowlist 적용,
+// 미설정 시 기존 동작('*') 유지 — 무중단 롤아웃용
+const ALLOWED_ORIGINS = (Deno.env.get('ALLOWED_ORIGINS') ?? '*')
+  .split(',')
+  .map((s) => s.trim())
+  .filter(Boolean)
+
+function corsHeadersFor(req: Request): Record<string, string> {
+  const origin = req.headers.get('origin') ?? ''
+  const allow = ALLOWED_ORIGINS.includes('*') ? '*' : ALLOWED_ORIGINS.includes(origin) ? origin : ''
+  const headers: Record<string, string> = {
+    'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+  }
+  if (allow) headers['Access-Control-Allow-Origin'] = allow
+  if (allow && allow !== '*') headers['Vary'] = 'Origin'
+  return headers
 }
 
 // 모임에서 갈 만한 곳: 음식점, 카페, 관광명소, 문화시설, 숙박
@@ -16,6 +29,13 @@ interface KakaoPlace {
 }
 
 Deno.serve(async (req) => {
+  const corsHeaders = corsHeadersFor(req)
+  const json = (body: unknown, status = 200): Response =>
+    new Response(JSON.stringify(body), {
+      status,
+      headers: { 'Content-Type': 'application/json', ...corsHeaders },
+    })
+
   if (req.method === 'OPTIONS') {
     return new Response('ok', { headers: corsHeaders })
   }
@@ -93,10 +113,3 @@ Deno.serve(async (req) => {
     return json({ error: '주변 장소를 찾지 못했습니다.' }, 500)
   }
 })
-
-function json(body: unknown, status = 200): Response {
-  return new Response(JSON.stringify(body), {
-    status,
-    headers: { 'Content-Type': 'application/json', ...corsHeaders },
-  })
-}

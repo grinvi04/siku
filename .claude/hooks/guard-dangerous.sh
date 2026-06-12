@@ -6,7 +6,7 @@ INPUT=$(cat)
 
 # 가드는 fail-closed — python3 부재 시 파싱 실패로 가드가 무력화되므로 차단
 if ! command -v python3 >/dev/null 2>&1; then
-  echo "⛔ [guard] python3 없음 — 가드 실행 불가 (fail-closed)"
+  echo "⛔ [guard] python3 없음 — 가드 실행 불가 (fail-closed)" >&2
   exit 2
 fi
 
@@ -44,8 +44,8 @@ fi
 
 # ── siku 가드: Supabase 마이그레이션 파일 삭제 금지 (forward-only) ──────
 if echo "$COMMAND" | grep -qE "rm\s+.*supabase/migrations"; then
-  echo "⛔ [guard] 마이그레이션 파일 삭제 금지 — forward-only"
-  echo "   해결: 되돌리려면 새 버전의 마이그레이션 추가"
+  echo "⛔ [guard] 마이그레이션 파일 삭제 금지 — forward-only" >&2
+  echo "   해결: 되돌리려면 새 버전의 마이그레이션 추가" >&2
   exit 2
 fi
 
