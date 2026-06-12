@@ -1,3 +1,4 @@
+/// <reference types="vitest/config" />
 import { fileURLToPath, URL } from 'node:url'
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
@@ -11,6 +12,10 @@ export default defineConfig({
   },
   resolve: {
     alias: { '@': fileURLToPath(new URL('./src', import.meta.url)) },
+  },
+  test: {
+    // vitest는 단위 테스트만 — tests/e2e/*.spec.ts는 Playwright 전용 (npm run test:e2e)
+    include: ['src/**/*.test.{ts,tsx}'],
   },
   plugins: [
     react(),
