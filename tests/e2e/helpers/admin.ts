@@ -153,6 +153,28 @@ export function makePng(size = 64, rgb: [number, number, number] = [42, 91, 215]
   ])
 }
 
+/** 장소 인식 테스트용 사진 행 (파일 없이 좌표·시각만) */
+export async function adminAddPhoto(
+  eventId: string,
+  uploaderId: string,
+  lat: number,
+  lng: number,
+  takenAt: string,
+): Promise<void> {
+  const fake = `e2e/${eventId}/${Math.random().toString(36).slice(2)}`
+  const { error } = await admin.from('photos').insert({
+    event_id: eventId,
+    uploader_id: uploaderId,
+    storage_path: `${fake}.webp`,
+    thumb_path: `${fake}_thumb.webp`,
+    taken_at: takenAt,
+    lat,
+    lng,
+    size_bytes: 1000,
+  })
+  if (error) throw error
+}
+
 export async function addMemberDirectly(groupId: string, userId: string): Promise<void> {
   const { error } = await admin
     .from('group_members')
