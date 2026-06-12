@@ -1,6 +1,7 @@
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
+import { BackLink } from '@/components/BackLink'
 import { ConfirmDialog } from '@/components/ConfirmDialog'
 import { useToast } from '@/components/Toast'
 import { deleteEvent, EVENT_TYPE_LABEL, getEvent } from '@/data/events'
@@ -64,13 +65,7 @@ export function EventPage() {
 
   return (
     <div className="min-h-dvh px-5 pt-6 pb-[calc(env(safe-area-inset-bottom)+16px)]">
-      <button
-        type="button"
-        className="h-11 text-base text-ink-soft"
-        onClick={() => navigate(`/groups/${event.group_id}`)}
-      >
-        ‹ 식구 홈
-      </button>
+      <BackLink to={`/groups/${event.group_id}`} label="식구 홈" />
       <header className="mt-2">
         <div className="flex items-start justify-between gap-2">
           <h1 className="text-[22px] font-bold">{event.title}</h1>

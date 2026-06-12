@@ -1,6 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useRef, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
+import { BackLink } from '@/components/BackLink'
 import { Button } from '@/components/Button'
 import { Chip } from '@/components/Chip'
 import { ConfirmDialog } from '@/components/ConfirmDialog'
@@ -153,9 +154,8 @@ export function ExpenseFormPage() {
       className="min-h-dvh px-5 pt-6 pb-[calc(env(safe-area-inset-bottom)+16px)]"
       onSubmit={handleSubmit}
     >
-      <button type="button" className="h-11 text-base text-ink-soft" onClick={goBack}>
-        ‹ 뒤로
-      </button>
+      {/* 뒤로 버튼은 push 이동(BackLink) — replace인 goBack은 저장 성공 후 자동 이동 전용 */}
+      <BackLink to={`/events/${eventId}`} label="뒤로" />
       <h1 className="mt-2 text-[22px] font-bold">{isEdit ? '지출 수정' : '지출 추가'}</h1>
 
       <div className="mt-6 space-y-5">

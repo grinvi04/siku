@@ -1,6 +1,7 @@
 import { useQuery } from '@tanstack/react-query'
-import { useNavigate, useParams } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 import { Avatar } from '@/components/Avatar'
+import { BackLink } from '@/components/BackLink'
 import { EVENT_TYPE_ICON } from '@/components/eventTypeIcon'
 import { CardListSkeleton } from '@/components/Skeleton'
 import { EVENT_TYPE_LABEL, type EventType } from '@/data/events'
@@ -71,7 +72,6 @@ function TopList({
 
 export function StatsPage() {
   const { groupId } = useParams<{ groupId: string }>()
-  const navigate = useNavigate()
 
   const { data: group } = useQuery({
     queryKey: ['group', groupId],
@@ -91,13 +91,7 @@ export function StatsPage() {
 
   return (
     <div className="min-h-dvh px-5 pt-6 pb-[calc(env(safe-area-inset-bottom)+24px)]">
-      <button
-        type="button"
-        className="h-11 text-base text-ink-soft"
-        onClick={() => navigate(`/groups/${groupId}`)}
-      >
-        ‹ 식구 홈
-      </button>
+      <BackLink to={`/groups/${groupId}`} label="식구 홈" />
       <h1 className="mt-2 text-[22px] font-bold">
         {group ? `${group.name} 통계` : '모임 통계'}
       </h1>

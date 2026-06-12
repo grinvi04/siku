@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { useNavigate } from 'react-router-dom'
+import { BackLink } from '@/components/BackLink'
 import { Button } from '@/components/Button'
 import { Input } from '@/components/Input'
 import { useToast } from '@/components/Toast'
@@ -10,7 +10,6 @@ import { supabase } from '@/data/supabase'
 
 /** 프로필 + 정산 계좌 입력 — 계좌는 정산 송금 안내에 그대로 노출된다 */
 export function ProfilePage() {
-  const navigate = useNavigate()
   const queryClient = useQueryClient()
   const toast = useToast()
   const { data: profile, isLoading } = useQuery({ queryKey: ['myProfile'], queryFn: getMyProfile })
@@ -50,14 +49,7 @@ export function ProfilePage() {
         save.mutate(new FormData(e.currentTarget))
       }}
     >
-      {/* 로그인 직후 ?next=로 바로 진입할 수 있어 navigate(-1) 대신 홈 고정 이동 */}
-      <button
-        type="button"
-        className="h-11 text-base text-ink-soft"
-        onClick={() => navigate('/', { replace: true })}
-      >
-        ‹ 홈으로
-      </button>
+      <BackLink to="/" label="내 식구" />
       <div className="mt-2 flex items-center gap-3">
         <Avatar name={profile.display_name} id={profile.id} size={52} />
         <div>
