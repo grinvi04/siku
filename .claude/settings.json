@@ -1,6 +1,5 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-settings.json",
-  "_comment": "team-harness 기반 — 공통 가드·시크릿 유출 탐지·git-flow 커맨드는 harness-guard 플러그인이 제공. 아래 hooks는 siku 고유분만 (플러그인 훅과 공존).",
   "permissions": {
     "allow": [
       "Bash(gh pr *)",
@@ -9,17 +8,6 @@
     ],
     "deny": [],
     "disableBypassPermissionsMode": "disable"
-  },
-  "extraKnownMarketplaces": {
-    "team-harness": {
-      "source": {
-        "source": "github",
-        "repo": "grinvi04/team-harness"
-      }
-    }
-  },
-  "enabledPlugins": {
-    "harness-guard@team-harness": true
   },
   "hooks": {
     "PreToolUse": [
@@ -48,5 +36,18 @@
         ]
       }
     ]
-  }
+  },
+  "enabledPlugins": {
+    "harness-guard@team-harness": true,
+    "frontend-design@claude-plugins-official": true
+  },
+  "extraKnownMarketplaces": {
+    "team-harness": {
+      "source": {
+        "source": "github",
+        "repo": "grinvi04/team-harness"
+      }
+    }
+  },
+  "_comment": "team-harness 기반 — 공통 가드·시크릿 유출 탐지·git-flow 커맨드는 harness-guard 플러그인이 제공. 아래 hooks는 siku 고유분만 (플러그인 훅과 공존)."
 }

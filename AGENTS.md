@@ -11,11 +11,11 @@
 - 백엔드: Supabase (Postgres + Auth + Storage + RLS) + Edge Functions 2개
   (`supabase/functions/nearby-places` 장소 후보, `supabase/functions/parse-receipt` 영수증 OCR)
 - 배포: Vercel 정적 배포 (초대 링크 OG용 `api/og.ts`는 계획 단계 — 미구현)
-- 추후 Capacitor 네이티브 전환 전제 — 구조 원칙은 아래 참조
+- **PWA 단독 운영** — 네이티브(Capacitor) 전환 계획 없음 (2026-06-13 확정). 기능 제안은 웹 역량(Web Share, 웹 푸시 등) 기준
 
-## 코드 구조 원칙 (Capacitor 전환 대비)
+## 코드 구조 원칙 (관심사 분리)
 
-- `src/core/` — 순수 TS만. 브라우저/플랫폼 API import 금지 (정산·클러스터링 로직)
+- `src/core/` — 순수 TS만. 브라우저/플랫폼 API import 금지 (정산·클러스터링 로직 — 테스트 용이성)
 - `src/services/` — 플랫폼 API는 인터페이스(`interfaces.ts`) 뒤로, `web/` 구현체 + 팩토리
 - `src/data/` — Supabase 접근은 이 층에만. UI 컴포넌트에서 supabase-js 직접 호출 금지
 - `src/features/` — 도메인별 화면·훅
