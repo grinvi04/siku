@@ -30,21 +30,23 @@ if [[ "$FILE_PATH" == "$PROJECT_ROOT/src/"* || "$FILE_PATH" == "$PROJECT_ROOT/su
     exit 2
   fi
 
-  # 관련 단위 테스트 실행 (src/**/*.ts — sibling *.test.ts 존재 시)
-  if [[ "$FILE_PATH" == "$PROJECT_ROOT/src/"* && "$FILE_PATH" == *.ts && "$FILE_PATH" != *.test.ts ]]; then
-    SPEC="${FILE_PATH%.ts}.test.ts"
-    if [[ -f "$SPEC" ]]; then
-      TEST_OUT=$(npx vitest run "$SPEC" 2>&1)
-      if [ $? -ne 0 ]; then
-        echo "❌ [테스트 실패] $(basename "$SPEC")"
-        echo "$TEST_OUT"
-        exit 2
+  # 관련 단위 테스트 실행 (src/**/*.ts·*.tsx — sibling *.test.ts(x) 존재 시)
+  if [[ "$FILE_PATH" == "$PROJECT_ROOT/src/"* && "$FILE_PATH" != *.test.ts && "$FILE_PATH" != *.test.tsx ]]; then
+    BASE="${FILE_PATH%.tsx}"; BASE="${BASE%.ts}"
+    for SPEC in "$BASE.test.ts" "$BASE.test.tsx"; do
+      if [[ -f "$SPEC" ]]; then
+        TEST_OUT=$(npx vitest run "$SPEC" 2>&1)
+        if [ $? -ne 0 ]; then
+          echo "❌ [테스트 실패] $(basename "$SPEC")"
+          echo "$TEST_OUT"
+          exit 2
+        fi
       fi
-    fi
+    done
   fi
 
   # 테스트 파일 자체를 수정한 경우 그 테스트 실행
-  if [[ "$FILE_PATH" == *.test.ts ]]; then
+  if [[ "$FILE_PATH" == *.test.ts || "$FILE_PATH" == *.test.tsx ]]; then
     TEST_OUT=$(npx vitest run "$FILE_PATH" 2>&1)
     if [ $? -ne 0 ]; then
       echo "❌ [테스트 실패] $(basename "$FILE_PATH")"
