@@ -6,3 +6,8 @@ export function colorOf(id: string): string {
   for (const ch of id) hash = (hash * 31 + ch.charCodeAt(0)) % 997
   return PALETTE[hash % PALETTE.length]
 }
+
+/** 이니셜 한 글자 — slice(0,1)은 이모지(서로게이트 페어)를 깨뜨리므로 코드포인트 단위로 추출 */
+export function initialOf(name: string): string {
+  return [...name][0] ?? ''
+}

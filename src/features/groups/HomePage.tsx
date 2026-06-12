@@ -6,7 +6,7 @@ import { listMyGroups } from '@/data/groups'
 import { ChevronRight } from 'lucide-react'
 import { CardListSkeleton } from '@/components/Skeleton'
 import { Avatar } from '@/components/Avatar'
-import { colorOf } from '@/components/identityColor'
+import { colorOf, initialOf } from '@/components/identityColor'
 import { RiceBowl } from '@/components/RiceBowl'
 
 /** 시간대별 인사 — 40~60대 정서의 따뜻한 첫 줄 (보이스 이원화: 설명문은 감성) */
@@ -57,7 +57,7 @@ export function HomePage() {
                     color: colorOf(group.id),
                   }}
                 >
-                  {group.name.slice(0, 1)}
+                  {initialOf(group.name)}
                 </span>
                 <div className="min-w-0 flex-1">
                   <p className="truncate text-base font-semibold">{group.name}</p>
