@@ -5,7 +5,7 @@
 // 미설정 시 기존 동작('*') 유지 — 무중단 롤아웃용
 const ALLOWED_ORIGINS = (Deno.env.get('ALLOWED_ORIGINS') ?? '*')
   .split(',')
-  .map((s) => s.trim())
+  .map((s) => s.trim().replace(/\/$/, ''))
   .filter(Boolean)
 
 function corsHeadersFor(req: Request): Record<string, string> {
