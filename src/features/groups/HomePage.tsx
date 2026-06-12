@@ -6,6 +6,7 @@ import { listMyGroups } from '@/data/groups'
 import { ChevronRight, UsersRound } from 'lucide-react'
 import { CardListSkeleton } from '@/components/Skeleton'
 import { Avatar } from '@/components/Avatar'
+import { RiceBowl } from '@/components/RiceBowl'
 
 export function HomePage() {
   const navigate = useNavigate()
@@ -45,10 +46,16 @@ export function HomePage() {
           ))}
         </ul>
       ) : (
-        <div className="mt-24 text-center">
-          <UsersRound size={40} className="mx-auto text-ink-faint" />
-          <p className="mt-3 text-base text-ink-soft">아직 함께하는 식구가 없어요.</p>
-          <p className="mt-1 text-sm text-ink-soft">자주 만나는 사람들을 식구로 모아보세요.</p>
+        <div className="mt-20 text-center">
+          <div className="mx-auto flex h-28 w-28 items-center justify-center rounded-full bg-accent-container">
+            <RiceBowl size={72} />
+          </div>
+          <p className="mt-5 text-base font-semibold">아직 식구가 없어요</p>
+          <p className="mt-1.5 text-sm leading-[1.6] text-ink-soft">
+            같이 먹는 사이라면, 식구죠.
+            <br />
+            자주 만나는 사람들을 모아보세요.
+          </p>
         </div>
       )}
 

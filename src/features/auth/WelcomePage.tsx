@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { Button } from '@/components/Button'
 import { Input } from '@/components/Input'
 import { useToast } from '@/components/Toast'
+import { RiceBowl } from '@/components/RiceBowl'
 import { updateMyProfile } from '@/data/profiles'
 
 /** 첫 로그인 온보딩 — 이메일 아이디 대신 부를 이름(닉네임)을 정한다 */
@@ -23,7 +24,7 @@ export function WelcomePage() {
 
   return (
     <form
-      className="flex min-h-dvh flex-col justify-center px-5"
+      className="flex min-h-dvh flex-col justify-center bg-gradient-to-b from-accent-container/70 via-white to-white px-5"
       onSubmit={(e) => {
         e.preventDefault()
         const name = String(new FormData(e.currentTarget).get('display_name') ?? '').trim()
@@ -34,7 +35,8 @@ export function WelcomePage() {
         save.mutate(name)
       }}
     >
-      <h1 className="text-[28px] leading-[1.35] font-bold">
+      <RiceBowl size={72} />
+      <h1 className="mt-5 text-[28px] leading-[1.35] font-bold">
         환영해요!
         <br />
         어떻게 불러드릴까요?

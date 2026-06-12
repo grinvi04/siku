@@ -107,7 +107,7 @@ export function LoginPage() {
   }
 
   return (
-    <div className="flex min-h-dvh flex-col justify-between px-5 pt-24 pb-[calc(env(safe-area-inset-bottom)+24px)]">
+    <div className="flex min-h-dvh flex-col justify-between bg-gradient-to-b from-accent-container/70 via-white to-white px-5 pt-24 pb-[calc(env(safe-area-inset-bottom)+24px)]">
       <div>
         <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-primary text-[26px] font-bold text-white">
           식
@@ -118,6 +118,9 @@ export function LoginPage() {
           <br />
           식구
         </h1>
+        <p className="mt-3 text-base leading-[1.6] text-ink-soft">
+          오늘 같이 먹은 한 끼, 잊기 전에 남겨요.
+        </p>
         <ul className="mt-5 space-y-3">
           <li className="flex items-start gap-2.5 text-base leading-[1.5] text-ink-soft">
             <ReceiptText size={20} className="mt-0.5 shrink-0 text-primary" />
@@ -160,7 +163,7 @@ export function LoginPage() {
           {pending ? '보내고 있어요…' : '이메일로 로그인 링크 받기'}
         </Button>
         <p className="text-center text-sm leading-[1.5] text-ink-soft">
-          비밀번호 없이, 메일로 받은 링크 하나로 로그인해요
+          비밀번호 없이, 메일로 받은 코드나 버튼으로 로그인해요
         </p>
         {error && <p className="text-center text-sm text-error">{error}</p>}
       </form>
