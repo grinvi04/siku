@@ -1,4 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { BackLink } from '@/components/BackLink'
 import { Button } from '@/components/Button'
 import { Input } from '@/components/Input'
 import { useToast } from '@/components/Toast'
@@ -48,7 +49,8 @@ export function ProfilePage() {
         save.mutate(new FormData(e.currentTarget))
       }}
     >
-      <div className="flex items-center gap-3">
+      <BackLink to="/" label="내 식구" />
+      <div className="mt-2 flex items-center gap-3">
         <Avatar name={profile.display_name} id={profile.id} size={52} />
         <div>
           <h1 className="text-[22px] font-bold">내 정보</h1>

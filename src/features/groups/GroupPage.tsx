@@ -1,5 +1,6 @@
 import { useQuery } from '@tanstack/react-query'
 import { Link, useNavigate, useParams } from 'react-router-dom'
+import { BackLink } from '@/components/BackLink'
 import { Button } from '@/components/Button'
 import { useToast } from '@/components/Toast'
 import { getGroup } from '@/data/groups'
@@ -53,9 +54,7 @@ export function GroupPage() {
 
   return (
     <div className="min-h-dvh px-5 pt-6 pb-[calc(env(safe-area-inset-bottom)+16px)]">
-      <button type="button" className="h-11 text-base text-ink-soft" onClick={() => navigate('/')}>
-        ‹ 내 식구
-      </button>
+      <BackLink to="/" label="내 식구" />
       <header className="mt-2">
         <h1 className="text-[22px] font-bold">{group.name}</h1>
         {/* 멤버가 많아도 가려지지 않게 여러 줄로 감싼다 */}

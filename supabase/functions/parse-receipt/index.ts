@@ -7,9 +7,23 @@ import { createClient } from 'npm:@supabase/supabase-js@2'
 
 const DAILY_LIMIT = 30
 
-const corsHeaders = {
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+// CORS: ALLOWED_ORIGINS 시크릿(쉼표 구분 origin 목록) 설정 시 allowlist 적용,
+// 미설정 시 기존 동작('*') 유지 — 무중단 롤아웃용
+const ALLOWED_ORIGINS = (Deno.env.get('ALLOWED_ORIGINS') ?? '*')
+  .split(',')
+  .map((s) => s.trim().replace(/\/$/, ''))
+  .filter(Boolean)
+
+function corsHeadersFor(req: Request): Record<string, string> {
+  const origin = req.headers.get('origin') ?? ''
+  const allow = ALLOWED_ORIGINS.includes('*') ? '*' : ALLOWED_ORIGINS.includes(origin) ? origin : ''
+  const headers: Record<string, string> = {
+    'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+    'Access-Control-Allow-Methods': 'POST, OPTIONS',
+  }
+  if (allow) headers['Access-Control-Allow-Origin'] = allow
+  if (allow && allow !== '*') headers['Vary'] = 'Origin'
+  return headers
 }
 
 /** 게이트웨이가 이미 JWT를 검증했으므로 payload에서 사용자 id만 꺼낸다 */
@@ -50,6 +64,13 @@ async function checkRateLimit(userId: string): Promise<boolean> {
 }
 
 Deno.serve(async (req) => {
+  const corsHeaders = corsHeadersFor(req)
+  const json = (body: unknown, status = 200): Response =>
+    new Response(JSON.stringify(body), {
+      status,
+      headers: { 'Content-Type': 'application/json', ...corsHeaders },
+    })
+
   if (req.method === 'OPTIONS') {
     return new Response('ok', { headers: corsHeaders })
   }
@@ -101,10 +122,3 @@ Deno.serve(async (req) => {
     return json({ error: '처리 중 오류가 발생했습니다.' }, 500)
   }
 })
-
-function json(body: unknown, status = 200): Response {
-  return new Response(JSON.stringify(body), {
-    status,
-    headers: { 'Content-Type': 'application/json', ...corsHeaders },
-  })
-}

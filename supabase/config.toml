@@ -411,3 +411,11 @@ s3_secret_key = "env(S3_SECRET_KEY)"
 # declarative_schema_path = "./database"
 # JSON string passed through to pg-delta SQL formatting.
 # format_options = "{\"keywordCase\":\"upper\",\"indent\":2,\"maxWidth\":80,\"commaStyle\":\"trailing\"}"
+
+# Edge Function 인증 — 게이트웨이 JWT 선검증을 명시적으로 고정
+# (parse-receipt의 userIdFromJwt는 서명 미검증 디코딩이라 verify_jwt=true가 신뢰 경계 전제)
+[functions.nearby-places]
+verify_jwt = true
+
+[functions.parse-receipt]
+verify_jwt = true

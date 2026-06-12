@@ -1,22 +1,27 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-settings.json",
+  "_comment": "team-harness 기반 — 공통 가드·시크릿 유출 탐지·git-flow 커맨드는 harness-guard 플러그인이 제공. 아래 hooks는 siku 고유분만 (플러그인 훅과 공존).",
   "permissions": {
+    "allow": [
+      "Bash(gh pr *)",
+      "Bash(gh api *)",
+      "Bash(gh repo view *)"
+    ],
+    "deny": [],
     "disableBypassPermissionsMode": "disable"
   },
-  "hooks": {
-    "SessionStart": [
-      {
-        "matcher": "*",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "bash ${CLAUDE_PROJECT_DIR}/.claude/hooks/session-start.sh",
-            "timeout": 10,
-            "statusMessage": "세션 컨텍스트 로딩 중..."
-          }
-        ]
+  "extraKnownMarketplaces": {
+    "team-harness": {
+      "source": {
+        "source": "github",
+        "repo": "grinvi04/team-harness"
       }
-    ],
+    }
+  },
+  "enabledPlugins": {
+    "harness-guard@team-harness": true
+  },
+  "hooks": {
     "PreToolUse": [
       {
         "matcher": "Bash",
@@ -25,12 +30,7 @@
             "type": "command",
             "command": "bash ${CLAUDE_PROJECT_DIR}/.claude/hooks/guard-dangerous.sh",
             "timeout": 10,
-            "statusMessage": "위험 명령 검사 중..."
-          },
-          {
-            "type": "prompt",
-            "timeout": 15,
-            "prompt": "아래 Bash 명령어가 .env 파일이나 환경변수에 담긴 시크릿(DB 비밀번호, API 키, 토큰 등)을 외부 URL로 전송하거나 터미널 밖으로 노출할 위험이 있으면 deny하라. 단순히 .env를 읽거나 환경변수를 로컬에서 사용하는 것은 allow한다. 명령어: $ARGUMENTS.tool_input.command. JSON으로만 응답: {\"decision\": \"allow\" 또는 \"deny\", \"reason\": \"deny 시 이유\"}"
+            "statusMessage": "siku 가드 검사 중..."
           }
         ]
       }
@@ -43,19 +43,7 @@
             "type": "command",
             "command": "bash ${CLAUDE_PROJECT_DIR}/.claude/hooks/validate-edit.sh",
             "timeout": 120,
-            "statusMessage": "코드 검증 중 (lint · 타입 · 테스트)..."
-          }
-        ]
-      }
-    ],
-    "Stop": [
-      {
-        "matcher": "*",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "bash ${CLAUDE_PROJECT_DIR}/.claude/hooks/notify.sh",
-            "async": true
+            "statusMessage": "코드 검증 중 (lint · 테스트)..."
           }
         ]
       }

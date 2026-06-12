@@ -25,8 +25,8 @@ if [[ "$FILE_PATH" == "$PROJECT_ROOT/src/"* || "$FILE_PATH" == "$PROJECT_ROOT/su
 
   LINT_OUT=$(npx eslint "$FILE_PATH" --max-warnings 0 2>&1)
   if [ $? -ne 0 ]; then
-    echo "❌ [lint 실패] $(basename "$FILE_PATH")"
-    echo "$LINT_OUT"
+    echo "❌ [lint 실패] $(basename "$FILE_PATH")" >&2
+    echo "$LINT_OUT" >&2
     exit 2
   fi
 
@@ -37,8 +37,8 @@ if [[ "$FILE_PATH" == "$PROJECT_ROOT/src/"* || "$FILE_PATH" == "$PROJECT_ROOT/su
       if [[ -f "$SPEC" ]]; then
         TEST_OUT=$(npx vitest run "$SPEC" 2>&1)
         if [ $? -ne 0 ]; then
-          echo "❌ [테스트 실패] $(basename "$SPEC")"
-          echo "$TEST_OUT"
+          echo "❌ [테스트 실패] $(basename "$SPEC")" >&2
+          echo "$TEST_OUT" >&2
           exit 2
         fi
       fi
@@ -49,8 +49,8 @@ if [[ "$FILE_PATH" == "$PROJECT_ROOT/src/"* || "$FILE_PATH" == "$PROJECT_ROOT/su
   if [[ "$FILE_PATH" == *.test.ts || "$FILE_PATH" == *.test.tsx ]]; then
     TEST_OUT=$(npx vitest run "$FILE_PATH" 2>&1)
     if [ $? -ne 0 ]; then
-      echo "❌ [테스트 실패] $(basename "$FILE_PATH")"
-      echo "$TEST_OUT"
+      echo "❌ [테스트 실패] $(basename "$FILE_PATH")" >&2
+      echo "$TEST_OUT" >&2
       exit 2
     fi
   fi
