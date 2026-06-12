@@ -19,10 +19,12 @@
 - `src/data/` — Supabase 접근은 이 층에만. UI 컴포넌트에서 supabase-js 직접 호출 금지
 - `src/features/` — 도메인별 화면·훅
 
-## 브랜치 정책
+## 브랜치 정책 (git flow — harness 표준)
 
-- `main` 직접 커밋 금지 (`.githooks/pre-commit`으로 차단)
-- 작업 브랜치: `feature/*`, `fix/*` → PR → merge
+- `main`, `develop` 직접 커밋 금지 (`.githooks/pre-commit`으로 차단)
+- 기능 개발·수정: `develop → feature/* | fix/* → PR → develop`
+- 운영 핫픽스: `main → hotfix/* → PR → main (tag) + develop back-merge`
+- 릴리즈: `develop → release/vX.X.X → PR → main (tag) + develop back-merge`
 
 ## 품질 게이트
 
