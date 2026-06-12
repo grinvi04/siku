@@ -23,6 +23,24 @@ jobs:
       - run: npm test
       - run: npm run build
 
+      # ── E2E: 로컬 Supabase 스택 — 운영 키를 CI에 넣지 않는다 (public repo)
+      - uses: supabase/setup-cli@v1
+        with:
+          version: latest
+      - name: 로컬 Supabase 기동 + .env 생성
+        run: |
+          supabase start
+          eval "$(supabase status -o env | grep -E '^(API_URL|ANON_KEY|SERVICE_ROLE_KEY)=')"
+          cat > .env <<EOF
+          VITE_SUPABASE_URL=$API_URL
+          VITE_SUPABASE_ANON_KEY=$ANON_KEY
+          SUPABASE_SERVICE_ROLE_KEY=$SERVICE_ROLE_KEY
+          EOF
+      - name: Playwright 브라우저 설치
+        run: npx playwright install --with-deps chromium
+      - name: E2E 테스트
+        run: npm run test:e2e
+
   secret-scan:
     runs-on: ubuntu-latest
     steps:
