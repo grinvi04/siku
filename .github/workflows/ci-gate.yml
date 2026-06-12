@@ -3,7 +3,12 @@ name: ci-gate
 
 on:
   pull_request:
-    branches: [main]
+    branches: [main, develop]
+
+# gitleaks-action이 PR 커밋 목록 조회에 pull-requests: read 필요
+permissions:
+  contents: read
+  pull-requests: read
 
 jobs:
   quality:
