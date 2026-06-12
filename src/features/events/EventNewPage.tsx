@@ -42,7 +42,7 @@ export function EventNewPage() {
     mutationFn: createEvent,
     onSuccess: (eventId) => {
       void queryClient.invalidateQueries({ queryKey: ['events', groupId] })
-      toast('기록을 남겼어요')
+      toast('오늘도 잘 먹었습니다 — 기록을 남겼어요')
       navigate(`/events/${eventId}`, { replace: true })
     },
     onError: () => toast('기록을 남기지 못했어요. 다시 시도해 주세요'),

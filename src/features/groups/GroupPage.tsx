@@ -2,13 +2,14 @@ import { useQuery } from '@tanstack/react-query'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import { BackLink } from '@/components/BackLink'
 import { Button } from '@/components/Button'
+import { RiceBowl } from '@/components/RiceBowl'
 import { useToast } from '@/components/Toast'
 import { getGroup } from '@/data/groups'
 import { EVENT_TYPE_LABEL, listEvents } from '@/data/events'
 import { formatDateRange } from '@/lib/format'
 import { useSession } from '@/features/auth/useSession'
 import { EVENT_TYPE_ICON } from '@/components/eventTypeIcon'
-import { BarChart3, CalendarPlus, ChevronRight } from 'lucide-react'
+import { BarChart3, ChevronRight } from 'lucide-react'
 import { Avatar } from '@/components/Avatar'
 import { CardListSkeleton } from '@/components/Skeleton'
 
@@ -138,9 +139,11 @@ export function GroupPage() {
           ))
         ) : (
           <div className="mt-12 text-center">
-            <CalendarPlus size={40} className="mx-auto text-ink-faint" />
-            <p className="mt-3 text-base text-ink-soft">아직 기록이 없어요.</p>
-            <p className="mt-1 text-sm text-ink-soft">같이 먹은 한 끼부터 시작해 보세요.</p>
+            <div className="mx-auto flex h-24 w-24 items-center justify-center rounded-full bg-accent-container">
+              <RiceBowl size={60} />
+            </div>
+            <p className="mt-4 text-base font-semibold">아직 기록이 없어요</p>
+            <p className="mt-1.5 text-sm text-ink-soft">같이 먹은 한 끼부터 시작해 보세요.</p>
           </div>
         )}
       </section>
