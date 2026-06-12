@@ -8,8 +8,9 @@
 소규모 모임(저녁모임·자전거·여행) 특화 PWA — 모임 기록, 사진 공유, 경비 정산.
 
 - 스택: Vite + React + TypeScript + Tailwind v4 + TanStack Query + React Router
-- 백엔드: Supabase (Postgres + Auth + Storage + RLS), 서버 코드 없음
-- 배포: Vercel 정적 배포 + Edge Function 1개(`api/og.ts`, 초대 링크 OG)
+- 백엔드: Supabase (Postgres + Auth + Storage + RLS) + Edge Functions 2개
+  (`supabase/functions/nearby-places` 장소 후보, `supabase/functions/parse-receipt` 영수증 OCR)
+- 배포: Vercel 정적 배포 (초대 링크 OG용 `api/og.ts`는 계획 단계 — 미구현)
 - 추후 Capacitor 네이티브 전환 전제 — 구조 원칙은 아래 참조
 
 ## 코드 구조 원칙 (Capacitor 전환 대비)
