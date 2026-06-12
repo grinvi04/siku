@@ -1,6 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
+import { BackLink } from '@/components/BackLink'
 import { Button } from '@/components/Button'
 import { Chip } from '@/components/Chip'
 import { Input } from '@/components/Input'
@@ -83,9 +84,7 @@ export function EventNewPage() {
 
   return (
     <form className="min-h-dvh px-5 pt-6 pb-[calc(env(safe-area-inset-bottom)+16px)]" onSubmit={handleSubmit}>
-      <button type="button" className="h-11 text-base text-ink-soft" onClick={() => navigate(-1)}>
-        ‹ 뒤로
-      </button>
+      <BackLink to={`/groups/${groupId}`} label="식구 홈" />
       <h1 className="mt-2 text-[22px] font-bold">새 모임 기록</h1>
 
       <div className="mt-6 space-y-5">

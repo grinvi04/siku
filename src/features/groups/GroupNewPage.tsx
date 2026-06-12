@@ -1,5 +1,6 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useNavigate } from 'react-router-dom'
+import { BackLink } from '@/components/BackLink'
 import { Button } from '@/components/Button'
 import { Input } from '@/components/Input'
 import { useToast } from '@/components/Toast'
@@ -33,9 +34,7 @@ export function GroupNewPage() {
         create.mutate(name)
       }}
     >
-      <button type="button" className="h-11 text-base text-ink-soft" onClick={() => navigate(-1)}>
-        ‹ 뒤로
-      </button>
+      <BackLink to="/" label="내 식구" />
       <h1 className="mt-2 text-[22px] font-bold">새 식구 만들기</h1>
       <p className="mt-1 text-sm text-ink-soft">
         자주 보는 얼굴들을 한곳에 모아보세요. 초대는 링크 하나면 충분해요.

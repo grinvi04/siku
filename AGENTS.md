@@ -50,6 +50,8 @@
 ## 코딩 컨벤션
 
 - import는 `@/` 별칭(=src) 사용 — 상대경로는 같은 폴더 sibling(`./x`)만 허용
+- 하위 화면 이탈은 `BackLink`(명시적 부모 경로, push)로 — `navigate(-1)` 금지
+  (deep link·로그인 `?next=` 진입 시 인앱 히스토리가 없어 깨짐). 저장 성공 후 자동 이동만 `replace`
 - 컴포넌트: 파일당 1개(전용 보조 컴포넌트는 같은 파일 하단 허용), PascalCase 파일명·named export,
   props는 TS 타입 필수(네이티브 속성은 `ButtonHTMLAttributes` 등 확장), 목록 key에 배열 인덱스 금지
 - 파생 가능한 값은 effect로 동기화하지 말고 렌더 중 계산 (React 공식 'You Might Not Need an Effect')
