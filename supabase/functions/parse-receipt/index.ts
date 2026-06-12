@@ -19,6 +19,7 @@ function corsHeadersFor(req: Request): Record<string, string> {
   const allow = ALLOWED_ORIGINS.includes('*') ? '*' : ALLOWED_ORIGINS.includes(origin) ? origin : ''
   const headers: Record<string, string> = {
     'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+    'Access-Control-Allow-Methods': 'POST, OPTIONS',
   }
   if (allow) headers['Access-Control-Allow-Origin'] = allow
   if (allow && allow !== '*') headers['Vary'] = 'Origin'
