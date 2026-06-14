@@ -3,6 +3,9 @@ import { defineConfig, devices } from '@playwright/test'
 export default defineConfig({
   testDir: './tests/e2e',
   fullyParallel: true,
+  // CI에서 재시도 — session 의존 렌더(예: EventPage isCreator) 등 브라우저 비동기 레이스로
+  // 드물게 요소가 제때 안 잡히는 경우를 흡수. 로컬은 0으로 실제 실패를 그대로 노출.
+  retries: process.env.CI ? 2 : 0,
   reporter: [['list']],
   use: {
     baseURL: 'http://localhost:5173',
