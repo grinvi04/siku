@@ -92,7 +92,7 @@ export function ExpenseFormPage() {
   const setShare = (userId: string, value: string) => setShareDraft({ ...shares, [userId]: value })
 
   // 미리보기: 총액 - 지정합계 = 나머지 → 미지정 인원이 균등분할
-  const totalNum = Number((amount || '').replaceAll(',', ''))
+  const totalNum = Number((amount || '').replaceAll(',', '')) || 0
   const explicitIds = [...participantIds].filter((id) => (shares[id] ?? '').trim() !== '')
   const explicitSum = explicitIds.reduce((s, id) => s + (Number(shares[id].replaceAll(',', '')) || 0), 0)
   const equalCount = participantIds.size - explicitIds.length
