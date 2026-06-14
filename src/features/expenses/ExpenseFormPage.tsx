@@ -94,7 +94,11 @@ export function ExpenseFormPage() {
   // 미리보기: 총액 - 지정합계 = 나머지 → 미지정 인원이 균등분할
   const totalNum = Number((amount || '').replaceAll(',', '')) || 0
   const explicitIds = [...participantIds].filter((id) => (shares[id] ?? '').trim() !== '')
-  const explicitSum = explicitIds.reduce((s, id) => s + (Number(shares[id].replaceAll(',', '')) || 0), 0)
+  // 음수·비숫자 입력은 미리보기에서 0으로 클램프 (제출 시 검증이 따로 막음) — remaining 왜곡 방지
+  const explicitSum = explicitIds.reduce(
+    (s, id) => s + Math.max(0, Number(shares[id].replaceAll(',', '')) || 0),
+    0,
+  )
   const equalCount = participantIds.size - explicitIds.length
   const remaining = totalNum - explicitSum
 
@@ -340,7 +344,7 @@ export function ExpenseFormPage() {
                         : `지정한 합계가 총액보다 ${(-remaining).toLocaleString()}원 많아요`
                     : remaining < 0
                       ? '지정한 합계가 총액을 넘어요'
-                      : `나머지 ${equalCount}명이 ${remaining.toLocaleString()}원을 똑같이 나눠요`}
+                      : `나머지 ${equalCount}명이 ${remaining.toLocaleString()}원을 똑같이 ${refund ? '돌려받아요' : '나눠요'}`}
                 </p>
               </div>
             )}
