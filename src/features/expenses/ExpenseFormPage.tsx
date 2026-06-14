@@ -38,6 +38,8 @@ export function ExpenseFormPage() {
   const [touched, setTouched] = useState<Set<string> | null>(null)
   const [titleValue, setTitleValue] = useState<string | null>(null)
   const [amountValue, setAmountValue] = useState<string | null>(null)
+  const [customOn, setCustomOn] = useState<boolean | null>(null)
+  const [shareDraft, setShareDraft] = useState<Record<string, string> | null>(null)
   const [scanning, setScanning] = useState(false)
   const receiptInputRef = useRef<HTMLInputElement>(null)
 
@@ -76,6 +78,25 @@ export function ExpenseFormPage() {
     else next.add(userId)
     setTouched(next)
   }
+
+  // 개인별 금액: 미입력이면 균등분할. 수정 시 기존 share_amount(절대값)를 초깃값으로
+  const existingHasShares = (existing?.participants ?? []).some((p) => p.share_amount !== null)
+  const custom = customOn ?? existingHasShares
+  const shares =
+    shareDraft ??
+    Object.fromEntries(
+      (existing?.participants ?? [])
+        .filter((p) => p.share_amount !== null)
+        .map((p) => [p.user_id, String(Math.abs(p.share_amount as number))]),
+    )
+  const setShare = (userId: string, value: string) => setShareDraft({ ...shares, [userId]: value })
+
+  // 미리보기: 총액 - 지정합계 = 나머지 → 미지정 인원이 균등분할
+  const totalNum = Number((amount || '').replaceAll(',', ''))
+  const explicitIds = [...participantIds].filter((id) => (shares[id] ?? '').trim() !== '')
+  const explicitSum = explicitIds.reduce((s, id) => s + (Number(shares[id].replaceAll(',', '')) || 0), 0)
+  const equalCount = participantIds.size - explicitIds.length
+  const remaining = totalNum - explicitSum
 
   const goBack = () => navigate(`/events/${eventId}`, { replace: true })
   const invalidate = () => {
@@ -140,12 +161,34 @@ export function ExpenseFormPage() {
       toast('나눌 사람을 한 명 이상 선택해 주세요')
       return
     }
+    let participantShares: Record<string, number> | undefined
+    if (custom && explicitIds.length > 0) {
+      for (const id of explicitIds) {
+        const v = Number(shares[id].replaceAll(',', ''))
+        if (!Number.isInteger(v) || v < 0) {
+          toast('개인별 금액은 0원 이상 숫자로 입력해 주세요')
+          return
+        }
+      }
+      if (equalCount === 0 && explicitSum !== raw) {
+        toast('지정한 금액 합계가 총액과 같아야 해요')
+        return
+      }
+      if (equalCount > 0 && explicitSum > raw) {
+        toast('지정한 금액 합계가 총액을 넘을 수 없어요')
+        return
+      }
+      participantShares = Object.fromEntries(
+        explicitIds.map((id) => [id, refund ? -Number(shares[id].replaceAll(',', '')) : Number(shares[id].replaceAll(',', ''))]),
+      )
+    }
     save.mutate({
       eventId: eventId!,
       payerId: payer,
       title,
       amount: refund ? -raw : raw,
       participantIds: [...participantIds],
+      participantShares,
     })
   }
 
@@ -250,10 +293,59 @@ export function ExpenseFormPage() {
             ))}
           </div>
           <p className="mt-1.5 text-sm leading-[1.5] text-ink-soft">
-            선택한 사람들끼리 똑같이 나눠요. 결제한 사람도 먹었다면 포함하세요 —
-            그 몫은 받을 금액에서 자동으로 빠져요.
+            결제한 사람도 먹었다면 포함하세요 — 그 몫은 받을 금액에서 자동으로 빠져요.
           </p>
         </div>
+
+        {participantIds.size > 0 && (
+          <div>
+            <span className="mb-1.5 block text-sm text-ink-soft">어떻게 나눌까요?</span>
+            <div className="flex gap-2">
+              <Chip
+                selected={!custom}
+                onClick={() => {
+                  setCustomOn(false)
+                  setShareDraft({})
+                }}
+              >
+                똑같이 나누기
+              </Chip>
+              <Chip selected={custom} onClick={() => setCustomOn(true)}>
+                개인별로 정하기
+              </Chip>
+            </div>
+            {custom && (
+              <div className="mt-3 space-y-2">
+                {event.participants
+                  .filter((p) => participantIds.has(p.user_id))
+                  .map((p) => (
+                    <div key={p.user_id} className="flex items-center gap-3">
+                      <span className="w-24 shrink-0 text-base text-ink">{p.display_name}</span>
+                      <div className="flex-1">
+                        <Input
+                          inputMode="numeric"
+                          placeholder="비우면 균등분할"
+                          value={shares[p.user_id] ?? ''}
+                          onChange={(e) => setShare(p.user_id, e.target.value)}
+                        />
+                      </div>
+                    </div>
+                  ))}
+                <p className="mt-1.5 text-sm leading-[1.5] text-ink-soft">
+                  {equalCount === 0
+                    ? remaining === 0
+                      ? '모든 사람의 몫을 직접 정했어요'
+                      : remaining > 0
+                        ? `지정한 합계가 총액보다 ${remaining.toLocaleString()}원 모자라요`
+                        : `지정한 합계가 총액보다 ${(-remaining).toLocaleString()}원 많아요`
+                    : remaining < 0
+                      ? '지정한 합계가 총액을 넘어요'
+                      : `나머지 ${equalCount}명이 ${remaining.toLocaleString()}원을 똑같이 나눠요`}
+                </p>
+              </div>
+            )}
+          </div>
+        )}
       </div>
 
       <div className="mt-8 space-y-3">
