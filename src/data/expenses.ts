@@ -44,6 +44,8 @@ export interface ExpenseInput {
   title: string
   amount: number
   participantIds: string[]
+  /** userId → 고정 부담액. 미포함 인원은 나머지 균등분할 */
+  participantShares?: Record<string, number>
 }
 
 export async function createExpense(input: ExpenseInput): Promise<void> {
@@ -63,7 +65,13 @@ export async function createExpense(input: ExpenseInput): Promise<void> {
   if (error) throw error
   const { error: pError } = await supabase
     .from('expense_participants')
-    .insert(input.participantIds.map((user_id) => ({ expense_id: expense.id, user_id })))
+    .insert(
+      input.participantIds.map((user_id) => ({
+        expense_id: expense.id,
+        user_id,
+        share_amount: input.participantShares?.[user_id] ?? null,
+      })),
+    )
   if (pError) throw pError
 }
 
@@ -81,7 +89,13 @@ export async function updateExpense(expenseId: string, input: ExpenseInput): Pro
   if (dError) throw dError
   const { error: pError } = await supabase
     .from('expense_participants')
-    .insert(input.participantIds.map((user_id) => ({ expense_id: expenseId, user_id })))
+    .insert(
+      input.participantIds.map((user_id) => ({
+        expense_id: expenseId,
+        user_id,
+        share_amount: input.participantShares?.[user_id] ?? null,
+      })),
+    )
   if (pError) throw pError
 }
 
