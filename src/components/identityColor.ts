@@ -7,7 +7,17 @@ export function colorOf(id: string): string {
   return PALETTE[hash % PALETTE.length]
 }
 
-/** 이니셜 한 글자 — slice(0,1)은 이모지(서로게이트 페어)를 깨뜨리므로 코드포인트 단위로 추출 */
+/** 이니셜 한 글자 — slice(0,1)은 서로게이트 페어를, 코드포인트 분해는 ZWJ 복합 이모지·국기를
+ *  깨뜨린다. Intl.Segmenter(grapheme)로 사용자가 보는 "한 글자" 단위 그대로 추출. */
+const grapheme =
+  typeof Intl !== 'undefined' && 'Segmenter' in Intl
+    ? new Intl.Segmenter('ko', { granularity: 'grapheme' })
+    : null
+
 export function initialOf(name: string): string {
+  if (grapheme) {
+    for (const s of grapheme.segment(name)) return s.segment
+    return ''
+  }
   return [...name][0] ?? ''
 }
