@@ -23,8 +23,8 @@ npm run dev
 ## Supabase 셋업 (1회)
 
 1. [supabase.com](https://supabase.com)에서 프로젝트 생성 → Settings → API의 URL과 anon key를 `.env`에
-2. SQL Editor에서 `supabase/migrations/` 파일을 번호 순서대로 실행
-   (또는 `npx supabase db push` — supabase CLI 링크 후)
+2. `npx supabase db push`로 `supabase/migrations/`를 적용 (supabase CLI를 프로젝트에 링크 후)
+   — 권장. SQL Editor에서 파일을 번호 순서대로 직접 실행해도 된다(CLI 미사용 시)
 
 ## 로그인 셋업 (이메일 매직링크, 1회)
 
