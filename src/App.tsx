@@ -26,7 +26,7 @@ function RequireAuth() {
 
 function App() {
   return (
-    <div className="mx-auto max-w-lg">
+    <main className="mx-auto max-w-lg">
       <Routes>
         <Route path="/login" element={<LoginPage />} />
         <Route path="/auth/callback" element={<AuthCallbackPage />} />
@@ -46,7 +46,7 @@ function App() {
         </Route>
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
-    </div>
+    </main>
   )
 }
 
