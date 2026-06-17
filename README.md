@@ -1,7 +1,7 @@
 # 식구 (SIKU)
 
 [![CI](https://github.com/grinvi04/siku/actions/workflows/ci-gate.yml/badge.svg)](https://github.com/grinvi04/siku/actions/workflows/ci-gate.yml)
-![PWA](https://img.shields.io/badge/PWA-Vite·React·Supabase-2A5BD7)
+![PWA](https://img.shields.io/badge/PWA-Vite_React_Supabase-2A5BD7)
 ![license](https://img.shields.io/badge/license-All%20Rights%20Reserved-lightgrey)
 
 소규모 모임(저녁모임·자전거·여행)의 **기록 · 사진 · 경비 정산**을 위한 모바일 PWA.
