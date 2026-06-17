@@ -1,5 +1,9 @@
 # 식구 (SIKU)
 
+[![CI](https://github.com/grinvi04/siku/actions/workflows/ci-gate.yml/badge.svg)](https://github.com/grinvi04/siku/actions/workflows/ci-gate.yml)
+![PWA](https://img.shields.io/badge/PWA-Vite·React·Supabase-2A5BD7)
+![license](https://img.shields.io/badge/license-All%20Rights%20Reserved-lightgrey)
+
 소규모 모임(저녁모임·자전거·여행)의 **기록 · 사진 · 경비 정산**을 위한 모바일 PWA.
 
 - 다녀온 곳: 사진의 EXIF(위치·시각)로 방문 장소를 자동 재구성
@@ -8,6 +12,16 @@
 
 스택: Vite + React + TS + Tailwind v4 + TanStack Query / Supabase / Vercel.
 규약은 [AGENTS.md](AGENTS.md), 디자인은 [DESIGN.md](DESIGN.md), DB는 `supabase/migrations/` 참조.
+
+## 스크린샷
+
+<!-- 로그인 후 화면 캡처를 docs/screenshots/ 에 추가한 뒤 아래 주석을 해제하세요
+| 홈 | 정산 | 사진 |
+|----|------|------|
+| ![홈](docs/screenshots/home.png) | ![정산](docs/screenshots/settle.png) | ![사진](docs/screenshots/photos.png) |
+-->
+
+_준비 중 — 인증 후 화면이라 캡처를 `docs/screenshots/`에 추가 예정._
 
 ## 개발
 
@@ -58,3 +72,7 @@ npx supabase functions deploy parse-receipt
 ```
 
 배포 전까지는 버튼을 눌러도 "영수증을 읽지 못했어요"가 떠서 수동 입력으로 동작한다.
+
+## 라이선스
+
+투명성·도구(브랜치 보호 등) 목적으로 공개돼 있을 뿐, 코드 재사용 라이선스는 부여하지 않는다 (All Rights Reserved). [LICENSE](LICENSE) 참조.
