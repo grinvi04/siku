@@ -8,7 +8,7 @@
 
 - 다녀온 곳: 사진의 EXIF(위치·시각)로 방문 장소를 자동 재구성
 - 사진: 모임별 갤러리, 촬영 시각·위치 기준 자동 분류
-- 정산: 항목별 참여자 선택 → 똑같이 나누거나 사람마다 금액 따로 지정 → 최소 이체 횟수 계산 → 계좌번호 복사로 송금 (플랫폼 비종속)
+- 정산: 항목별 참여자 선택 → 균등 분할 또는 개인별 금액 지정 → 최소 이체 횟수 계산 → 계좌번호 복사로 송금 (플랫폼 비종속)
 
 스택: Vite + React + TS + Tailwind v4 + TanStack Query / Supabase / Vercel.
 규약은 [AGENTS.md](AGENTS.md), 디자인은 [DESIGN.md](DESIGN.md), DB는 `supabase/migrations/` 참조.
