@@ -8,12 +8,12 @@ export function RiceBowl({ size = 96 }: { size?: number }) {
       <path d="M35,20 C32,26 38,30 35,36" stroke="#e8865d" strokeWidth="3" strokeLinecap="round" opacity="0.45" />
       <path d="M48,15 C45,23 51,28 48,35" stroke="#e8865d" strokeWidth="3" strokeLinecap="round" opacity="0.7" />
       <path d="M61,20 C58,26 64,30 61,36" stroke="#e8865d" strokeWidth="3" strokeLinecap="round" opacity="0.45" />
-      {/* 그릇 (웜 채움) — 브랜드 마크와 동일 실루엣 */}
-      <path d="M21,55 C23,73 37,81 48,81 C59,81 73,73 75,55 Z" fill="#e8865d" />
-      {/* 밥 (흰 봉우리, 개구부에) */}
-      <path d="M27,55 Q48,46 69,55 Z" fill="#ffffff" />
-      {/* 림 하이라이트 */}
-      <path d="M23,55 H73" stroke="#ffffff" strokeWidth="1.5" strokeLinecap="round" opacity="0.35" />
+      {/* 그릇 (웜 채움) — 브랜드 마크와 동일 실루엣(곡선 림) */}
+      <path d="M21,55 C23,73 37,81 48,81 C59,81 73,73 75,55 Q48,61 21,55 Z" fill="#e8865d" />
+      {/* 밥 (흰 봉우리, 곡선 개구부에) */}
+      <path d="M27,55 Q48,46 69,55 Q48,61 27,55 Z" fill="#ffffff" />
+      {/* 림 하이라이트 (곡선) */}
+      <path d="M20,55 Q48,61 76,55" stroke="#ffffff" strokeWidth="1.5" strokeLinecap="round" opacity="0.35" />
     </svg>
   )
 }
