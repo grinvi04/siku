@@ -31,7 +31,7 @@ _준비 중 — 인증 후 화면이라 캡처를 `docs/screenshots/`에 추가 
 
 | 레이어 | 기술 |
 |---|---|
-| Frontend | Vite · React · TypeScript · Tailwind v4 · TanStack Query · React Router |
+| 프론트엔드 | Vite · React · TypeScript · Tailwind v4 · TanStack Query · React Router |
 | 백엔드 | Supabase (Postgres · Auth · Storage · RLS · Edge Functions) |
 | OCR | Google Cloud Vision (Edge Function `parse-receipt`) |
 | 배포 | Vercel (정적 PWA) |
@@ -57,7 +57,7 @@ npm run dev
 ```
 
 - 테스트: `npm test` · 린트: `npm run lint` · 빌드: `npm run build`
-- main 직접 커밋 차단: `git config core.hooksPath .githooks` (클론 후 1회)
+- main·develop 직접 커밋 차단: `git config core.hooksPath .githooks` (클론 후 1회)
 
 ## 🗄️ Supabase 셋업 (1회)
 
