@@ -14,8 +14,6 @@ export function RiceBowl({ size = 96 }: { size?: number }) {
       <path d="M27,55 Q48,46 69,55 Z" fill="#ffffff" />
       {/* 림 하이라이트 */}
       <path d="M23,55 H73" stroke="#ffffff" strokeWidth="1.5" strokeLinecap="round" opacity="0.35" />
-      {/* 굽 */}
-      <rect x="40" y="82" width="16" height="4" rx="2" fill="#c96a45" />
     </svg>
   )
 }
