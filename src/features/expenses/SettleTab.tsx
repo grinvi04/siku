@@ -4,7 +4,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import { Button } from '@/components/Button'
 import { ConfirmDialog } from '@/components/ConfirmDialog'
 import { useToast } from '@/components/Toast'
-import { computeBalances, settle } from '@/core/settlement'
+import { computeBalances, formatSettlementText, settle } from '@/core/settlement'
 import type { EventDetail } from '@/data/events'
 import { listExpenses, toCoreExpense } from '@/data/expenses'
 import {
@@ -18,7 +18,8 @@ import {
   type TransferStatus,
 } from '@/data/settlements'
 import { formatDateTime, formatKrw } from '@/lib/format'
-import { Check, Lock, ReceiptText, RotateCcw } from 'lucide-react'
+import { shareText } from '@/lib/share'
+import { Check, Lock, ReceiptText, RotateCcw, Share2 } from 'lucide-react'
 import { useSession } from '@/features/auth/useSession'
 
 export function SettleTab({ event }: { event: EventDetail }) {
@@ -146,6 +147,20 @@ export function SettleTab({ event }: { event: EventDetail }) {
     toast('계좌번호를 복사했어요. 은행 앱에 붙여넣으세요')
   }
 
+  const shareSettlement = async () => {
+    const lines = (closed?.transfers ?? []).map((t) => ({
+      from: nameOf(t.from_user),
+      to: nameOf(t.to_user),
+      amount: t.amount,
+    }))
+    const text = formatSettlementText({ groupName: event.title, lines })
+    const result = await shareText(text, {
+      share: 'share' in navigator ? (data) => navigator.share(data) : undefined,
+      copy: (t) => navigator.clipboard.writeText(t),
+    })
+    if (result === 'copied') toast('정산 결과를 복사했어요. 채팅에 붙여넣으세요')
+  }
+
   const isLocked = !!closed
   const total = (expenses ?? []).reduce((s, e) => s + e.amount, 0)
 
@@ -258,6 +273,14 @@ export function SettleTab({ event }: { event: EventDetail }) {
                   />
                 ))}
                 </ul>
+                <button
+                  type="button"
+                  className="mt-3 flex h-11 w-full items-center justify-center gap-1.5 rounded-2xl bg-surface text-base font-semibold text-primary"
+                  onClick={() => void shareSettlement()}
+                >
+                  <Share2 className="size-4" />
+                  정산 결과 공유
+                </button>
               </>
             )}
             <button

@@ -26,7 +26,9 @@ jobs:
       # ── E2E: 로컬 Supabase 스택 — 운영 키를 CI에 넣지 않는다 (public repo)
       - uses: supabase/setup-cli@v1
         with:
-          version: latest
+          # 'latest'는 매 실행 릴리즈 조회 API에 의존 → 외부 504(Gateway Time-out)에 취약.
+          # 특정 버전 핀으로 조회 호출 제거(주기적 업데이트). 2026-06 기준 최신 안정.
+          version: 2.107.0
       - name: 로컬 Supabase 기동 + .env 생성
         run: |
           supabase start
