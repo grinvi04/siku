@@ -67,3 +67,7 @@
 - `git reset --hard`, 핵심 디렉토리 `rm -rf` — 사용자가 직접 실행
 - 글로벌 패키지 설치 금지 (`npm install -g` 등) — 로컬 설치(`--save-dev`·`npx`) 사용
 - Supabase 운영 프로젝트 직접 조작 금지 — 스키마 변경은 `supabase/migrations/`로만
+
+## 문서 관리
+
+> **생성 문서는 repo에 커밋한다.** AI 도구가 만든 계획·설계 문서(`/plan` 스펙, `/milestone` 추적, 설계 결정 기록 등)는 도구 로컬 디렉터리(예: `~/.claude/plans`)에 두지 말고 프로젝트 `docs/` 아래에 커밋해 관리한다. 로컬 캐시는 노트북·도구·세션이 바뀌면 유실된다 — repo에 있어야 누가·어디서 이어받아도 일관되게 작업할 수 있다. (공통 규칙 단일 출처: team-harness `ai-collaboration.md`.)
