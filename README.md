@@ -58,6 +58,11 @@ _준비 중 — 인증 후 화면이라 캡처를 `docs/screenshots/`에 추가 
 
 ## 🏗️ 아키텍처
 
+![아키텍처 다이어그램](docs/architecture.png)
+
+<details>
+<summary>mermaid 소스 (GitHub 웹에선 차트로 렌더)</summary>
+
 ```mermaid
 flowchart LR
     subgraph Client["📱 PWA (Vite · React)"]
@@ -84,6 +89,8 @@ flowchart LR
     Data --> Fn
     Fn -->|API 키는 Function 시크릿| Vision
 ```
+
+</details>
 
 **핵심 원칙**
 
