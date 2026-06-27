@@ -2,7 +2,7 @@
 
 [![CI](https://github.com/grinvi04/siku/actions/workflows/ci-gate.yml/badge.svg)](https://github.com/grinvi04/siku/actions/workflows/ci-gate.yml)
 ![PWA](https://img.shields.io/badge/PWA-Vite_React_Supabase-2A5BD7)
-![version](https://img.shields.io/badge/version-0.4.7-informational)
+![version](https://img.shields.io/badge/version-0.4.8-informational)
 [![License](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
 [![Live](https://img.shields.io/badge/live-siku--app.vercel.app-black)](https://siku-app.vercel.app)
 
