@@ -84,7 +84,14 @@ export function EventEditPage() {
           </div>
         </div>
 
-        <Input id="title" name="title" label="이름" defaultValue={event.title} maxLength={40} required />
+        <Input
+          id="title"
+          name="title"
+          label="이름"
+          defaultValue={event.title}
+          maxLength={40}
+          required
+        />
 
         <div className="grid grid-cols-2 gap-3">
           <Input

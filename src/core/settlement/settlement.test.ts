@@ -54,7 +54,14 @@ describe('splitExpense', () => {
     expect(() => splitExpense(exp('e', 'a', 1000, ['a', 'a']))).toThrow()
     expect(() => splitExpense(exp('e', 'a', 1000, [['b', 2000], 'a']))).toThrow()
     // 전원 명시인데 합계 불일치
-    expect(() => splitExpense(exp('e', 'a', 1000, [['a', 300], ['b', 300]]))).toThrow()
+    expect(() =>
+      splitExpense(
+        exp('e', 'a', 1000, [
+          ['a', 300],
+          ['b', 300],
+        ]),
+      ),
+    ).toThrow()
   })
 })
 
@@ -146,7 +153,12 @@ describe('splitExpense — 경계·속성', () => {
   })
 
   it('전원 명시이고 합계가 정확히 일치하면 그대로 채택', () => {
-    const shares = splitExpense(exp('e', 'a', 1000, [['a', 700], ['b', 300]]))
+    const shares = splitExpense(
+      exp('e', 'a', 1000, [
+        ['a', 700],
+        ['b', 300],
+      ]),
+    )
     expect(shares.get('a')).toBe(700)
     expect(shares.get('b')).toBe(300)
   })
@@ -195,7 +207,10 @@ describe('computeBalances — 경계', () => {
 })
 
 describe('simplifyBalances — 경계·속성', () => {
-  const applyTransfers = (balances: Map<string, number>, transfers: ReturnType<typeof simplifyBalances>) => {
+  const applyTransfers = (
+    balances: Map<string, number>,
+    transfers: ReturnType<typeof simplifyBalances>,
+  ) => {
     const after = new Map(balances)
     for (const t of transfers) {
       after.set(t.fromUser, (after.get(t.fromUser) ?? 0) + t.amount)
@@ -205,13 +220,23 @@ describe('simplifyBalances — 경계·속성', () => {
   }
 
   it('모든 잔액이 0이면 빈 목록', () => {
-    expect(simplifyBalances(new Map([['a', 0], ['b', 0]]))).toEqual([])
+    expect(
+      simplifyBalances(
+        new Map([
+          ['a', 0],
+          ['b', 0],
+        ]),
+      ),
+    ).toEqual([])
   })
 
   it('채권자 2 채무자 3 — 적용 후 전원 0', () => {
     const balances = new Map([
-      ['a', 45000], ['b', 15000],
-      ['c', -10000], ['d', -20000], ['e', -30000],
+      ['a', 45000],
+      ['b', 15000],
+      ['c', -10000],
+      ['d', -20000],
+      ['e', -30000],
     ])
     const transfers = simplifyBalances(balances)
     expect(transfers.length).toBeLessThanOrEqual(4)
@@ -220,8 +245,16 @@ describe('simplifyBalances — 경계·속성', () => {
 
   it('10명 복합 — 이체 수 ≤ 9, 적용 후 전원 0', () => {
     const balances = new Map([
-      ['u0', 123400], ['u1', -56700], ['u2', 8900], ['u3', -1200], ['u4', -74400],
-      ['u5', 31000], ['u6', -45000], ['u7', 99000], ['u8', -85000], ['u9', 0],
+      ['u0', 123400],
+      ['u1', -56700],
+      ['u2', 8900],
+      ['u3', -1200],
+      ['u4', -74400],
+      ['u5', 31000],
+      ['u6', -45000],
+      ['u7', 99000],
+      ['u8', -85000],
+      ['u9', 0],
     ])
     expect([...balances.values()].reduce((s, v) => s + v, 0)).toBe(0)
     const transfers = simplifyBalances(balances)

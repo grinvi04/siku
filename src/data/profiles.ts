@@ -38,9 +38,7 @@ export async function ensureProfile(): Promise<{ profile: Profile; created: bool
   return { profile: data, created: true }
 }
 
-export async function updateMyProfile(
-  patch: Partial<Omit<Profile, 'id'>>,
-): Promise<Profile> {
+export async function updateMyProfile(patch: Partial<Omit<Profile, 'id'>>): Promise<Profile> {
   const { data: auth } = await supabase.auth.getUser()
   if (!auth.user) throw new Error('로그인이 필요합니다.')
   const { data, error } = await supabase
