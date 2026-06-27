@@ -261,17 +261,17 @@ export function SettleTab({ event }: { event: EventDetail }) {
                   />
                 </div>
                 <ul className="mt-1">
-                {closed.transfers.map((t) => (
-                  <TransferItem
-                    key={t.id}
-                    transfer={t}
-                    me={me}
-                    nameOf={nameOf}
-                    holder={accounts?.get(t.to_user)?.account_holder ?? null}
-                    onCopy={() => void copyAccount(t.to_user)}
-                    onMark={(status) => mark.mutate({ id: t.id, status })}
-                  />
-                ))}
+                  {closed.transfers.map((t) => (
+                    <TransferItem
+                      key={t.id}
+                      transfer={t}
+                      me={me}
+                      nameOf={nameOf}
+                      holder={accounts?.get(t.to_user)?.account_holder ?? null}
+                      onCopy={() => void copyAccount(t.to_user)}
+                      onMark={(status) => mark.mutate({ id: t.id, status })}
+                    />
+                  ))}
                 </ul>
                 <button
                   type="button"
@@ -307,8 +307,12 @@ export function SettleTab({ event }: { event: EventDetail }) {
                     >
                       {nameOf(userId)}
                     </span>
-                    <span className={`amount text-base ${balance > 0 ? 'text-receive' : 'text-pay'}`}>
-                      {balance > 0 ? `+${formatKrw(balance)} 받아요` : `${formatKrw(balance)} 보내요`}
+                    <span
+                      className={`amount text-base ${balance > 0 ? 'text-receive' : 'text-pay'}`}
+                    >
+                      {balance > 0
+                        ? `+${formatKrw(balance)} 받아요`
+                        : `${formatKrw(balance)} 보내요`}
                     </span>
                   </li>
                 ))}
@@ -331,7 +335,9 @@ export function SettleTab({ event }: { event: EventDetail }) {
             </div>
           </>
         ) : (
-          <p className="mt-2 text-base text-ink-soft">지출을 남기면 누가 얼마 보낼지 알아서 계산해 드려요.</p>
+          <p className="mt-2 text-base text-ink-soft">
+            지출을 남기면 누가 얼마 보낼지 알아서 계산해 드려요.
+          </p>
         )}
       </section>
 
@@ -379,9 +385,7 @@ function StatusBadge({ transfer }: { transfer: TransferRow }) {
       <span className="flex items-center gap-1 rounded-md bg-success/10 px-2 py-1 text-sm font-semibold text-success">
         <Check size={14} /> 완료
         {transfer.confirmed_at && (
-          <span className="font-normal text-ink-soft">
-            {formatDateTime(transfer.confirmed_at)}
-          </span>
+          <span className="font-normal text-ink-soft">{formatDateTime(transfer.confirmed_at)}</span>
         )}
       </span>
     )

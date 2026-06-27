@@ -39,22 +39,22 @@ _준비 중 — 인증 후 화면이라 캡처를 `docs/screenshots/`에 추가 
 
 ## ✨ 주요 기능
 
-| 기능 | 설명 |
-|---|---|
+| 기능         | 설명                                                                                                              |
+| ------------ | ----------------------------------------------------------------------------------------------------------------- |
 | 🧾 경비 정산 | 항목별 참여자 선택 → 균등 분할 또는 개인별 금액 지정 → 최소 이체 횟수 계산 → 계좌번호 복사로 송금 (플랫폼 비종속) |
-| 📷 사진 | 모임별 갤러리, 촬영 시각·위치 기준 자동 분류 |
-| 📍 다녀온 곳 | 사진의 EXIF(위치·시각)로 방문 장소를 자동 재구성 |
+| 📷 사진      | 모임별 갤러리, 촬영 시각·위치 기준 자동 분류                                                                      |
+| 📍 다녀온 곳 | 사진의 EXIF(위치·시각)로 방문 장소를 자동 재구성                                                                  |
 
 ## 🧱 기술 스택
 
-| 레이어 | 기술 |
-|---|---|
+| 레이어     | 기술                                                                    |
+| ---------- | ----------------------------------------------------------------------- |
 | 프론트엔드 | Vite · React · TypeScript · Tailwind v4 · TanStack Query · React Router |
-| 백엔드 | Supabase (Postgres · Auth · Storage · RLS · Edge Functions) |
-| OCR | Google Cloud Vision (Edge Function `parse-receipt`) |
-| 배포 | Vercel (정적 PWA) |
-| 테스트 | Vitest (단위) · Playwright (E2E) |
-| CI | GitHub Actions (`ci-gate`) — lint · test · build · E2E |
+| 백엔드     | Supabase (Postgres · Auth · Storage · RLS · Edge Functions)             |
+| OCR        | Google Cloud Vision (Edge Function `parse-receipt`)                     |
+| 배포       | Vercel (정적 PWA)                                                       |
+| 테스트     | Vitest (단위) · Playwright (E2E)                                        |
+| CI         | GitHub Actions (`ci-gate`) — lint · test · build · E2E                  |
 
 ## 🏗️ 아키텍처
 

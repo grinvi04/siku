@@ -23,11 +23,13 @@
 **유일한 예외 사용처** — 본문 UI는 플랫(Elevation 참조) 유지.
 
 **색 역할 분리** (Guidelines "따뜻함은 추억에만"과 일관):
+
 - 브랜드/앱 아이콘 = **파랑(Primary 계열)** — 신뢰의 얼굴(돈이 오가는 앱).
 - 감성 비주얼 `RiceBowl`(로그인·온보딩·빈 화면) = **웜(Accent #E8865D)** — 같은 그릇 실루엣,
   색만 역할 분리해 한 가족으로 읽히게 한다.
 
 **자산** (favicon.svg가 원본 — 수정 시 전 자산 재생성):
+
 - `favicon.svg` — 벡터 원본
 - `icons/icon-192.png` · `icon-512.png` — purpose `any`(라운드 배지)
 - `icons/icon-512-maskable.png` — 풀블리드 그라데이션 + 심볼을 중앙 80% 안전영역에

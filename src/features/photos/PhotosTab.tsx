@@ -178,9 +178,7 @@ export function PhotosTab({ event }: { event: EventDetail }) {
           <div className="mx-auto max-w-lg">
             <Button
               className="bg-pay active:bg-pay/80"
-              onClick={() =>
-                setConfirmTarget((photos ?? []).filter((p) => selected.has(p.id)))
-              }
+              onClick={() => setConfirmTarget((photos ?? []).filter((p) => selected.has(p.id)))}
             >
               선택한 {selected.size}장 지우기
             </Button>
@@ -231,7 +229,11 @@ export function PhotosTab({ event }: { event: EventDetail }) {
 
       <ConfirmDialog
         open={confirmTarget !== null}
-        title={confirmTarget && confirmTarget.length > 1 ? `사진 ${confirmTarget.length}장을 지울까요?` : '사진을 지울까요?'}
+        title={
+          confirmTarget && confirmTarget.length > 1
+            ? `사진 ${confirmTarget.length}장을 지울까요?`
+            : '사진을 지울까요?'
+        }
         message="지운 사진은 되돌릴 수 없어요."
         confirmLabel="지우기"
         danger

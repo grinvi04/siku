@@ -68,9 +68,7 @@ export function ExpenseFormPage() {
   }
   const participantIds =
     touched ??
-    new Set(
-      (existing ? existing.participants : (event?.participants ?? [])).map((p) => p.user_id),
-    )
+    new Set((existing ? existing.participants : (event?.participants ?? [])).map((p) => p.user_id))
 
   const toggleParticipant = (userId: string) => {
     const next = new Set(participantIds)
@@ -183,7 +181,10 @@ export function ExpenseFormPage() {
         return
       }
       participantShares = Object.fromEntries(
-        explicitIds.map((id) => [id, refund ? -Number(shares[id].replaceAll(',', '')) : Number(shares[id].replaceAll(',', ''))]),
+        explicitIds.map((id) => [
+          id,
+          refund ? -Number(shares[id].replaceAll(',', '')) : Number(shares[id].replaceAll(',', '')),
+        ]),
       )
     }
     save.mutate({
@@ -359,16 +360,15 @@ export function ExpenseFormPage() {
         {/* 삭제는 작성자·결제자만 (RLS와 동일) — 권한 없는 사람에겐 버튼을 보이지 않음 */}
         {isEdit &&
           existing &&
-          (existing.created_by === session?.user.id ||
-            existing.payer_id === session?.user.id) && (
-          <button
-            type="button"
-            className="h-11 w-full text-base font-semibold text-pay"
-            onClick={() => setConfirmDelete(true)}
-          >
-            이 지출 지우기
-          </button>
-        )}
+          (existing.created_by === session?.user.id || existing.payer_id === session?.user.id) && (
+            <button
+              type="button"
+              className="h-11 w-full text-base font-semibold text-pay"
+              onClick={() => setConfirmDelete(true)}
+            >
+              이 지출 지우기
+            </button>
+          )}
       </div>
 
       <ConfirmDialog

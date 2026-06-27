@@ -92,9 +92,7 @@ export function StatsPage() {
   return (
     <div className="min-h-dvh px-5 pt-6 pb-[calc(env(safe-area-inset-bottom)+24px)]">
       <BackLink to={`/groups/${groupId}`} label="식구 홈" />
-      <h1 className="mt-2 text-[22px] font-bold">
-        {group ? `${group.name} 통계` : '모임 통계'}
-      </h1>
+      <h1 className="mt-2 text-[22px] font-bold">{group ? `${group.name} 통계` : '모임 통계'}</h1>
 
       {isLoading || !stats ? (
         <CardListSkeleton count={4} />

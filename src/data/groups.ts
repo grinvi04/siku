@@ -11,7 +11,11 @@ export interface GroupDetail {
   id: string
   name: string
   invite_code: string
-  members: { user_id: string; role: string; profile: Pick<Profile, 'display_name' | 'avatar_url'> }[]
+  members: {
+    user_id: string
+    role: string
+    profile: Pick<Profile, 'display_name' | 'avatar_url'>
+  }[]
 }
 
 export async function listMyGroups(): Promise<GroupSummary[]> {
@@ -30,7 +34,9 @@ export async function listMyGroups(): Promise<GroupSummary[]> {
 export async function getGroup(groupId: string): Promise<GroupDetail> {
   const { data, error } = await supabase
     .from('groups')
-    .select('id, name, invite_code, group_members(user_id, role, profile:profiles(display_name, avatar_url))')
+    .select(
+      'id, name, invite_code, group_members(user_id, role, profile:profiles(display_name, avatar_url))',
+    )
     .eq('id', groupId)
     .single()
   if (error) throw error

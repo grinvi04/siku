@@ -29,12 +29,10 @@ export async function listPhotos(eventId: string): Promise<PhotoWithUrl[]> {
   if (error) throw error
   if (data.length === 0) return []
 
-  const { data: signed, error: signError } = await supabase.storage
-    .from('photos')
-    .createSignedUrls(
-      data.map((p) => p.thumb_path),
-      60 * 60,
-    )
+  const { data: signed, error: signError } = await supabase.storage.from('photos').createSignedUrls(
+    data.map((p) => p.thumb_path),
+    60 * 60,
+  )
   if (signError) throw signError
   const urlByPath = new Map(signed.map((s) => [s.path, s.signedUrl]))
   return data.map((p) => ({ ...p, thumbUrl: urlByPath.get(p.thumb_path) ?? '' }))

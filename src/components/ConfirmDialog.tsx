@@ -33,10 +33,7 @@ export function ConfirmDialog({
           <Button variant="secondary" onClick={onCancel}>
             취소
           </Button>
-          <Button
-            onClick={onConfirm}
-            className={danger ? 'bg-pay active:bg-pay/80' : undefined}
-          >
+          <Button onClick={onConfirm} className={danger ? 'bg-pay active:bg-pay/80' : undefined}>
             {confirmLabel}
           </Button>
         </div>

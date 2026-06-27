@@ -31,10 +31,10 @@ test.afterAll(async () => {
 })
 
 async function loginAs(target: Page, user: TestUser) {
-  await target.addInitScript(
-    ([key, session]) => localStorage.setItem(key, session),
-    [STORAGE_KEY, JSON.stringify(user.session)] as const,
-  )
+  await target.addInitScript(([key, session]) => localStorage.setItem(key, session), [
+    STORAGE_KEY,
+    JSON.stringify(user.session),
+  ] as const)
 }
 
 async function newSessionPage(browser: Browser, user: TestUser): Promise<Page> {

@@ -47,7 +47,9 @@ export function InvitePage() {
     <div className="flex min-h-dvh flex-col justify-center px-5 text-center">
       <p className="text-sm text-ink-soft">식구 초대</p>
       <h1 className="mt-1 text-[28px] font-bold">{preview.name}</h1>
-      <p className="mt-2 text-base text-ink-soft">{preview.member_count}명이 함께 먹고 다니는 중이에요</p>
+      <p className="mt-2 text-base text-ink-soft">
+        {preview.member_count}명이 함께 먹고 다니는 중이에요
+      </p>
       <div className="mt-10">
         <Button onClick={() => join.mutate()} disabled={join.isPending}>
           {join.isPending ? '들어가는 중…' : '식구 되기'}

@@ -1,30 +1,89 @@
 <!-- Supabase 대시보드 → Authentication → Emails → "Magic Link" 템플릿에 붙여넣기.
      "Confirm signup" 템플릿에도 동일하게 붙여넣으면 첫 가입 메일도 같은 디자인이 된다.
      제목(Subject) 추천: [식구] 로그인 링크가 도착했어요 -->
-<div style="margin:0;padding:32px 16px;background-color:#f7f8fa;font-family:'Apple SD Gothic Neo','Malgun Gothic',sans-serif;">
-  <div style="max-width:480px;margin:0 auto;background-color:#ffffff;border-radius:16px;border:1px solid #e5e8eb;overflow:hidden;">
-    <div style="padding:32px 28px 0;">
-      <div style="width:48px;height:48px;border-radius:14px;background-color:#2a5bd7;color:#ffffff;font-size:22px;font-weight:700;text-align:center;line-height:48px;">식</div>
-      <h1 style="margin:20px 0 0;font-size:22px;line-height:1.4;color:#1a202c;">식구에 로그인하세요</h1>
-      <p style="margin:10px 0 0;font-size:16px;line-height:1.6;color:#64707d;">
+<div
+  style="
+    margin: 0;
+    padding: 32px 16px;
+    background-color: #f7f8fa;
+    font-family: 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;
+  "
+>
+  <div
+    style="
+      max-width: 480px;
+      margin: 0 auto;
+      background-color: #ffffff;
+      border-radius: 16px;
+      border: 1px solid #e5e8eb;
+      overflow: hidden;
+    "
+  >
+    <div style="padding: 32px 28px 0">
+      <div
+        style="
+          width: 48px;
+          height: 48px;
+          border-radius: 14px;
+          background-color: #2a5bd7;
+          color: #ffffff;
+          font-size: 22px;
+          font-weight: 700;
+          text-align: center;
+          line-height: 48px;
+        "
+      >
+        식
+      </div>
+      <h1 style="margin: 20px 0 0; font-size: 22px; line-height: 1.4; color: #1a202c">
+        식구에 로그인하세요
+      </h1>
+      <p style="margin: 10px 0 0; font-size: 16px; line-height: 1.6; color: #64707d">
         비밀번호 없이 코드 입력이나 버튼으로 로그인해요.<br />
-        <strong style="color:#1a202c;">1시간 동안, 한 번만</strong> 사용할 수 있어요.
+        <strong style="color: #1a202c">1시간 동안, 한 번만</strong> 사용할 수 있어요.
       </p>
     </div>
-    <div style="padding:28px;">
-      <p style="margin:0 0 8px;font-size:14px;color:#64707d;">앱 화면에 이 코드를 입력하세요</p>
-      <div style="margin:0 0 20px;padding:14px 0;background-color:#f7f8fa;border:1px solid #e5e8eb;border-radius:12px;text-align:center;font-size:30px;font-weight:800;letter-spacing:10px;color:#1a202c;">{{ .Token }}</div>
-      <p style="margin:0 0 8px;font-size:14px;color:#64707d;">또는 버튼으로 바로 로그인</p>
-      <a href="{{ .ConfirmationURL }}"
-         style="display:block;background-color:#2a5bd7;color:#ffffff;text-decoration:none;text-align:center;font-size:17px;font-weight:700;padding:16px 0;border-radius:12px;">
+    <div style="padding: 28px">
+      <p style="margin: 0 0 8px; font-size: 14px; color: #64707d">앱 화면에 이 코드를 입력하세요</p>
+      <div
+        style="
+          margin: 0 0 20px;
+          padding: 14px 0;
+          background-color: #f7f8fa;
+          border: 1px solid #e5e8eb;
+          border-radius: 12px;
+          text-align: center;
+          font-size: 30px;
+          font-weight: 800;
+          letter-spacing: 10px;
+          color: #1a202c;
+        "
+      >
+        {{ .Token }}
+      </div>
+      <p style="margin: 0 0 8px; font-size: 14px; color: #64707d">또는 버튼으로 바로 로그인</p>
+      <a
+        href="{{ .ConfirmationURL }}"
+        style="
+          display: block;
+          background-color: #2a5bd7;
+          color: #ffffff;
+          text-decoration: none;
+          text-align: center;
+          font-size: 17px;
+          font-weight: 700;
+          padding: 16px 0;
+          border-radius: 12px;
+        "
+      >
         식구 로그인하기
       </a>
-      <p style="margin:16px 0 0;font-size:13px;line-height:1.6;color:#adb5bd;">
+      <p style="margin: 16px 0 0; font-size: 13px; line-height: 1.6; color: #adb5bd">
         버튼이 눌리지 않으면 위의 6자리 코드를 입력하면 돼요.
       </p>
     </div>
-    <div style="padding:20px 28px;background-color:#f7f8fa;border-top:1px solid #e5e8eb;">
-      <p style="margin:0;font-size:13px;line-height:1.6;color:#adb5bd;">
+    <div style="padding: 20px 28px; background-color: #f7f8fa; border-top: 1px solid #e5e8eb">
+      <p style="margin: 0; font-size: 13px; line-height: 1.6; color: #adb5bd">
         본인이 요청하지 않았다면 이 메일은 무시하셔도 돼요. 계정은 안전합니다.
       </p>
     </div>

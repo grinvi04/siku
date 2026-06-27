@@ -26,10 +26,10 @@ test.afterAll(async () => {
 })
 
 async function loginAs(page: Page, user: TestUser) {
-  await page.addInitScript(
-    ([key, session]) => localStorage.setItem(key, session),
-    [STORAGE_KEY, JSON.stringify(user.session)] as const,
-  )
+  await page.addInitScript(([key, session]) => localStorage.setItem(key, session), [
+    STORAGE_KEY,
+    JSON.stringify(user.session),
+  ] as const)
 }
 
 test('식구 생성 → 기록 → 지출 → 정산 확정·취소 전 과정', async ({ page }) => {

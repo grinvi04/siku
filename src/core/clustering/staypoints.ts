@@ -33,7 +33,10 @@ const DEFAULT_MAX_GAP_MS = 6 * 60 * 60 * 1000
  *   — 자전거 이동 중 찍은 사진은 자동 배제된다
  * - 좌표나 시각이 없는 사진은 입력에서 제외하고 호출할 것
  */
-export function detectStayPoints(photos: PhotoPoint[], options: StayPointOptions = {}): StayPoint[] {
+export function detectStayPoints(
+  photos: PhotoPoint[],
+  options: StayPointOptions = {},
+): StayPoint[] {
   const radiusM = options.radiusM ?? DEFAULT_RADIUS_M
   const minStayMs = options.minStayMs ?? DEFAULT_MIN_STAY_MS
   const maxGapMs = options.maxGapMs ?? DEFAULT_MAX_GAP_MS

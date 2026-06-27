@@ -4,7 +4,9 @@ const url = import.meta.env.VITE_SUPABASE_URL as string
 const anonKey = import.meta.env.VITE_SUPABASE_ANON_KEY as string
 
 if (!url || !anonKey) {
-  throw new Error('VITE_SUPABASE_URL / VITE_SUPABASE_ANON_KEY 환경변수가 필요합니다 (.env.example 참조)')
+  throw new Error(
+    'VITE_SUPABASE_URL / VITE_SUPABASE_ANON_KEY 환경변수가 필요합니다 (.env.example 참조)',
+  )
 }
 
 export const supabase = createClient(url, anonKey)
