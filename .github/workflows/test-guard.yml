@@ -1,0 +1,68 @@
+# test-guard — PR에서 테스트·마이그레이션이 (소리없이) 삭제되는 것을 차단하는 기계 게이트.
+# 배경: harness-guard 훅은 Bash 커맨드만 검사하고(Edit/Write로 테스트 삭제 못 잡음),
+# CI는 테스트가 삭제되면 그냥 green이라 못 잡는다. 이 게이트가 그 공백을 메운다.
+# 정당한 제거(데드코드 정리 등)는 PR에 'allow-test-removal' 라벨을 붙이면 통과.
+#
+# siku 스택(Vite + React + Supabase) 맞춤:
+#   - 단위 테스트(vitest): src/**/*.test.ts(x)
+#   - e2e 테스트(playwright): tests/e2e/**/*.spec.ts
+#   - Supabase 마이그레이션은 forward-only — supabase/migrations/*.sql 삭제 차단.
+name: test-guard
+
+on:
+  pull_request:
+    branches: [main, develop]
+
+jobs:
+  test-guard:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+
+      - name: Detect test / migration removals
+        env:
+          BASE: ${{ github.base_ref }}
+          LABELS: ${{ toJson(github.event.pull_request.labels.*.name) }}
+        run: |
+          set -uo pipefail
+
+          if echo "$LABELS" | grep -q "allow-test-removal"; then
+            echo "::notice::'allow-test-removal' 라벨 — 테스트/마이그레이션 감소 허용(게이트 스킵)"
+            exit 0
+          fi
+
+          git fetch --quiet origin "$BASE"
+
+          # 테스트 마커(vitest·playwright): it()·test()·describe()
+          # siku 테스트 경로만 센다 — git 기본 pathspec에서 '*'는 '/'도 매칭한다.
+          MARKER='(^|[^A-Za-z_])(it|test|describe)[[:space:]]*\('
+          TEST_PATHS=('src/*.test.ts' 'src/*.test.tsx' 'tests/e2e/*.spec.ts')
+          count_tests() {
+            git grep -hIE "$MARKER" "$1" -- "${TEST_PATHS[@]}" 2>/dev/null | grep -cE "$MARKER" || true
+          }
+
+          # Supabase 마이그레이션 파일 개수(forward-only — 삭제 차단)
+          count_migrations() {
+            git ls-tree -r --name-only "$1" -- supabase/migrations 2>/dev/null | grep -cE '\.sql$' || true
+          }
+
+          BEFORE_T=$(count_tests "origin/$BASE")
+          AFTER_T=$(count_tests "HEAD")
+          BEFORE_M=$(count_migrations "origin/$BASE")
+          AFTER_M=$(count_migrations "HEAD")
+          echo "테스트 마커     — base($BASE)=$BEFORE_T, PR=$AFTER_T"
+          echo "마이그레이션 파일 — base($BASE)=$BEFORE_M, PR=$AFTER_M"
+
+          fail=0
+          if [ "$AFTER_T" -lt "$BEFORE_T" ]; then
+            echo "::error::테스트가 $((BEFORE_T - AFTER_T))개 감소했습니다. 의도된 제거라면 PR에 'allow-test-removal' 라벨을 붙이세요."
+            fail=1
+          fi
+          if [ "$AFTER_M" -lt "$BEFORE_M" ]; then
+            echo "::error::Supabase 마이그레이션이 $((BEFORE_M - AFTER_M))개 삭제됐습니다(forward-only 위반). 의도된 제거라면 PR에 'allow-test-removal' 라벨을 붙이세요."
+            fail=1
+          fi
+          [ "$fail" -eq 0 ] && echo "✅ 테스트·마이그레이션 감소 없음"
+          exit $fail
