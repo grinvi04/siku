@@ -11,7 +11,7 @@
 - **감사 결과 (실측)**:
   - **HIGH/MEDIUM 결함 0건.**
   - **RLS 전 테이블 커버** — `profiles·groups·group_members·events·event_participants·visits·photos·
-    expenses·expense_participants·settlements·settlement_transfers·ocr_usage` + `storage.objects(photos)`
+expenses·expense_participants·settlements·settlement_transfers·ocr_usage` + `storage.objects(photos)`
     까지 RLS 활성. `settlements·settlement_transfers·ocr_usage`는 의도된 **default-deny**(직접 정책 없음,
     `SECURITY DEFINER` RPC / service_role로만 변경). 멤버십 헬퍼(`is_group_member`/`event_group`)는
     `SECURITY DEFINER + set search_path=public`로 자기참조 재귀를 차단 — 올바른 패턴.
@@ -31,13 +31,13 @@
 
 ## §1 결함 인벤토리 (LOW / INFO만)
 
-| 심각도 | 클래스 | 위치 | 결함 | 근거 | team-harness 표준 |
-|---|---|---|---|---|---|
-| LOW | 데이터 무결성 | `supabase/migrations/0014_storage_delete_group.sql:6` vs `0002_rls.sql:101` | storage 파일 삭제는 **그룹 멤버 전체** 허용인데 `photos` 행 삭제는 **업로더만** 허용 → 멤버가 타인 사진 파일만 지우면 `photos` 행이 남아 **깨진 참조(orphan row)** 가능 | 두 정책의 권한 주체 불일치(파일=멤버, 행=업로더). `0014` 주석은 반대 방향(고아 파일)만 언급 | db-standards.md (참조 무결성) |
-| INFO | 식별자/PII 노출 | `supabase/migrations/0002_rls.sql:40-47` | `profiles_select`가 **동일 그룹 멤버에게 타인 계좌번호·은행·예금주 전체 노출** | 정산 송금 UX상 의도된 설계(필드 단위 제한 없음). 비결제자에게도 전원 노출 | auth-standards.md (데이터 스코프) |
-| INFO | 입력검증(서버) | `supabase/migrations/0003_rpc.sql` `close_settlement` | 이체 금액 **정합성(지출 균형과 일치)은 서버 미검증** — 클라이언트(`core/settlement`, 단위 테스트됨)가 계산해 전달, 서버는 멤버십·양수·당사자만 검증 | 함수 주석에 의도 명시. 같은 그룹 내 신뢰 범위 가정 | api-standards.md (서버측 검증) |
-| INFO | 시크릿 동거 | `.env`(gitignore됨) / `tests/e2e/helpers/admin.ts:20` | `SUPABASE_SERVICE_ROLE_KEY`가 클라이언트 `VITE_*` 키와 **같은 `.env`**에 존재 | Vite는 `VITE_` 접두사만 번들에 인라인 → **번들 미유입 실측 확인**. `.env`는 미추적 | operations.md (시크릿 관리) |
-| 미측정 | 마이그레이션 운영안전 | (배포 환경) | 원격 DB ↔ 마이그레이션 **드리프트 미확인** — 감사 시 DB 접속 권한 없어 `supabase db diff` 미실행 | 코드상 드리프트 징후는 없으나 원격 상태는 미관측 | db-standards.md (forward-only·드리프트) |
+| 심각도 | 클래스                | 위치                                                                        | 결함                                                                                                                                                                    | 근거                                                                                        | team-harness 표준                       |
+| ------ | --------------------- | --------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------- | --------------------------------------- |
+| LOW    | 데이터 무결성         | `supabase/migrations/0014_storage_delete_group.sql:6` vs `0002_rls.sql:101` | storage 파일 삭제는 **그룹 멤버 전체** 허용인데 `photos` 행 삭제는 **업로더만** 허용 → 멤버가 타인 사진 파일만 지우면 `photos` 행이 남아 **깨진 참조(orphan row)** 가능 | 두 정책의 권한 주체 불일치(파일=멤버, 행=업로더). `0014` 주석은 반대 방향(고아 파일)만 언급 | db-standards.md (참조 무결성)           |
+| INFO   | 식별자/PII 노출       | `supabase/migrations/0002_rls.sql:40-47`                                    | `profiles_select`가 **동일 그룹 멤버에게 타인 계좌번호·은행·예금주 전체 노출**                                                                                          | 정산 송금 UX상 의도된 설계(필드 단위 제한 없음). 비결제자에게도 전원 노출                   | auth-standards.md (데이터 스코프)       |
+| INFO   | 입력검증(서버)        | `supabase/migrations/0003_rpc.sql` `close_settlement`                       | 이체 금액 **정합성(지출 균형과 일치)은 서버 미검증** — 클라이언트(`core/settlement`, 단위 테스트됨)가 계산해 전달, 서버는 멤버십·양수·당사자만 검증                     | 함수 주석에 의도 명시. 같은 그룹 내 신뢰 범위 가정                                          | api-standards.md (서버측 검증)          |
+| INFO   | 시크릿 동거           | `.env`(gitignore됨) / `tests/e2e/helpers/admin.ts:20`                       | `SUPABASE_SERVICE_ROLE_KEY`가 클라이언트 `VITE_*` 키와 **같은 `.env`**에 존재                                                                                           | Vite는 `VITE_` 접두사만 번들에 인라인 → **번들 미유입 실측 확인**. `.env`는 미추적          | operations.md (시크릿 관리)             |
+| 미측정 | 마이그레이션 운영안전 | (배포 환경)                                                                 | 원격 DB ↔ 마이그레이션 **드리프트 미확인** — 감사 시 DB 접속 권한 없어 `supabase db diff` 미실행                                                                        | 코드상 드리프트 징후는 없으나 원격 상태는 미관측                                            | db-standards.md (forward-only·드리프트) |
 
 ## §2 Acceptance Criteria
 
@@ -50,11 +50,11 @@
 
 ## §3 PR 분해
 
-| PR | 범위 | 대상 | 비고 |
-|---|---|---|---|
-| PR-A | AC-1 실수정 | 새 마이그레이션(`0017_*`)로 storage delete 정책을 `photos` 행 삭제 권한(업로더)과 통일 — **기존 마이그레이션 수정 금지(forward-only)** | RLS·default-deny 패턴 유지 |
-| (결정문서) | AC-2 | 본 문서 §4에 INFO 3건 수용 결정 기록 | 코드 변경 없음 |
-| (운영 1회) | AC-3 | 배포 환경에서 `supabase db diff` 실행·기록 | PR 아님(운영 점검) |
+| PR         | 범위        | 대상                                                                                                                                   | 비고                       |
+| ---------- | ----------- | -------------------------------------------------------------------------------------------------------------------------------------- | -------------------------- |
+| PR-A       | AC-1 실수정 | 새 마이그레이션(`0017_*`)로 storage delete 정책을 `photos` 행 삭제 권한(업로더)과 통일 — **기존 마이그레이션 수정 금지(forward-only)** | RLS·default-deny 패턴 유지 |
+| (결정문서) | AC-2        | 본 문서 §4에 INFO 3건 수용 결정 기록                                                                                                   | 코드 변경 없음             |
+| (운영 1회) | AC-3        | 배포 환경에서 `supabase db diff` 실행·기록                                                                                             | PR 아님(운영 점검)         |
 
 > 이 로드맵 문서 자체는 머지하지 않는다(검토용). 실수정 PR-A는 별도 진행.
 
