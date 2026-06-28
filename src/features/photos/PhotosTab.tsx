@@ -146,12 +146,7 @@ export function PhotosTab({ event }: { event: EventDetail }) {
                 className="relative aspect-square overflow-hidden bg-surface"
                 onClick={() => (selecting ? toggleSelect(photo) : void openViewer(photo))}
               >
-                <img
-                  src={photo.thumbUrl}
-                  alt=""
-                  loading="lazy"
-                  className={`h-full w-full object-cover ${dimmed ? 'opacity-30' : ''}`}
-                />
+                <PhotoThumb url={photo.thumbUrl} dimmed={dimmed} />
                 {isSelected && (
                   <span className="absolute inset-0 flex items-center justify-center bg-primary/40">
                     <span className="flex h-8 w-8 items-center justify-center rounded-full bg-primary text-base font-bold text-white">
@@ -244,5 +239,26 @@ export function PhotosTab({ event }: { event: EventDetail }) {
         onCancel={() => setConfirmTarget(null)}
       />
     </div>
+  )
+}
+
+function PhotoThumb({ url, dimmed }: { url: string; dimmed: boolean }) {
+  const [failed, setFailed] = useState(false)
+  const dim = dimmed ? 'opacity-30' : ''
+  if (!url || failed) {
+    return (
+      <div className={`flex h-full w-full items-center justify-center bg-surface ${dim}`}>
+        <Images size={24} className="text-ink-faint" aria-label="사진 없음" />
+      </div>
+    )
+  }
+  return (
+    <img
+      src={url}
+      alt=""
+      loading="lazy"
+      className={`h-full w-full object-cover ${dim}`}
+      onError={() => setFailed(true)}
+    />
   )
 }

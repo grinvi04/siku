@@ -324,7 +324,7 @@ export function SettleTab({ event }: { event: EventDetail }) {
                   {preview.transfers.map((t) => (
                     <li key={`${t.fromUser}-${t.toUser}`} className="text-base">
                       {nameOf(t.fromUser)} → {nameOf(t.toUser)}{' '}
-                      <span className="amount">{formatKrw(t.amount)}</span>
+                      <span className="amount whitespace-nowrap">{formatKrw(t.amount)}</span>
                     </li>
                   ))}
                 </ul>
