@@ -64,6 +64,7 @@ _준비 중 — 인증 후 화면이라 캡처를 `docs/screenshots/`에 추가 
 <summary>mermaid 소스 (GitHub 웹에선 차트로 렌더)</summary>
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'lineColor': '#6b7280', 'background': '#f8fafc', 'mainBkg': '#f8fafc', 'clusterBkg': '#f1f5f9', 'fontSize': '14px'}}}%%
 flowchart LR
     subgraph Client["📱 PWA (Vite · React)"]
         UI["features/ 화면·훅"]
