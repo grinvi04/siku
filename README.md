@@ -58,7 +58,7 @@ _준비 중 — 인증 후 화면이라 캡처를 `docs/screenshots/`에 추가 
 
 ## 🏗️ 아키텍처
 
-![아키텍처 다이어그램](docs/architecture.png)
+![아키텍처 다이어그램](docs/architecture.svg)
 
 <details>
 <summary>mermaid 소스 (GitHub 웹에선 차트로 렌더)</summary>
