@@ -83,7 +83,10 @@ export function EventNewPage() {
   const today = new Date().toISOString().slice(0, 10)
 
   return (
-    <form className="min-h-dvh px-5 pt-6 pb-[calc(env(safe-area-inset-bottom)+16px)]" onSubmit={handleSubmit}>
+    <form
+      className="min-h-dvh px-5 pt-6 pb-[calc(env(safe-area-inset-bottom)+16px)]"
+      onSubmit={handleSubmit}
+    >
       <BackLink to={`/groups/${groupId}`} label="식구 홈" />
       <h1 className="mt-2 text-[22px] font-bold">새 모임 기록</h1>
 
@@ -99,10 +102,24 @@ export function EventNewPage() {
           </div>
         </div>
 
-        <Input id="title" name="title" label="이름" placeholder="예: 6월 정기모임, 제주 라이딩" maxLength={40} required />
+        <Input
+          id="title"
+          name="title"
+          label="이름"
+          placeholder="예: 6월 정기모임, 제주 라이딩"
+          maxLength={40}
+          required
+        />
 
         <div className="grid grid-cols-2 gap-3">
-          <Input id="start_date" name="start_date" type="date" label="시작일" defaultValue={today} required />
+          <Input
+            id="start_date"
+            name="start_date"
+            type="date"
+            label="시작일"
+            defaultValue={today}
+            required
+          />
           <Input id="end_date" name="end_date" type="date" label="종료일 (1박 이상이면)" />
         </div>
 

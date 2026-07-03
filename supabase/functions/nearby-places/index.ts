@@ -84,7 +84,9 @@ Deno.serve(async (req) => {
           'X-Goog-FieldMask': 'places.displayName,places.primaryTypeDisplayName',
         },
         body: JSON.stringify({
-          locationRestriction: { circle: { center: { latitude: lat, longitude: lng }, radius: 200 } },
+          locationRestriction: {
+            circle: { center: { latitude: lat, longitude: lng }, radius: 200 },
+          },
           maxResultCount: 4,
           rankPreference: 'DISTANCE',
           languageCode: 'ko',
@@ -95,10 +97,12 @@ Deno.serve(async (req) => {
         return json({ places: [] })
       }
       const data = await res.json()
-      const places = ((data.places ?? []) as {
-        displayName?: { text?: string }
-        primaryTypeDisplayName?: { text?: string }
-      }[])
+      const places = (
+        (data.places ?? []) as {
+          displayName?: { text?: string }
+          primaryTypeDisplayName?: { text?: string }
+        }[]
+      )
         .map((p) => ({
           name: p.displayName?.text ?? '',
           category: p.primaryTypeDisplayName?.text ?? '',

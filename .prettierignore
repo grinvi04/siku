@@ -1,0 +1,10 @@
+node_modules
+dist
+dist-ssr
+coverage
+test-results
+playwright-report
+.vercel
+.codex
+package-lock.json
+*.HEIC

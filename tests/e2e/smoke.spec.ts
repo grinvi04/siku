@@ -32,9 +32,9 @@ test('이메일이 비어 있으면 브라우저 검증이 제출을 막는다',
   // 제출이 막혀 같은 화면에 머물고, "메일함 확인" 화면으로 넘어가지 않는다
   await expect(page.getByLabel('이메일')).toBeVisible()
   await expect(page.getByText('메일함을 확인해 주세요')).not.toBeVisible()
-  const invalid = await page.getByLabel('이메일').evaluate(
-    (el) => !(el as HTMLInputElement).checkValidity(),
-  )
+  const invalid = await page
+    .getByLabel('이메일')
+    .evaluate((el) => !(el as HTMLInputElement).checkValidity())
   expect(invalid).toBe(true)
 })
 

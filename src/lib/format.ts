@@ -27,7 +27,11 @@ export function formatKrw(amount: number): string {
   return `${amount.toLocaleString('ko-KR')}원`
 }
 
-const timeFmt = new Intl.DateTimeFormat('ko-KR', { hour: '2-digit', minute: '2-digit', hour12: false })
+const timeFmt = new Intl.DateTimeFormat('ko-KR', {
+  hour: '2-digit',
+  minute: '2-digit',
+  hour12: false,
+})
 const dateTimeFmt = new Intl.DateTimeFormat('ko-KR', {
   month: 'numeric',
   day: 'numeric',

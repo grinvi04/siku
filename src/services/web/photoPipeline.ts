@@ -32,7 +32,8 @@ export async function processPhoto(file: File): Promise<ProcessedPhoto> {
   return {
     main,
     thumb,
-    takenAt: takenDate instanceof Date && !isNaN(takenDate.getTime()) ? takenDate.toISOString() : null,
+    takenAt:
+      takenDate instanceof Date && !isNaN(takenDate.getTime()) ? takenDate.toISOString() : null,
     lat: gps?.latitude ?? null,
     lng: gps?.longitude ?? null,
   }

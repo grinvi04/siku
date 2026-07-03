@@ -24,7 +24,9 @@ export interface ClosedSettlement {
 export async function getClosedSettlement(eventId: string): Promise<ClosedSettlement | null> {
   const { data, error } = await supabase
     .from('settlements')
-    .select('id, created_at, closed_by, settlement_transfers(id, from_user, to_user, amount, status, sent_at, confirmed_at)')
+    .select(
+      'id, created_at, closed_by, settlement_transfers(id, from_user, to_user, amount, status, sent_at, confirmed_at)',
+    )
     .eq('event_id', eventId)
     .eq('status', 'closed')
     .maybeSingle()

@@ -82,9 +82,7 @@ export function EventPage() {
           {event.participants.map((p, i) => (
             <span key={p.user_id}>
               {i > 0 && ', '}
-              <span
-                className={p.user_id === session?.user.id ? 'font-semibold text-primary' : ''}
-              >
+              <span className={p.user_id === session?.user.id ? 'font-semibold text-primary' : ''}>
                 {p.display_name}
               </span>
             </span>
@@ -100,7 +98,9 @@ export function EventPage() {
             type="button"
             aria-current={tab === t.key}
             className={`flex h-11 items-center justify-center gap-1.5 rounded-lg text-base transition-colors ${
-              tab === t.key ? 'bg-white font-semibold text-primary shadow-[0_2px_8px_rgba(26,32,44,0.08)]' : 'text-ink-soft'
+              tab === t.key
+                ? 'bg-white font-semibold text-primary shadow-[0_2px_8px_rgba(26,32,44,0.08)]'
+                : 'text-ink-soft'
             }`}
             onClick={() => setTab(t.key)}
           >

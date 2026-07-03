@@ -263,11 +263,11 @@ export function VisitsTab({ event }: { event: EventDetail }) {
         onSubmit={(e) => {
           e.preventDefault()
           const name = manualName.trim()
-            if (!name) {
-              toast('장소 이름을 입력해 주세요')
-              return
-            }
-            addManual.mutate(name)
+          if (!name) {
+            toast('장소 이름을 입력해 주세요')
+            return
+          }
+          addManual.mutate(name)
         }}
       >
         <div className="flex-1">
@@ -278,7 +278,12 @@ export function VisitsTab({ event }: { event: EventDetail }) {
             onChange={(e) => setManualName(e.target.value)}
           />
         </div>
-        <Button type="submit" variant="secondary" className="!w-24 shrink-0" disabled={addManual.isPending}>
+        <Button
+          type="submit"
+          variant="secondary"
+          className="!w-24 shrink-0"
+          disabled={addManual.isPending}
+        >
           추가
         </Button>
       </form>

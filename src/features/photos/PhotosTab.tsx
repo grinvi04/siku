@@ -146,12 +146,7 @@ export function PhotosTab({ event }: { event: EventDetail }) {
                 className="relative aspect-square overflow-hidden bg-surface"
                 onClick={() => (selecting ? toggleSelect(photo) : void openViewer(photo))}
               >
-                <img
-                  src={photo.thumbUrl}
-                  alt=""
-                  loading="lazy"
-                  className={`h-full w-full object-cover ${dimmed ? 'opacity-30' : ''}`}
-                />
+                <PhotoThumb url={photo.thumbUrl} dimmed={dimmed} />
                 {isSelected && (
                   <span className="absolute inset-0 flex items-center justify-center bg-primary/40">
                     <span className="flex h-8 w-8 items-center justify-center rounded-full bg-primary text-base font-bold text-white">
@@ -178,9 +173,7 @@ export function PhotosTab({ event }: { event: EventDetail }) {
           <div className="mx-auto max-w-lg">
             <Button
               className="bg-pay active:bg-pay/80"
-              onClick={() =>
-                setConfirmTarget((photos ?? []).filter((p) => selected.has(p.id)))
-              }
+              onClick={() => setConfirmTarget((photos ?? []).filter((p) => selected.has(p.id)))}
             >
               선택한 {selected.size}장 지우기
             </Button>
@@ -231,7 +224,11 @@ export function PhotosTab({ event }: { event: EventDetail }) {
 
       <ConfirmDialog
         open={confirmTarget !== null}
-        title={confirmTarget && confirmTarget.length > 1 ? `사진 ${confirmTarget.length}장을 지울까요?` : '사진을 지울까요?'}
+        title={
+          confirmTarget && confirmTarget.length > 1
+            ? `사진 ${confirmTarget.length}장을 지울까요?`
+            : '사진을 지울까요?'
+        }
         message="지운 사진은 되돌릴 수 없어요."
         confirmLabel="지우기"
         danger
@@ -242,5 +239,26 @@ export function PhotosTab({ event }: { event: EventDetail }) {
         onCancel={() => setConfirmTarget(null)}
       />
     </div>
+  )
+}
+
+function PhotoThumb({ url, dimmed }: { url: string; dimmed: boolean }) {
+  const [failed, setFailed] = useState(false)
+  const dim = dimmed ? 'opacity-30' : ''
+  if (!url || failed) {
+    return (
+      <div className={`flex h-full w-full items-center justify-center bg-surface ${dim}`}>
+        <Images size={24} className="text-ink-faint" aria-label="사진 없음" />
+      </div>
+    )
+  }
+  return (
+    <img
+      src={url}
+      alt=""
+      loading="lazy"
+      className={`h-full w-full object-cover ${dim}`}
+      onError={() => setFailed(true)}
+    />
   )
 }

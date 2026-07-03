@@ -76,9 +76,7 @@ describe('detectStayPoints', () => {
 
   it('입력 순서와 무관하게 촬영시각순으로 처리한다 (결정적)', () => {
     const photos = [photo('p3', 40), photo('p1', 0), photo('p2', 20)]
-    expect(detectStayPoints(photos)).toEqual(
-      detectStayPoints([...photos].reverse()),
-    )
+    expect(detectStayPoints(photos)).toEqual(detectStayPoints([...photos].reverse()))
   })
 
   it('사진 1장뿐인 장소도 방문 후보가 된다', () => {
@@ -99,7 +97,11 @@ describe('detectStayPoints — 경계·옵션', () => {
     // 위도 0.00134° ≈ 149m, 0.0014° ≈ 156m
     const inside = detectStayPoints([photo('p1', 0), photo('p2', 35, 0.00134)])
     expect(inside).toHaveLength(1)
-    const outside = detectStayPoints([photo('p1', 0), photo('p2', 35, 0.0014), photo('p3', 70, 0.0014)])
+    const outside = detectStayPoints([
+      photo('p1', 0),
+      photo('p2', 35, 0.0014),
+      photo('p3', 70, 0.0014),
+    ])
     expect(outside.map((s) => s.photoIds)).toEqual([['p1'], ['p2', 'p3']])
   })
 

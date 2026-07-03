@@ -15,7 +15,9 @@ export interface ExpenseRow {
 export async function listExpenses(eventId: string): Promise<ExpenseRow[]> {
   const { data, error } = await supabase
     .from('expenses')
-    .select('id, event_id, payer_id, title, amount, spent_at, created_by, expense_participants(user_id, share_amount)')
+    .select(
+      'id, event_id, payer_id, title, amount, spent_at, created_by, expense_participants(user_id, share_amount)',
+    )
     .eq('event_id', eventId)
     .order('spent_at', { ascending: true })
   if (error) throw error
@@ -63,15 +65,13 @@ export async function createExpense(input: ExpenseInput): Promise<void> {
     .select('id')
     .single()
   if (error) throw error
-  const { error: pError } = await supabase
-    .from('expense_participants')
-    .insert(
-      input.participantIds.map((user_id) => ({
-        expense_id: expense.id,
-        user_id,
-        share_amount: input.participantShares?.[user_id] ?? null,
-      })),
-    )
+  const { error: pError } = await supabase.from('expense_participants').insert(
+    input.participantIds.map((user_id) => ({
+      expense_id: expense.id,
+      user_id,
+      share_amount: input.participantShares?.[user_id] ?? null,
+    })),
+  )
   if (pError) throw pError
 }
 
@@ -87,15 +87,13 @@ export async function updateExpense(expenseId: string, input: ExpenseInput): Pro
     .delete()
     .eq('expense_id', expenseId)
   if (dError) throw dError
-  const { error: pError } = await supabase
-    .from('expense_participants')
-    .insert(
-      input.participantIds.map((user_id) => ({
-        expense_id: expenseId,
-        user_id,
-        share_amount: input.participantShares?.[user_id] ?? null,
-      })),
-    )
+  const { error: pError } = await supabase.from('expense_participants').insert(
+    input.participantIds.map((user_id) => ({
+      expense_id: expenseId,
+      user_id,
+      share_amount: input.participantShares?.[user_id] ?? null,
+    })),
+  )
   if (pError) throw pError
 }
 
@@ -107,7 +105,9 @@ export async function deleteExpense(expenseId: string): Promise<void> {
 export async function getExpense(expenseId: string): Promise<ExpenseRow> {
   const { data, error } = await supabase
     .from('expenses')
-    .select('id, event_id, payer_id, title, amount, spent_at, created_by, expense_participants(user_id, share_amount)')
+    .select(
+      'id, event_id, payer_id, title, amount, spent_at, created_by, expense_participants(user_id, share_amount)',
+    )
     .eq('id', expenseId)
     .single()
   if (error) throw error
