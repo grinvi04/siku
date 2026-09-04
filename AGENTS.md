@@ -49,6 +49,8 @@
 
 ## 코딩 컨벤션
 
+- 작업 대상 stack과 관련된 `.claude/rules/*.md`를 작업 전에 읽는다. 이 경로는 Claude Code의 자동 로딩
+  위치이지만 rule 원문은 도구 공통이다. Codex/Gemini는 이 지시에 따라 관련 파일을 명시적으로 읽는다.
 - import는 `@/` 별칭(=src) 사용 — 상대경로는 같은 폴더 sibling(`./x`)만 허용
 - 하위 화면 이탈은 `BackLink`(명시적 부모 경로, push)로 — `navigate(-1)` 금지
   (deep link·로그인 `?next=` 진입 시 인앱 히스토리가 없어 깨짐). 저장 성공 후 자동 이동만 `replace`

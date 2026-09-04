@@ -8,3 +8,9 @@ playwright-report
 .codex
 package-lock.json
 *.HEIC
+
+# team-harness managed scripts — keep byte-identical to the released canonical assets
+scripts/check-commit-message.cjs
+scripts/check-destructive-ddl.mjs
+scripts/check-alembic-destructive-ddl.mjs
+scripts/check-activerecord-destructive-ddl.mjs
