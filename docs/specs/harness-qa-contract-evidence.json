@@ -1,0 +1,700 @@
+{
+  "schemaVersion": 1,
+  "date": "2026-10-07",
+  "consumerRoot": "<CONSUMER_ROOT>",
+  "branch": "fix/harness-qa-contract",
+  "base": "c7b5bbdbbc8523cbe34189aae65f605801b4a2ce",
+  "firstContractCandidate": "b18f39338d6b9ac95e05883d340f7791cb0b84d8",
+  "candidate": "committed source input fingerprints below; containing commit from Git history",
+  "harnessSource": "9838c2ef288b4566f81fae03acb56530ee165c06",
+  "runtime": {
+    "node": "22.18.0",
+    "fixture": {
+      "repo": "https://github.com/supabase/supabase",
+      "tag": "self-hosted/v0.8.2",
+      "commit": "564eab8ad7840b13324f68b1bfac074ef8d51c21",
+      "scope": "isolated synthetic Auth/PostgREST/Storage/Postgres fixture; no global daemon or OS changes",
+      "port": "127.0.0.1:15421",
+      "services": ["api-gw", "auth", "rest", "storage", "imgproxy", "db"]
+    },
+    "productionSecretsRead": false,
+    "operationalDatabaseUsed": false,
+    "retries": 0,
+    "serverReuse": false,
+    "storage": "dedicated Docker named volume; all six services stopped after tests"
+  },
+  "verdict": {
+    "selectedLocalQA": "PASS",
+    "unitTests": 86,
+    "browserTests": 25,
+    "audit": {
+      "info": 0,
+      "low": 0,
+      "moderate": 0,
+      "high": 0,
+      "critical": 0,
+      "total": 0
+    },
+    "independentReview": "PENDING",
+    "remoteCI": "UNVERIFIED",
+    "PRMergeDeployment": "NOT_RUN",
+    "remoteDatabaseDrift": "NOT_MEASURED",
+    "atomicDBStorageDeletion": "NOT_GUARANTEED"
+  },
+  "requirements": [
+    {
+      "risk": "unauthorized delete",
+      "expect": "zero deleted rows rejects; storage untouched; rows and files preserved",
+      "evidence": ["unit tests", "photo-policy real function E2E"]
+    },
+    {
+      "risk": "storage partial failure after successful DB deletion",
+      "expect": "typed partial failure; photo list refresh; event leaves deleted route; no success toast; file still present",
+      "evidence": ["unit tests", "photo-policy real UI E2E with Storage 403 injection"]
+    },
+    {
+      "risk": "normal flows regression",
+      "expect": "existing 18 flows plus 7 policy/function/UI cases pass without retries",
+      "evidence": ["e2e-webp"]
+    }
+  ],
+  "inputs": [
+    {
+      "path": ".github/workflows/commitlint-trusted.yml",
+      "sha256": "f48ff0fb9f382e318235c915f01dc311a4cc47cc4120c1dfaa73972451454e54"
+    },
+    {
+      "path": "AGENTS.md",
+      "sha256": "38e4da093d666cce5b0250d22ff3a2e07afaa4f10cf244afd392fced809a46cd"
+    },
+    {
+      "path": "commitlint.config.cjs",
+      "sha256": "3fb63c917c584b3987797fdf0d2bdb46c0b1f8df9205e30fb4d35e3e554513c5"
+    },
+    {
+      "path": "eslint.config.js",
+      "sha256": "da9558df1a1a7243199ddc3a2c1b3e30b7a3701e289e2f963ef11309d9a92fec"
+    },
+    {
+      "path": "package-lock.json",
+      "sha256": "6dd59d9d491fb2a317731ecc32dcedfb50307b3ee16b93d363f3191a5b184973"
+    },
+    {
+      "path": "package.json",
+      "sha256": "c7e884e68f8d4f487d358e8be724058b66e0cb44d05463f56fcf627b344d78c2"
+    },
+    {
+      "path": "playwright.config.ts",
+      "sha256": "feafea58a735bc76897e92fc6f425a91af402d581ea20512700932775ddfa804"
+    },
+    {
+      "path": "scripts/check-commit-message.cjs",
+      "sha256": "0e16c0b6d7ebfd88bf48bcc952726149f0c00e3a136ac8dffcdff9653475cb61"
+    },
+    {
+      "path": "src/App.tsx",
+      "sha256": "9c88e5e61c58b1e4c18926fae187cc5172d85bcb11be99970695ccfaf14f0311"
+    },
+    {
+      "path": "src/assets/vite.svg",
+      "sha256": "5be21acd42eb7b896e517f4e0f0f11eb5c5d9e54fbbcebe9453f033008fcca6f"
+    },
+    {
+      "path": "src/components/Avatar.tsx",
+      "sha256": "a02b6844d4e2e6e0d2b6335b30d25ac4b890b4ddd60b821eb0375914f062baea"
+    },
+    {
+      "path": "src/components/BackLink.tsx",
+      "sha256": "6773dae574488667d4d02da7670502c4fdf7fd8309e3ab5fa451451d738990ba"
+    },
+    {
+      "path": "src/components/Button.tsx",
+      "sha256": "cb7a76a1350000bdeefb785cf26802f7a455de3ca9f94aaba5112fc4655fc7eb"
+    },
+    {
+      "path": "src/components/Chip.tsx",
+      "sha256": "373f9aa8d7f052f32ac9da512c7c490238b5be8d0344d0cf23cce0307fe56703"
+    },
+    {
+      "path": "src/components/ConfirmDialog.tsx",
+      "sha256": "1e9f5d0a050d0339f308a38dac3645bc30c358094aea74060eeb28d60c578831"
+    },
+    {
+      "path": "src/components/ErrorBoundary.tsx",
+      "sha256": "05da127c2b66618fc1b1ad7eb736bbf1560bb2c678c6fd32158e7304bda5073d"
+    },
+    {
+      "path": "src/components/Input.tsx",
+      "sha256": "f9a7e6ee7ae80c476775049f3a2f7dfb6c805bb7a1585b11c249b11d111bf745"
+    },
+    {
+      "path": "src/components/RiceBowl.tsx",
+      "sha256": "24027421e9fd430924330bcf162085d920882717a8348507ed9b3d7b1811d04e"
+    },
+    {
+      "path": "src/components/Skeleton.tsx",
+      "sha256": "f9f994e97efda218af77abb17045b583bb112fcf03a0e9f491e78242b67a2af8"
+    },
+    {
+      "path": "src/components/Toast.tsx",
+      "sha256": "d945441aa81ce128c7ee374b1f550f916e7c9186b67fd8a09808bd43a15758cb"
+    },
+    {
+      "path": "src/components/eventTypeIcon.ts",
+      "sha256": "48a0691134255b8639881acffe915710bcf1b7fdbc53367ae63ba10a8f83c69c"
+    },
+    {
+      "path": "src/components/identityColor.ts",
+      "sha256": "285643eb5f6e12c55b38a33727f61f48291d530c9b8ece9964bb9df0ff21eb6f"
+    },
+    {
+      "path": "src/core/clustering/geo.ts",
+      "sha256": "75005d8679c1657fe3f843caf764d1fdca77b7abd91709830f4e92fc4136fb9b"
+    },
+    {
+      "path": "src/core/clustering/index.ts",
+      "sha256": "25864f5ccf951a2322933f8a548fc83ec9345147f3ade5c4229bc399c874ded3"
+    },
+    {
+      "path": "src/core/clustering/staypoints.test.ts",
+      "sha256": "894024693cd566c0dff908392e8fa1898a8bab9cf9982669ef0f799de775559a"
+    },
+    {
+      "path": "src/core/clustering/staypoints.ts",
+      "sha256": "34c074e8bf62472d046d8336cd3f842e9811bd3f30f460a42bf2c18473eed901"
+    },
+    {
+      "path": "src/core/receipt/parse.test.ts",
+      "sha256": "46d334dee40e06ea843913733b1911e36245baa6ff0bc7d316d23d6335bb7ba2"
+    },
+    {
+      "path": "src/core/receipt/parse.ts",
+      "sha256": "deb3f341e01c85811e6d1a825f9cd5562084965787057e38f373f83562279913"
+    },
+    {
+      "path": "src/core/settlement/balance.ts",
+      "sha256": "617051508f0f0fd2b87642cd0d495b2df266fcb3590837b91bb033390f62bb91"
+    },
+    {
+      "path": "src/core/settlement/index.ts",
+      "sha256": "7a56ba79152f9a68395145eaa08bc54d4082b02134b988f9eb3709ca06617f04"
+    },
+    {
+      "path": "src/core/settlement/settlement.test.ts",
+      "sha256": "5978a233a5acc3928bc5bf21b2bed4b33065d480d5cfbf17f883cb034081d14e"
+    },
+    {
+      "path": "src/core/settlement/shareText.test.ts",
+      "sha256": "82fd6e13b36b0d373238261f5886a0e2f8a7a76175a606fc400a88afcfaa2cdc"
+    },
+    {
+      "path": "src/core/settlement/shareText.ts",
+      "sha256": "acf4e879bbb3d623bedf415b9d163e110841e921eb4f6c5e9bb460ab21f07449"
+    },
+    {
+      "path": "src/core/settlement/simplify.ts",
+      "sha256": "cf36963dd37beabb1f71f81cbfa4b293c0202bf7cad8462e054a725f44722988"
+    },
+    {
+      "path": "src/core/settlement/split.ts",
+      "sha256": "9840ba985a80be2df3bc67f2d1c796c600a104cb5a102374ec98af3a340455a8"
+    },
+    {
+      "path": "src/core/types.ts",
+      "sha256": "8c73308ddb659732dd2701ebf6bf2bf8302b27234a7d49ad1284629ec3f0c99e"
+    },
+    {
+      "path": "src/data/deleteErrors.ts",
+      "sha256": "23635183ff410b22bc8900a51a8a34907ddb7edd1248505257480b31c7de3130"
+    },
+    {
+      "path": "src/data/deletion.test.ts",
+      "sha256": "46f87befd590f0c9c6d35b889a3ed6c0117988a1ba8c1bbf32e70faa40849959"
+    },
+    {
+      "path": "src/data/events.ts",
+      "sha256": "a3c359b13b3675848e7a2d102d57218e3b1997952e943a6736fbf9ce03a18f5e"
+    },
+    {
+      "path": "src/data/expenses.ts",
+      "sha256": "73cc98ceb8daf90ce005ff0cd0f82f4f696c2d06cb81f48d436b9d06baa976e8"
+    },
+    {
+      "path": "src/data/groups.ts",
+      "sha256": "4d0b9da744a63b1ff3f580b5453591573698234bf7cbc78f559cb417f3577b60"
+    },
+    {
+      "path": "src/data/nearby.ts",
+      "sha256": "99d5c4f31a4273506856800d1760444d6c490c4aca310ee281e1c63467a8bdcc"
+    },
+    {
+      "path": "src/data/photos.ts",
+      "sha256": "44b2c80d060676080497e8b98575a9dfc5dc78d5a9e05231880d04c9170b0f9b"
+    },
+    {
+      "path": "src/data/profiles.ts",
+      "sha256": "d9e75dfa1832c1baae1b612d6eeda85956ebe671fa432afd1df45412c1c788dc"
+    },
+    {
+      "path": "src/data/settlements.ts",
+      "sha256": "e9e8763905a3188a430627710e0bf8da5cc033ae9ee3b158dade57feef14e1e2"
+    },
+    {
+      "path": "src/data/stats.ts",
+      "sha256": "4088bfc046dc51700a223bb2e4def428126b1952aee0bb4a82784e5139530cf7"
+    },
+    {
+      "path": "src/data/supabase.ts",
+      "sha256": "fde097589777ab64e9954d101eb188981595d367331c1ef83a71c3a68cf5641d"
+    },
+    {
+      "path": "src/data/visits.ts",
+      "sha256": "560b79989e4daa2c2678b660d09bd63b5d609f3838c3798e644acd0d4403e262"
+    },
+    {
+      "path": "src/features/auth/AuthCallbackPage.tsx",
+      "sha256": "d52b21aa87d16e222605e5453253ed925c07397c086846a75ae98a12d3ba6bdc"
+    },
+    {
+      "path": "src/features/auth/LoginPage.tsx",
+      "sha256": "f2182335890e6e856cba6afb5312916f9ccbef52932ebdd6b36a22aec5b7450a"
+    },
+    {
+      "path": "src/features/auth/ProfilePage.tsx",
+      "sha256": "bb53e965060c1ad124f61194625fa34b92d09663a9fce921d6e487b64555d1b7"
+    },
+    {
+      "path": "src/features/auth/WelcomePage.tsx",
+      "sha256": "cbba315b8f04b126506b4d4f68c37b78ee76765bc226ef397f88c9f8374c4341"
+    },
+    {
+      "path": "src/features/auth/inAppBrowser.ts",
+      "sha256": "31b127f3911da06c03c8a8a78cc9d3508ff1f62795da558ae70a5b36142b8498"
+    },
+    {
+      "path": "src/features/auth/nextPath.test.ts",
+      "sha256": "5a2b71ce3e1fd00370a2f94fb9eba3d5e21c50f7b8b72574a2aa77bb5f8751a2"
+    },
+    {
+      "path": "src/features/auth/nextPath.ts",
+      "sha256": "be9fb028f5190ed1bdaa60e4044b07c102c3a4a8093e953d38f775eafc8c9dde"
+    },
+    {
+      "path": "src/features/auth/useSession.ts",
+      "sha256": "3babe38af8f6ad00279db823925172af894ad8c49cd2de6e49a34f728033f588"
+    },
+    {
+      "path": "src/features/events/EventEditPage.tsx",
+      "sha256": "4e90dac1472466d2666f6cb6bda3e0992238d847c5cc5e8e0dce3ebd201eeef5"
+    },
+    {
+      "path": "src/features/events/EventNewPage.tsx",
+      "sha256": "330aa961971a4882fd17dd2c228b65f4d8cda302582441472abd6ba653beafaf"
+    },
+    {
+      "path": "src/features/events/EventPage.tsx",
+      "sha256": "a339c77dbefb697548048d25c2fdba814b73b97b0a68169df0d6e4c7c6500a43"
+    },
+    {
+      "path": "src/features/expenses/ExpenseFormPage.tsx",
+      "sha256": "9032101a9248db292960647c4e2d1595715430bcf6e78101a570bb5e5e8c81a9"
+    },
+    {
+      "path": "src/features/expenses/SettleTab.tsx",
+      "sha256": "d37fbe3d51c06d148155bb0640e0180c3704664368e352ad76d792ef42fdfc1b"
+    },
+    {
+      "path": "src/features/groups/GroupNewPage.tsx",
+      "sha256": "f56cbc09506b54c29d36c3deb3d8b930e2497d0668a81fa3555eb1c703efbe84"
+    },
+    {
+      "path": "src/features/groups/GroupPage.tsx",
+      "sha256": "73a869f88faca8deaad56775f3334f88b73aa0464de525facc874b53e0560a1a"
+    },
+    {
+      "path": "src/features/groups/HomePage.tsx",
+      "sha256": "59b1368b2a24d1742de0b4627c4d300a44beae3ff990f86e44363a2f4a1e36a2"
+    },
+    {
+      "path": "src/features/groups/InvitePage.tsx",
+      "sha256": "e6a4abcff627419535e73ac0ca5f69aed5b51b0a8853846510cfa6672db1ab74"
+    },
+    {
+      "path": "src/features/groups/StatsPage.tsx",
+      "sha256": "77ac310ab81ff63c3e85c133d019009d05f05df306b26e643b49ba8b01e6f5f4"
+    },
+    {
+      "path": "src/features/photos/PhotosTab.tsx",
+      "sha256": "873fc8233c535ba1db0d03f91a905c16268474657b5a6542f66a250ffbe68d06"
+    },
+    {
+      "path": "src/features/places/VisitsTab.tsx",
+      "sha256": "f35c6119ae0e24abe29a5a1b055807ad67b401993291b6c5e577d3a3245c4111"
+    },
+    {
+      "path": "src/index.css",
+      "sha256": "7c631a26b68e6937ed22453a116c0e292ca9c74810a001ea02cd2e0b7d8f84a2"
+    },
+    {
+      "path": "src/lib/format.ts",
+      "sha256": "9f2fb2e98e1ec662a0facf2352eab20086113540b8dfdb946b799f6d4520dc60"
+    },
+    {
+      "path": "src/lib/share.test.ts",
+      "sha256": "d4c9187ac7860c4e4dc065c86de8fdc1c53d58a79f09831d0a1cb8c5d9a07a87"
+    },
+    {
+      "path": "src/lib/share.ts",
+      "sha256": "8fccb9be05fb7aa298be5610a746ac3a163a20de2cfad035c39b5714fb009ce4"
+    },
+    {
+      "path": "src/main.tsx",
+      "sha256": "3ecfc7a5b16df97734f7024ce34d1deb5a7868325e45b28847b6af9ccbf051f9"
+    },
+    {
+      "path": "src/services/web/image.ts",
+      "sha256": "b3f054911bc329d8fa4a03d3a08a6966640dc783612e506920ac81df9bc00113"
+    },
+    {
+      "path": "src/services/web/photoPipeline.ts",
+      "sha256": "d5cd541e50cfaa3eb17a6d0fba3c19ae0d9fb800c0447d9ebff93372c0788c9c"
+    },
+    {
+      "path": "src/services/web/receiptOcr.ts",
+      "sha256": "8fba997a114019e85207896c7b7d809454450b0908e5fe3086c589464f997d06"
+    },
+    {
+      "path": "src/vite-env.d.ts",
+      "sha256": "2a1f23f653b2c45828455d3ed1ecc76b9c9c32dd3f47ac4bafe109ad55afdbf8"
+    },
+    {
+      "path": "supabase/migrations/0001_init.sql",
+      "sha256": "53b580e496c43813bae9957b1a34d70666e31d3502e677935289991263e05329"
+    },
+    {
+      "path": "supabase/migrations/0002_rls.sql",
+      "sha256": "8193f41c3403a283a50d6a8d589ec2f686300249d4ce69df06e6869428b14e14"
+    },
+    {
+      "path": "supabase/migrations/0003_rpc.sql",
+      "sha256": "30e83f91b01538e4fb82a6829d86cf51065cb89902525286c983fe07d27b479e"
+    },
+    {
+      "path": "supabase/migrations/0004_create_group.sql",
+      "sha256": "5bc31d2093cdc634311a3807263a84187fc1a5324a8820dbe6c2d5cf9771ddbc"
+    },
+    {
+      "path": "supabase/migrations/0005_storage.sql",
+      "sha256": "bb949ddc3e475efaef339bb362e6354887629b7435d75aea3e056a90e34c629d"
+    },
+    {
+      "path": "supabase/migrations/0006_visits_manual.sql",
+      "sha256": "4788a15f2a28707ae4920dfd400e52c303c0fa6cc9be11a163ee52c51b53e425"
+    },
+    {
+      "path": "supabase/migrations/0007_hardening.sql",
+      "sha256": "4d546ef682c23a15f97ab37bfb4fb47934e70302963a5526cd1e1cdeec285e81"
+    },
+    {
+      "path": "supabase/migrations/0008_storage_jpeg.sql",
+      "sha256": "922951c8b579853871c2c3fda96322364d5364fd695d4be867772d43c6073c30"
+    },
+    {
+      "path": "supabase/migrations/0009_transfer_undo.sql",
+      "sha256": "ba514651322654df034fec272de87c65659d27f11e1728c2486144afa962fbf7"
+    },
+    {
+      "path": "supabase/migrations/0010_event_types.sql",
+      "sha256": "12ffbec443bcc37f6a76846f48f97b56b16e11a6873d127931fe18d5be43fa48"
+    },
+    {
+      "path": "supabase/migrations/0011_settlement_closer.sql",
+      "sha256": "48ca8095c630c76c7e67f119273ac2958ec7414e5dec4fcb39a941c55d004701"
+    },
+    {
+      "path": "supabase/migrations/0012_expenses_member_edit.sql",
+      "sha256": "c8c7b9f5b21951612e007b0024167f2c24b84676bd5ede86dc31da4a5db0333b"
+    },
+    {
+      "path": "supabase/migrations/0013_expense_delete_restrict.sql",
+      "sha256": "4399378f5ecabddd65592c6c8e9ada6b8e371a87609ac36ea948d2dbceed9d04"
+    },
+    {
+      "path": "supabase/migrations/0014_storage_delete_group.sql",
+      "sha256": "a4776e5e9a1c1bc78dae83c655443e99bfc283f30e153f7cab84260f82b92e98"
+    },
+    {
+      "path": "supabase/migrations/0015_grants.sql",
+      "sha256": "4b2013be2a7477ab68126d2cfcc21050ce10eb609b044088bc21984aa3c0c77c"
+    },
+    {
+      "path": "supabase/migrations/0016_sequence_grants.sql",
+      "sha256": "ddb0c7df806a99515cf8239d86b569feb1a12f74f50a933665b08bda9afdc5f4"
+    },
+    {
+      "path": "supabase/migrations/0017_storage_delete_no_orphan.sql",
+      "sha256": "dfff434374982106ee12a1307da00b396041317e11da186de53599f4134a5fde"
+    },
+    {
+      "path": "tests/e2e/flows.spec.ts",
+      "sha256": "82ac80fbe0fd1c590ce430193cfbe1c1921ad10ecbbe46949063a1c489ef9d65"
+    },
+    {
+      "path": "tests/e2e/helpers/admin.ts",
+      "sha256": "30ded510800b4631094c32f2f76c83794bb35cf410a3b4c7a2d706060d35d6a2"
+    },
+    {
+      "path": "tests/e2e/photo-policy.spec.ts",
+      "sha256": "fea33ced28b610d45c2c9c2dffe8a813fc03718ebb59428baa73b396d8b93791"
+    },
+    {
+      "path": "tests/e2e/settle.spec.ts",
+      "sha256": "794e535ec75002fe75fb86a57869755215f0007c4cbd8990aaf56e3fb1dd0d23"
+    },
+    {
+      "path": "tests/e2e/smoke.spec.ts",
+      "sha256": "88fc465ee89e9624880f40c7861b54f6900a31a7d73adaf4843619c9c8e1be39"
+    },
+    {
+      "path": "tsconfig.json",
+      "sha256": "e8d6f7b50828db3953e21c7e92584f9206b3cd2551b4012507372afbb7fe9ce3"
+    },
+    {
+      "path": "vite.config.ts",
+      "sha256": "c63f025ced02ec9562d18dd9365935ffdc3a3aa225c0d8ba699f707fc5a497b3"
+    }
+  ],
+  "runs": [
+    {
+      "command": ["npm", "ci"],
+      "cwd": "<CONSUMER_ROOT>",
+      "exitCode": 0,
+      "signal": null,
+      "sha256": "ee628ce2cd86acf68113cacf45d61e45c140d39133f4583e3e911dc740bdad95",
+      "environment": "synthetic local Auth/RLS/Storage; env overrides; no project .env load for Vite; loopback gateway; no reused server/retries",
+      "label": "install",
+      "log": "/tmp/siku-loopback-fixture-20261007/install.log",
+      "phase": "final-local"
+    },
+    {
+      "command": ["npm", "run", "format:check"],
+      "cwd": "<CONSUMER_ROOT>",
+      "exitCode": 0,
+      "signal": null,
+      "sha256": "3d62adfd07b88e824324532d006515647b14c7b5318ff743d362ef5e0542009d",
+      "environment": "synthetic local Auth/RLS/Storage; env overrides; no project .env load for Vite; loopback gateway; no reused server/retries",
+      "label": "format-final",
+      "log": "/tmp/siku-loopback-fixture-20261007/format-final.log",
+      "phase": "final-local"
+    },
+    {
+      "command": ["npm", "run", "lint"],
+      "cwd": "<CONSUMER_ROOT>",
+      "exitCode": 0,
+      "signal": null,
+      "sha256": "7d9dc7f77849128f5e7b08a120e5364be4b12b1b833ce4e3f934b8125ee8d879",
+      "environment": "synthetic local Auth/RLS/Storage; env overrides; no project .env load for Vite; loopback gateway; no reused server/retries",
+      "label": "lint-final",
+      "log": "/tmp/siku-loopback-fixture-20261007/lint-final.log",
+      "phase": "final-local"
+    },
+    {
+      "command": [
+        "npm",
+        "test",
+        "--",
+        "--config",
+        "/tmp/siku-loopback-fixture-20261007/vite.config.mjs"
+      ],
+      "cwd": "<CONSUMER_ROOT>",
+      "exitCode": 0,
+      "signal": null,
+      "sha256": "ec22a971f1c6557b39cf5810c46e40b6748f8d0812e1a14e7dfdb3e7e69f8fc6",
+      "environment": "synthetic local Auth/RLS/Storage; env overrides; no project .env load for Vite; loopback gateway; no reused server/retries",
+      "label": "unit",
+      "log": "/tmp/siku-loopback-fixture-20261007/unit.log",
+      "phase": "final-local"
+    },
+    {
+      "command": [
+        "npm",
+        "run",
+        "build",
+        "--",
+        "--config",
+        "/tmp/siku-loopback-fixture-20261007/vite.config.mjs"
+      ],
+      "cwd": "<CONSUMER_ROOT>",
+      "exitCode": 0,
+      "signal": null,
+      "sha256": "1511a45bfa63b8e4646548095161df6fce93d43b88572af9a38c5572d4ceb840",
+      "environment": "synthetic local Auth/RLS/Storage; env overrides; no project .env load for Vite; loopback gateway; no reused server/retries",
+      "label": "build",
+      "log": "/tmp/siku-loopback-fixture-20261007/build.log",
+      "phase": "final-local"
+    },
+    {
+      "command": ["npm", "audit", "--json"],
+      "cwd": "<CONSUMER_ROOT>",
+      "exitCode": 0,
+      "signal": null,
+      "sha256": "4ae19c8ee7af864ea41bcb6b9d63fdcbaea95d4a4465475f9204d16bb2eb70c3",
+      "environment": "synthetic local Auth/RLS/Storage; env overrides; no project .env load for Vite; loopback gateway; no reused server/retries",
+      "label": "audit",
+      "log": "/tmp/siku-loopback-fixture-20261007/audit.log",
+      "phase": "final-local"
+    },
+    {
+      "command": [
+        "npx",
+        "playwright",
+        "test",
+        "--config",
+        "/tmp/siku-loopback-fixture-20261007/playwright.config.mjs",
+        "--retries=0"
+      ],
+      "cwd": "<CONSUMER_ROOT>",
+      "exitCode": 1,
+      "signal": null,
+      "sha256": "3c20f838ccc8ecf5dd9afd356cfdc605ec7fa5697fd4bf42c7ef54dfa2ebeff9",
+      "environment": "synthetic local Auth/RLS/Storage; env overrides; no project .env load for Vite; loopback gateway; no reused server/retries",
+      "label": "e2e",
+      "log": "/tmp/siku-loopback-fixture-20261007/e2e.log",
+      "phase": "first-failure"
+    },
+    {
+      "command": [
+        "npx",
+        "playwright",
+        "test",
+        "--config",
+        "/tmp/siku-loopback-fixture-20261007/playwright.config.mjs",
+        "--retries=0"
+      ],
+      "cwd": "<CONSUMER_ROOT>",
+      "exitCode": 1,
+      "signal": null,
+      "sha256": "4979bd368f314fb15af06ea28782548373aa83863bc11ee1f73b1f28631b6894",
+      "environment": "synthetic local Auth/RLS/Storage; env overrides; no project .env load for Vite; loopback gateway; no reused server/retries",
+      "label": "e2e-volume",
+      "log": "/tmp/siku-loopback-fixture-20261007/e2e-volume.log",
+      "phase": "second-failure"
+    },
+    {
+      "command": [
+        "npx",
+        "playwright",
+        "test",
+        "--config",
+        "/tmp/siku-loopback-fixture-20261007/playwright.config.mjs",
+        "--retries=0"
+      ],
+      "cwd": "<CONSUMER_ROOT>",
+      "exitCode": 0,
+      "signal": null,
+      "sha256": "ea53bb832421781b447b2e7c547309365368e96f11830d74db186ba97cea10ca",
+      "environment": "synthetic local Auth/RLS/Storage; env overrides; no project .env load for Vite; loopback gateway; no reused server/retries",
+      "label": "e2e-webp",
+      "log": "/tmp/siku-loopback-fixture-20261007/e2e-webp.log",
+      "phase": "final-local"
+    }
+  ],
+  "proofs": [
+    {
+      "path": "/tmp/siku-loopback-fixture-20261007/source.json",
+      "sha256": "89fb14a299b0c83c8319488cd5ba6f0427a4f7cef1e3808cab26298ba4a6e83e"
+    },
+    {
+      "path": "/tmp/siku-loopback-fixture-20261007/migrations.json",
+      "sha256": "21af6443b6699119977129a294980d71231abd24709552a696e1ca4589c55c17"
+    },
+    {
+      "path": "/tmp/siku-loopback-fixture-20261007/binding.json",
+      "sha256": "585020df6b81178f058338673d22de57ad8eeb18d164836178fbe0eb55962097"
+    },
+    {
+      "path": "/tmp/siku-loopback-fixture-20261007/binding-final.json",
+      "sha256": "5607a5730ab428473135db36cdb82f8583b7ce017b52981cbe1994004c3e36f8"
+    },
+    {
+      "path": "/tmp/siku-loopback-fixture-20261007/stopped-final.json",
+      "sha256": "c91a96ac0dd7a1d963b6c1b7d22403634f72244038c95e220fd59fd8edfbdc24"
+    },
+    {
+      "path": "/tmp/siku-loopback-fixture-20261007/fixture-cleanup.log",
+      "sha256": "b55cf20aab8bfe483a4d7f4b794192ef66cfc9bc82cbc97f7f14a890386ffb72"
+    },
+    {
+      "path": "/tmp/siku-loopback-fixture-20261007/fixture-stop.log",
+      "sha256": "b66d5375a723026d4acd3a35fa998d0e2924393da8a14c19a7e974219074bbe8"
+    },
+    {
+      "path": "/tmp/siku-loopback-fixture-20261007/server-binding.txt",
+      "sha256": "b1a3805ea5fd787e92aa13d2d9cf75ab6e0cb13cf8fe2ef3c2af596344cac6e2"
+    },
+    {
+      "path": "/tmp/siku-loopback-fixture-20261007/server-stopped.txt",
+      "sha256": "10f7d1dad5295d14bf83173b2bd9e77850e2073b5dd18edf6fc802b2e34db4b3"
+    },
+    {
+      "path": "/tmp/siku-loopback-fixture-20261007/final-start.log",
+      "sha256": "74025ff13c7f4b94ff6bc3e96994100ea39df27bf7617c6f3445b5093616ed3c"
+    },
+    {
+      "path": "/tmp/siku-loopback-fixture-20261007/storage-volume-start.log",
+      "sha256": "c7ec0417dd6c13952d5c0e1d3c5e7ffd9a67fd622b035cf4740eae505fc961d0"
+    },
+    {
+      "path": "/tmp/siku-loopback-fixture-20261007/migrate.log",
+      "sha256": "630076846af2b80d44fa7c8a6b012c26a6616cc392565e723b264efc9634192c"
+    },
+    {
+      "path": "/tmp/siku-loopback-fixture-20261007/compose.json",
+      "sha256": "b5660a1117ad4e540ea40ce93e4c7aca23e5d987da773d1e81077094f7c596e8"
+    },
+    {
+      "path": "/tmp/siku-loopback-fixture-20261007/playwright.config.mjs",
+      "sha256": "8815f9c328e4779ada5a50720e233ab9958c2fcc043f1b44b1428d93a119751d"
+    },
+    {
+      "path": "/tmp/siku-loopback-fixture-20261007/vite.config.mjs",
+      "sha256": "f478f9b6cb334837c4b9d0c9d97e1f0ad998b730e0099ad9e314d0cf826fbd9e"
+    },
+    {
+      "path": "/tmp/siku-loopback-fixture-20261007/run-qa.cjs",
+      "sha256": "ca09a969df0ba6f10adc8a5c5c26877e9f1881d11dbd049a101a1d6124ec41be"
+    },
+    {
+      "path": "/tmp/siku-delete-red-20261007.log",
+      "sha256": "007d0a19ba3230e73cc85b72f962575a3ed887808fbcefbfa4d5e548a6663ffd"
+    },
+    {
+      "path": "/tmp/siku-delete-unit-final-20261007.log",
+      "sha256": "c323352cb5e023e5f446fb8349db65a7c5dc54a61c67a3aec3d04606d2548613"
+    }
+  ],
+  "failureHistory": [
+    {
+      "run": "delete RED",
+      "result": "5 failed / 2 passed before production fix; 7 passed after fix"
+    },
+    {
+      "run": "e2e",
+      "result": "2 failed / 11 not run / 12 passed; macOS bind filesystem cannot support required xattr; fixture only switched to owned Docker volume"
+    },
+    {
+      "run": "e2e-volume",
+      "result": "1 failed / 6 not run / 18 passed; policy fixture PNG violates existing bucket JPEG/WebP contract; fixture changed to valid WebP without weakening policy"
+    },
+    {
+      "run": "e2e-webp",
+      "result": "25 passed; exit 0; retries 0"
+    }
+  ],
+  "limits": [
+    "Storage failure is injected only at browser boundary; Auth, RLS, DB and allowed file upload/delete remain real.",
+    "All migration hashes refer to synthetic local schema, not remote drift.",
+    "Initial macOS CLI signature and Linux CLI wildcard binding failures remain historical; neither OS security nor Docker daemon settings modified.",
+    "Earlier b18 isolated quality assertions without raw records were UNVERIFIED; final results above were freshly executed with saved raw output."
+  ]
+}

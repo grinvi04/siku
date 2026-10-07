@@ -1,3 +1,4 @@
+import { DeletePartialError } from './deleteErrors'
 import { supabase } from './supabase'
 
 export type EventType = 'lunch' | 'dinner' | 'snack' | 'ride' | 'outing' | 'trip'
@@ -111,13 +112,19 @@ export async function deleteEvent(eventId: string): Promise<void> {
     .eq('event_id', eventId)
   if (photoError) throw photoError
 
-  const { error } = await supabase.from('events').delete().eq('id', eventId)
+  const { data: deletedRows, error } = await supabase
+    .from('events')
+    .delete()
+    .eq('id', eventId)
+    .select('id')
   if (error) throw error
+  if (deletedRows.length === 0) throw new Error('EVENT_DELETE_DENIED')
 
   if (photoRows.length > 0) {
-    await supabase.storage
+    const { error: storageError } = await supabase.storage
       .from('photos')
       .remove(photoRows.flatMap((p) => [p.storage_path, p.thumb_path]))
+    if (storageError) throw new DeletePartialError('storage', 1, 1, storageError)
   }
 }
 

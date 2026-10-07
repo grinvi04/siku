@@ -1,9 +1,10 @@
-import { useMutation, useQuery } from '@tanstack/react-query'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { BackLink } from '@/components/BackLink'
 import { ConfirmDialog } from '@/components/ConfirmDialog'
 import { useToast } from '@/components/Toast'
+import { DeletePartialError } from '@/data/deleteErrors'
 import { deleteEvent, EVENT_TYPE_LABEL, getEvent } from '@/data/events'
 import { formatDateRange } from '@/lib/format'
 import { SettleTab } from '@/features/expenses/SettleTab'
@@ -25,6 +26,7 @@ export function EventPage() {
   const navigate = useNavigate()
   const { session } = useSession()
   const toast = useToast()
+  const queryClient = useQueryClient()
   const [tab, setTab] = useState<TabKey>('settle')
   const [confirmDelete, setConfirmDelete] = useState(false)
 
@@ -37,10 +39,17 @@ export function EventPage() {
   const remove = useMutation({
     mutationFn: () => deleteEvent(eventId!),
     onSuccess: () => {
+      void queryClient.invalidateQueries({ queryKey: ['events', event!.group_id] })
       toast('기록을 지웠어요')
       navigate(`/groups/${event!.group_id}`, { replace: true })
     },
     onError: (e) => {
+      if (e instanceof DeletePartialError) {
+        void queryClient.invalidateQueries({ queryKey: ['events', event!.group_id] })
+        toast('기록은 지워졌지만 사진 파일 정리에 실패했어요')
+        navigate(`/groups/${event!.group_id}`, { replace: true })
+        return
+      }
       toast(
         e instanceof Error && e.message === 'SETTLEMENT_CLOSED'
           ? '확정된 정산이 있어요. 정산을 취소한 후 지울 수 있어요'
