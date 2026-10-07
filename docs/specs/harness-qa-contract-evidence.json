@@ -35,7 +35,13 @@
       "critical": 0,
       "total": 0
     },
-    "independentReview": "PENDING",
+    "independentReview": {
+      "candidate": "5ad8a96fb40a616dfdc3c9a10089df9945801405",
+      "scope": "read-only fixed source, raw execution and environment fingerprints; original P2 resolved; no additional P1/P2",
+      "result": "PASS within reviewed scope",
+      "documentCorrection": "first E2E failed separately from xattr and PNG rejection; corrected after review; final document readback pending",
+      "remoteAuthorization": false
+    },
     "remoteCI": "UNVERIFIED",
     "PRMergeDeployment": "NOT_RUN",
     "remoteDatabaseDrift": "NOT_MEASURED",
@@ -671,6 +677,10 @@
     {
       "path": "/tmp/siku-delete-unit-final-20261007.log",
       "sha256": "c323352cb5e023e5f446fb8349db65a7c5dc54a61c67a3aec3d04606d2548613"
+    },
+    {
+      "path": "/tmp/siku-loopback-fixture-20261007/secret-redaction-proof.json",
+      "sha256": "305efb122612433f875a61f7d825b4ef3c037aa672e5474b5cf9867a1e78ea18"
     }
   ],
   "failureHistory": [
@@ -680,7 +690,7 @@
     },
     {
       "run": "e2e",
-      "result": "2 failed / 11 not run / 12 passed; macOS bind filesystem cannot support required xattr; fixture only switched to owned Docker volume"
+      "result": "2 failed / 11 not run / 12 passed; existing flow upload failed from macOS bind filesystem xattr; new policy PNG fixture separately violated JPEG/WebP contract. Fixture storage changed to owned Docker volume; PNG failure remained in second run."
     },
     {
       "run": "e2e-volume",
