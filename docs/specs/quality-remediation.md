@@ -2,7 +2,7 @@
 
 > 자매 프로젝트 **erp** 감사에서 드러난 결함 클래스를 siku에 동일 기준으로 점검한 결과를 정리하고,
 > 남은 경미 항목과 미측정 항목의 처리 방침을 기록한다. 표준 출처: team-harness `docs/`.
-> §0~§5는 작성 당시의 감사·계획 기록이다. 현재 상태와 이번 QA 판정은 §6을 따른다.
+> §0~§5는 작성 당시의 감사·계획 기록이고 §6~§7은 로컬 QA와 첫 원격 게이트의 당시 기록이다. 현재 develop 인수 상태는 §8을 따른다.
 
 ## §0 Context
 
@@ -123,3 +123,9 @@ v0.7.0 게이트가 차단한다.
 - 위 §6은 당시 로컬 후보의 실행 기록이다. `b6ed228`을 develop 대상 [PR #87](https://github.com/grinvi04/siku/pull/87)로 전달했다. 첫 required `repo-sync` 실행은 `commitlint.config.cjs`가 Harness main `9838c2ef`의 정본과 줄바꿈만 달라 FAIL이었다([실행 원문](https://github.com/grinvi04/siku/actions/runs/37620704260/job/112789954761)). commitlint 자체는 PASS였다.
 - 정본 파일을 바이트 그대로 적용하고, 해당 파일에만 Prettier `printWidth: 90`을 지정했다. 이 값에서 정본과 Prettier 출력의 SHA-256이 일치하므로 두 게이트를 동시에 유지한다. 앱·검증 로직의 의미는 바꾸지 않았다. §6의 101개 입력 지문 중 이 설정 파일 하나는 변경되므로 그 전체 지문 일치 주장을 새 후보에 옮기지 않는다. 변경 없는 앱 입력과 기존 로컬 QA 원문은 해당 범위에 한해 재사용한다.
 - 새 PR head의 필수 CI·Vercel 미리보기 결과는 [PR #87](https://github.com/grinvi04/siku/pull/87)의 현재 head SHA에서 확인한다. 이 기록은 최초 실패와 수정 이유를 보존하며, PR·CI를 병합·운영 배포 완료로 취급하지 않는다. 운영 DB 드리프트 미측정과 DB/Storage 비원자성 한계는 그대로다.
+
+## §8 develop 병합 후 현행 판정 (2026-10-08)
+
+- [PR #87](https://github.com/grinvi04/siku/pull/87)의 최종 head `dea999426959627ebcac169a615905e67cdfdb97`에서 develop 보호에 필요한 6개 검사(`quality`, `secret-scan`, `test-guard`, `commitlint`, `repo-sync`, `destructive-ddl`)가 모두 PASS였다. PR은 [병합 커밋 `92a929810c636aaec2670028a31566b50081811b`](https://github.com/grinvi04/siku/commit/92a929810c636aaec2670028a31566b50081811b)으로 develop에 반영됐다. §7의 첫 실패는 당시 결과로 유지한다.
+- 최종 PR head의 Vercel Preview 배포는 SUCCESS였지만 비인증 URL은 로그인 화면으로 HTTP 302 이동해 앱 화면은 **UNVERIFIED**다. develop 병합은 main 릴리즈나 운영 반영의 증거가 아니다. main/default의 trusted 검사 전환은 별도 후속 단계이며 기존 보호 게이트를 유지한다.
+- §6의 로컬 Auth·RLS·Storage 및 브라우저 25건 QA는 변경 없는 앱 입력에 한해 재사용한다. 운영 DB 마이그레이션 드리프트는 미측정이고 DB/Storage 삭제는 비원자적이다. 다음 단계는 별도 승인·환경에서 미리보기 앱 동작과 운영 경계를 검증하고, main 릴리즈 준비 시 보호 검사 전환과 배포 신선도를 별도로 판정하는 것이다. 원문·초기 실패·후속 근거는 [QA 증거](harness-qa-contract-evidence.json)와 [PR #87](https://github.com/grinvi04/siku/pull/87)에 연결한다.
