@@ -4,5 +4,11 @@
   "tabWidth": 2,
   "trailingComma": "all",
   "printWidth": 100,
-  "arrowParens": "always"
+  "arrowParens": "always",
+  "overrides": [
+    {
+      "files": "commitlint.config.cjs",
+      "options": { "printWidth": 90 }
+    }
+  ]
 }

@@ -117,3 +117,9 @@ v0.7.0 게이트가 차단한다.
 - 새 `npm ci`·형식·lint·단위 **86개**·build·전체 `npm audit` **0건**은 원문 로그를 저장한 현재 시험에서 exit 0이다. 마지막 fixture 변경 뒤 형식·lint도 다시 통과했다. 삭제 단위 시험은 기존 구현에서 5/7 FAIL, 수정 후 7/7 PASS였다.
 - 시험 후 합성 DB의 groups·photos·auth.users는 각각 0건이며 전용 여섯 컨테이너가 모두 중지됐다. Playwright 전용 `127.0.0.1:5173` 서버도 종료됐다. 원문·명령·cwd·최초 실패·재시도·소스/마이그레이션/환경 지문은 [QA 증거](harness-qa-contract-evidence.json)에 연결했다. 원문은 시험 당시 후보 증거이며 추후 변경 때 재사용 범위를 다시 대조해야 한다.
 - 선정한 **로컬 QA는 PASS**, 고정 코드 후보 `5ad8a96`의 독립 읽기 전용 검토에서 기존 P2 해소·추가 P1/P2 없음과 실행/소스 지문 일치를 확인했다. 최초 실패의 원인 귀속 정정을 반영했고 문서 후보 `dde10ba`의 독립 재대조에서도 소스 지문 유지·기록 일치와 추가 P1/P2 없음이 확인됐다. 원격 CI/required-check 적용은 **UNVERIFIED**, PR·병합·배포는 **미실행**이다. §2 AC-3 원격 드리프트는 여전히 미측정이며 DB와 Storage 원자성은 보장하지 않는다. 다음 단계는 별도 원격 gate 인수이며, 로컬 시험 통과를 전체 도입·배포 완료로 확장하지 않는다.
+
+## §7 원격 PR 인수와 첫 게이트 실패 (2026-10-07)
+
+- 위 §6은 당시 로컬 후보의 실행 기록이다. `b6ed228`을 develop 대상 [PR #87](https://github.com/grinvi04/siku/pull/87)로 전달했다. 첫 required `repo-sync` 실행은 `commitlint.config.cjs`가 Harness main `9838c2ef`의 정본과 줄바꿈만 달라 FAIL이었다([실행 원문](https://github.com/grinvi04/siku/actions/runs/37620704260/job/112789954761)). commitlint 자체는 PASS였다.
+- 정본 파일을 바이트 그대로 적용하고, 해당 파일에만 Prettier `printWidth: 90`을 지정했다. 이 값에서 정본과 Prettier 출력의 SHA-256이 일치하므로 두 게이트를 동시에 유지한다. 앱·검증 로직의 의미는 바꾸지 않았다. §6의 101개 입력 지문 중 이 설정 파일 하나는 변경되므로 그 전체 지문 일치 주장을 새 후보에 옮기지 않는다. 변경 없는 앱 입력과 기존 로컬 QA 원문은 해당 범위에 한해 재사용한다.
+- 새 PR head의 필수 CI·Vercel 미리보기 결과는 [PR #87](https://github.com/grinvi04/siku/pull/87)의 현재 head SHA에서 확인한다. 이 기록은 최초 실패와 수정 이유를 보존하며, PR·CI를 병합·운영 배포 완료로 취급하지 않는다. 운영 DB 드리프트 미측정과 DB/Storage 비원자성 한계는 그대로다.

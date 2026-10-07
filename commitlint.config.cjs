@@ -7,9 +7,12 @@ const { join } = require('node:path')
 const validatorPath = existsSync(join(__dirname, 'scripts/check-commit-message.cjs'))
   ? './scripts/check-commit-message.cjs'
   : '../scripts/check-commit-message.cjs'
-const { commitlintRule, isGitGenerated, hasConventionalConflictComments, TYPES } = require(
-  validatorPath,
-)
+const {
+  commitlintRule,
+  isGitGenerated,
+  hasConventionalConflictComments,
+  TYPES,
+} = require(validatorPath)
 
 module.exports = {
   defaultIgnores: false,
