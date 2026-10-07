@@ -2,6 +2,7 @@
 
 > 자매 프로젝트 **erp** 감사에서 드러난 결함 클래스를 siku에 동일 기준으로 점검한 결과를 정리하고,
 > 남은 경미 항목과 미측정 항목의 처리 방침을 기록한다. 표준 출처: team-harness `docs/`.
+> §0~§5는 작성 당시의 감사·계획 기록이다. 현재 상태와 이번 QA 판정은 §6을 따른다.
 
 ## §0 Context
 
@@ -56,7 +57,7 @@ expenses·expense_participants·settlements·settlement_transfers·ocr_usage` + 
 | (결정문서) | AC-2        | 본 문서 §4에 INFO 3건 수용 결정 기록                                                                                                   | 코드 변경 없음             |
 | (운영 1회) | AC-3        | 배포 환경에서 `supabase db diff` 실행·기록                                                                                             | PR 아님(운영 점검)         |
 
-> 이 로드맵 문서 자체는 머지하지 않는다(검토용). 실수정 PR-A는 별도 진행.
+> 이 표는 당시 실행 계획이다. 실제 적용 여부는 §6과 Git 이력을 대조한다.
 
 ## §4 INFO 항목 수용 결정 (기록)
 
@@ -82,3 +83,28 @@ expenses·expense_participants·settlements·settlement_transfers·ocr_usage` + 
 
 erp-클래스 결함이 siku에서는 거의 재현되지 않았다 — 잘 통제된 코드베이스이며, 신규 부채는 harness-guard
 v0.7.0 게이트가 차단한다.
+
+## §6 현행 상태와 로컬 QA 계약 (2026-10-07)
+
+- `0017_storage_delete_no_orphan.sql`은 `af27e39`에서 이미 추가됐다. 정책은 **행이 남아 있는 타인 사진 파일**의 삭제를 거부하고, 행이 사라진 파일은 같은 그룹 멤버의 정리를 허용한다. 업로더 본인은 참조 행이 남아 있어도 파일을 직접 삭제할 수 있다. 따라서 §2 AC-1의 “orphan row가 발생할 수 없음”은 정책만으로 보장되지 않는다. 앱의 `deletePhotos`와 `deleteEvent`는 DB 행 삭제 후 Storage 삭제 순서이며 두 단계는 원자적이지 않다. 이 관찰 경계를 그대로 시험하고, 미검증 부분을 완료로 표기하지 않는다.
+- §4 INFO 결정은 당시 판단으로 보존한다. §2 AC-3 원격 DB 드리프트는 운영 접근을 승인받지 않은 이번 로컬 QA 범위 밖이며 **미측정**이다. 로컬 마이그레이션 검사는 원격 드리프트의 증거가 아니다.
+- 이번 변경은 로컬 계약·검증과 trusted commitlint 추가까지다. PR·병합·운영 적용은 수행하지 않는다. 로컬 결과와 다음 행동은 아래 표의 현재 후보·실행 기록으로 갱신한다.
+
+| 요구·위험 / 선정 이유                    | 조건·행동 / 환경                                                                | 기대 결과·판정자                                                                                                                                   | 관찰 경계                                                                                 | 필수 | 현재 판정                                 |
+| ---------------------------------------- | ------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------- | ---- | ----------------------------------------- |
+| 개인 사진 삭제 / 행·파일 정합성          | 격리 로컬 Supabase에서 업로더가 실제 세션으로 자기 사진 행 삭제 후 Storage 제거 | 행 0개, 원본·썸네일 파일 0개. 실패 시 어느 단계까지 반영됐는지 구분                                                                                | 실제 Auth·PostgREST·Storage, service role은 합성 fixture 준비에만 사용                    | 예   | UNVERIFIED — 스택 바인딩 차단으로 미실행  |
+| 타인 사진 삭제 거부 / 멤버 권한          | 같은 그룹의 다른 멤버 세션으로 타인 사진 행·원본·썸네일 삭제 시도               | 각 삭제가 거부 또는 0건 처리되고 행·두 파일이 그대로 남음. 업로더 허용 사례와 쌍으로 판정                                                          | 실제 사용자 JWT·DB 재조회·Storage 다운로드                                                | 예   | UNVERIFIED — 스택 바인딩 차단으로 미실행  |
+| 행 삭제 뒤 Storage 부분 실패 / 고아 파일 | 행 삭제 뒤 Storage 요청이 실패하는 조건                                         | DB 행은 삭제된 채이고 파일은 남을 수 있음. 호출자에게 실패가 전달되는지 `deletePhotos`·`deleteEvent`별로 판정하고 자동 롤백·재시도를 주장하지 않음 | 실제 저장 결과와 함수 반환·UI 반응을 별도로 관찰                                          | 예   | UNVERIFIED — 스택 바인딩 차단으로 미실행  |
+| 기존 핵심 흐름 유지                      | Node 22, 새 의존성 설치 후 단위·형식·lint·build·Chromium e2e                    | 각 명령 exit 0, e2e 실패/재시도는 원인 해소 전 PASS로 간주하지 않음                                                                                | 현재 브랜치 작업트리와 로컬 Supabase, 기존 CI의 명령·설정                                 | 예   | 형식·lint·단위·build PASS, e2e UNVERIFIED |
+| trusted commitlint / PR 코드 실행 위험   | 신뢰 기본 브랜치 SHA의 validator로 정상·부정 커밋 metadata를 검사               | 정상 통과, 잘못된 형식 거부; 기존 `commitlint` 워크플로 유지                                                                                       | canonical 파일 비교·Node 구문·로컬 validator 실행. GitHub required check 적용은 별도 단계 | 예   | 로컬 계약 PASS, 원격 CI UNVERIFIED        |
+
+필수 항목의 실행 명령·cwd·후보·최초 실패·재시도 조건과 결과는 아래에 기록한다. 운영 DB·Storage는 검증에 사용하지 않는다.
+
+실행 기준은 `/Users/grinvi04/project/siku`의 `fix/harness-qa-contract` 작업트리(`origin/develop` 기준 `c7b5bbd`, 커밋 전)와 Node 22.18.0이다.
+
+- `npm ci --no-audit --no-fund`: 원래 lockfile에서 exit 0. `npm audit --json`은 HIGH 7·CRITICAL 0. 공식 수정 범위의 `npm audit fix --no-fund` 후 `npm ci` 최초 재실행은 `Invalid: lock file's @emnapi/wasi-threads@1.2.1 does not satisfy @emnapi/wasi-threads@1.2.3` 등 선택 의존성 불일치로 exit 1. 깨끗한 작업 디렉터리에서 원본 `package.json`만으로 lockfile을 다시 해결한 다음 `npm ci --no-audit --no-fund` exit 0. 최종 `npm audit --json`은 전체 0건. 강제/메이저 업그레이드 없음.
+- `npm run format:check`: 최초 `commitlint.config.cjs` 형식 경고로 exit 1. 해당 설정만 Prettier로 정리한 뒤 exit 0. `npm run lint`, `npm test`(6파일 79개), `npm run build`, `git diff --check`는 exit 0. `node --check` 검사기·설정 exit 0, 검사기 정상 메시지 허용/형식 오류 거부 확인. 원본 trusted workflow와 검사기 파일은 Harness 정본과 일치하며 설정은 서식만 다르다.
+- 로컬 Supabase: npm 캐시의 macOS CLI는 공식 v2.107.0 릴리스 SHA-256과 일치하지만 `codesign --verify`가 `invalid signature (code or signature have been modified)`를 반환하고 실행은 `SIGKILL`됐다. 공식 Linux ARM64 v2.107.0 tarball은 릴리스 digest `d54648dd…21e0f`와 일치하고 격리 컨테이너에서 `--version`이 성공했다. `supabase start`는 `0017`까지 마이그레이션을 적용하고 exit 0이었다. 그러나 Docker의 실제 published HostIp는 API·DB 등에서 `0.0.0.0`/`[::]`였다. 즉시 `stop --no-backup` exit 0. 공식 문서의 loopback 바인딩 옵션을 가진 전용 Docker network로 재시도했으나 같은 바인딩이 관찰되어 다시 중지하고 전용 network를 제거했다. 기존 다른 프로젝트 컨테이너와 `.env`는 변경하지 않았다.
+- `npx playwright test --list`는 합성 로컬 URL·키 환경변수로 새 2건 포함 전체 20건을 발견했고 exit 0이다. `npm run test:e2e`와 새 `tests/e2e/photo-policy.spec.ts`의 **실행은 미실행/UNVERIFIED**. 재개 조건은 모든 Supabase 공개 포트의 실제 Docker `HostIp`가 loopback인 격리 스택 또는 동등한 안전한 로컬 실행 환경 확보다. 공식 self-host Docker Compose의 시험 전용 사본에 합성 키와 명시적 `127.0.0.1` 포트를 쓰는 방식을 다음 후보로 검토할 수 있다. 그 뒤 실제 사용자 세션의 허용·거부·부분 실패와 기존 Chromium 흐름을 실행하고 최초 실패 및 재시도를 기록한다. `deletePhotos`·`deleteEvent`의 실패 반환·UI 반응 역시 현재 미관측이다. 운영 접근이 필요한 AC-3은 별도 승인·환경에서 수행할 미측정 항목이다.
+
+이번 로컬 후보는 필수 DB/Storage/e2e가 미확인이라 `NOT VERIFIED`다. 정적·단위 결과는 그 범위에서만 PASS이며 구현·커밋 이후 PR/병합/배포 완료를 뜻하지 않는다.
