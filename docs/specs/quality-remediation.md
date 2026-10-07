@@ -2,7 +2,7 @@
 
 > 자매 프로젝트 **erp** 감사에서 드러난 결함 클래스를 siku에 동일 기준으로 점검한 결과를 정리하고,
 > 남은 경미 항목과 미측정 항목의 처리 방침을 기록한다. 표준 출처: team-harness `docs/`.
-> §0~§5는 작성 당시의 감사·계획 기록이고 §6~§7은 로컬 QA와 첫 원격 게이트의 당시 기록이다. 현재 develop 인수 상태는 §8을 따른다.
+> §0~§5는 작성 당시의 감사·계획 기록이고 §6~§7은 로컬 QA와 첫 원격 게이트의 당시 기록이다. 현재 develop 인수와 미리보기 판정은 §8 및 §9를 따른다.
 
 ## §0 Context
 
@@ -129,3 +129,15 @@ v0.7.0 게이트가 차단한다.
 - [PR #87](https://github.com/grinvi04/siku/pull/87)의 최종 head `dea999426959627ebcac169a615905e67cdfdb97`에서 develop 보호에 필요한 6개 검사(`quality`, `secret-scan`, `test-guard`, `commitlint`, `repo-sync`, `destructive-ddl`)가 모두 PASS였다. PR은 [병합 커밋 `92a929810c636aaec2670028a31566b50081811b`](https://github.com/grinvi04/siku/commit/92a929810c636aaec2670028a31566b50081811b)으로 develop에 반영됐다. §7의 첫 실패는 당시 결과로 유지한다.
 - 최종 PR head의 Vercel Preview 배포는 SUCCESS였지만 비인증 URL은 로그인 화면으로 HTTP 302 이동해 앱 화면은 **UNVERIFIED**다. develop 병합은 main 릴리즈나 운영 반영의 증거가 아니다. main/default의 trusted 검사 전환은 별도 후속 단계이며 기존 보호 게이트를 유지한다.
 - §6의 로컬 Auth·RLS·Storage 및 브라우저 25건 QA는 변경 없는 앱 입력에 한해 재사용한다. 운영 DB 마이그레이션 드리프트는 미측정이고 DB/Storage 삭제는 비원자적이다. 다음 단계는 별도 승인·환경에서 미리보기 앱 동작과 운영 경계를 검증하고, main 릴리즈 준비 시 보호 검사 전환과 배포 신선도를 별도로 판정하는 것이다. 원문·초기 실패·후속 근거는 [QA 증거](harness-qa-contract-evidence.json)와 [PR #87](https://github.com/grinvi04/siku/pull/87)에 연결한다.
+
+## §9 인증된 미리보기의 실제 실패와 사용자 보류 결정 (2026-10-08)
+
+현재 Chrome의 Vercel 인증으로 앱 병합 SHA `92a929810c636aaec2670028a31566b50081811b`의 배포 #6917504540 [고정 미리보기](https://siku-8cjueeozm-grinvi04-2237s-projects.vercel.app)에 접근했다. 페이지 제목은 `식구 — SIKU`지만 화면은 흰색이고 DOM은 비어 있다. 콘솔은 `VITE_SUPABASE_URL / VITE_SUPABASE_ANON_KEY 환경변수가 필요합니다 (.env.example 참조)` 오류를 `assets/index-B9dBMi3O.js`에서 기록했다. §8의 비인증 접근 UNVERIFIED는 당시 기록이며, 이 앱 후보의 인증된 실제 기동은 **FAIL**이다. 배포 SUCCESS는 기능 동작 PASS가 아니다.
+
+Vercel 프로젝트 설정에서 두 변수는 각각 Production에만 설정돼 있고 Shared 탭은 `No shared variables linked`다. 값은 열거나 복사하지 않았다. `src/data/supabase.ts`가 두 Vite build-time 값을 검사하고 누락되면 import 시 예외를 내는 현재 소스와 실제 오류가 일치한다. Preview 적용 범위 누락이 확인됐지만 운영 값을 재사용해 테스트 DB가 안전하다고 추정하지 않는다.
+
+사용자는 별도 Supabase 테스트 프로젝트가 없다고 답해 **원격 검증 보류**를 선택했다. Production 변수의 Preview 복사·운영 DB/Auth/Storage 요청·새 테스트 계정/프로젝트 생성·재배포는 수행하지 않는다. 로컬 QA의 기존 Auth/RLS/Storage·브라우저 증거는 당시 동일 앱 입력 범위에서 유지하며 원격 완료를 대체하지 않는다.
+
+재개 조건은 사용자의 명시적 재개와 승인된 비운영 Supabase 대상이다. 그때 Preview 변수 범위·build-time 적용을 확인하고 고정 SHA를 재빌드한 뒤 로그인 화면·보호 경로 복귀·잘못된 이메일의 전송 차단 및 격리 계정의 승인된 정상/거부 흐름을 별도로 인수한다. Production 설정 보존도 확인한다. 현재 로컬 QA PASS / 원격 앱 기동 FAIL / 후속 원격 시험 보류를 구분한다.
+
+이번 명령·후보·UI 관찰·사용자 결정은 `$HOME/Documents/Codex/2026-10-08/preview-environment-verification/observations.json`과 Harness 이슈 #496에 연결한다. 앱 코드·설정·키·원격 데이터는 변경하지 않았다.
