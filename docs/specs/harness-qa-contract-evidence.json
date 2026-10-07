@@ -39,7 +39,7 @@
       "candidate": "5ad8a96fb40a616dfdc3c9a10089df9945801405",
       "scope": "read-only fixed source, raw execution and environment fingerprints; original P2 resolved; no additional P1/P2",
       "result": "PASS within reviewed scope",
-      "documentCorrection": "first E2E failed separately from xattr and PNG rejection; corrected after review; final document readback pending",
+      "documentCorrection": "first E2E failed separately from xattr and PNG rejection; corrected; document candidate dde10ba0e114bfb00203c055c386a23bd5cf0537 independently compared; all 101 source fingerprints unchanged; no additional P1/P2",
       "remoteAuthorization": false
     },
     "remoteCI": "UNVERIFIED",
