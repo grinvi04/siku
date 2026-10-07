@@ -3,20 +3,28 @@ import { readFileSync } from 'node:fs'
 import { resolve } from 'node:path'
 import { deflateSync } from 'node:zlib'
 
-// Playwright는 .env를 자동 로드하지 않으므로 직접 읽는다 (테스트 전용, repo 미포함 파일)
+// Playwright는 .env를 자동 로드하지 않는다. 명시한 로컬 키를 우선 사용해 기존 .env를 보존한다.
 function loadEnv(): Record<string, string> {
   const env: Record<string, string> = {}
-  const raw = readFileSync(resolve(import.meta.dirname, '../../../.env'), 'utf8')
-  for (const line of raw.split('\n')) {
-    const m = line.match(/^([A-Z_]+)=(.*)$/)
-    if (m) env[m[1]] = m[2].trim()
+  const names = ['VITE_SUPABASE_URL', 'VITE_SUPABASE_ANON_KEY', 'SUPABASE_SERVICE_ROLE_KEY']
+  if (names.every((name) => process.env[name])) {
+    for (const name of names) env[name] = process.env[name]!
+  } else {
+    const raw = readFileSync(resolve(import.meta.dirname, '../../../.env'), 'utf8')
+    for (const line of raw.split('\n')) {
+      const m = line.match(/^([A-Z_]+)=(.*)$/)
+      if (m) env[m[1]] = m[2].trim()
+    }
+  }
+  if (!['localhost', '127.0.0.1'].includes(new URL(env.VITE_SUPABASE_URL).hostname)) {
+    throw new Error('E2E는 로컬 Supabase에서만 실행할 수 있습니다.')
   }
   return env
 }
 
 const env = loadEnv()
 export const SUPABASE_URL = env.VITE_SUPABASE_URL
-const ANON_KEY = env.VITE_SUPABASE_ANON_KEY
+export const ANON_KEY = env.VITE_SUPABASE_ANON_KEY
 const SERVICE_KEY = env.SUPABASE_SERVICE_ROLE_KEY
 
 if (!SERVICE_KEY) {

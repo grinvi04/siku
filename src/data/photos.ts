@@ -1,4 +1,5 @@
 import { processPhoto } from '@/services/web/photoPipeline'
+import { DeletePartialError } from './deleteErrors'
 import { supabase } from './supabase'
 
 export interface PhotoRow {
@@ -121,15 +122,26 @@ export async function uploadPhotos(
 
 export async function deletePhotos(photos: PhotoRow[]): Promise<void> {
   if (photos.length === 0) return
-  const { error } = await supabase
+  const { data: deletedRows, error } = await supabase
     .from('photos')
     .delete()
     .in(
       'id',
       photos.map((p) => p.id),
     )
+    .select('id')
   if (error) throw error
-  await supabase.storage
+  if (deletedRows.length === 0) throw new Error('PHOTO_DELETE_DENIED')
+
+  const deletedIds = new Set(deletedRows.map((row) => row.id))
+  const deletedPhotos = photos.filter((photo) => deletedIds.has(photo.id))
+  const { error: storageError } = await supabase.storage
     .from('photos')
-    .remove(photos.flatMap((p) => [p.storage_path, p.thumb_path]))
+    .remove(deletedPhotos.flatMap((p) => [p.storage_path, p.thumb_path]))
+  if (storageError) {
+    throw new DeletePartialError('storage', deletedRows.length, photos.length, storageError)
+  }
+  if (deletedRows.length !== new Set(photos.map((photo) => photo.id)).size) {
+    throw new DeletePartialError('rows', deletedRows.length, photos.length)
+  }
 }

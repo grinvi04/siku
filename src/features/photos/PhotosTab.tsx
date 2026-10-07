@@ -3,6 +3,7 @@ import { useRef, useState } from 'react'
 import { Button } from '@/components/Button'
 import { ConfirmDialog } from '@/components/ConfirmDialog'
 import { useToast } from '@/components/Toast'
+import { DeletePartialError } from '@/data/deleteErrors'
 import type { EventDetail } from '@/data/events'
 import {
   deletePhotos,
@@ -84,7 +85,21 @@ export function PhotosTab({ event }: { event: EventDetail }) {
       setSelected(new Set())
       toast(deleted.length > 1 ? `사진 ${deleted.length}장을 지웠어요` : '사진을 지웠어요')
     },
-    onError: () => toast('지우지 못했어요. 다시 시도해 주세요'),
+    onError: (error) => {
+      if (error instanceof DeletePartialError) {
+        invalidate()
+        setViewer(null)
+        setSelecting(false)
+        setSelected(new Set())
+        toast(
+          error.phase === 'storage'
+            ? `사진 정보 ${error.deletedCount}장은 지워졌지만 파일 정리에 실패했어요`
+            : `사진 ${error.deletedCount}장만 지워졌어요. 남은 사진을 확인해 주세요`,
+        )
+      } else {
+        toast('지우지 못했어요. 다시 시도해 주세요')
+      }
+    },
   })
 
   return (
